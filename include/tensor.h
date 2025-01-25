@@ -1,0 +1,51 @@
+#ifndef TENSOR
+#define TENSOR
+
+#include <stddef.h>
+
+typedef struct {
+    double* data;
+    size_t* shape;
+} tensor;
+
+typedef enum {
+    TENSOR_OK = 0,
+    TENSOR_NULL,
+    TENSOR_SHAPE_NULL,
+    TENSOR_DATA_NULL,
+    TENSOR_INDEX_OUT_OF_BOUNDS,
+    TENSOR_SHAPE_MISMATCH
+} tensor_error;
+
+tensor* tensor2d_alloc(size_t rows, size_t cols);
+void tensor_free(tensor* t);
+static inline void tensor2d_set_unchecked(tensor* t, size_t row, size_t col, double value);
+static inline tensor_error tensor2d_set(tensor* t, size_t row, size_t col, double value);
+void print_tensor(const tensor* const t);
+tensor_error tensor2d_mult(const tensor* const A, const tensor* const B, tensor* const out);
+void tensor2d_mult_unchecked(const tensor* const A, const tensor* const B, tensor* const out);
+void tensor2d_trans(const tensor* const t, tensor* const out);
+void tensor_add(const tensor* const A, const tensor* const B, tensor* const out);
+void tensor_add_inplace(tensor* A, const tensor* const B);
+void tensor2d_add_row_vector(tensor* const A, const tensor* const v);
+void tensor_copy(const tensor* const src, tensor* dest);
+tensor* tensor_clone(const tensor* const src);
+
+static inline void tensor2d_set_unchecked(tensor* t, size_t row, size_t col, double value) 
+{
+    t->data[row * t->shape[1] + col] = value;
+}
+
+static inline tensor_error tensor2d_set(tensor* t, size_t row, size_t col, double value) 
+{
+    if (t == NULL) return TENSOR_NULL;
+    if (t->shape == NULL) return TENSOR_SHAPE_NULL;
+    if (t->data == NULL) return TENSOR_DATA_NULL;
+    if (row >= t->shape[0] || col >= t->shape[1]) 
+        return TENSOR_INDEX_OUT_OF_BOUNDS;
+    
+    t->data[row * t->shape[1] + col] = value;
+    return TENSOR_OK;
+}
+
+#endif
