@@ -3,9 +3,12 @@
 
 #include <stddef.h>
 
+typedef struct computational_graph_node computational_graph_node;
+
 typedef struct {
     double* data;
     size_t* shape;
+    computational_graph_node* node;
 } tensor;
 
 typedef enum {

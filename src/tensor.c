@@ -24,6 +24,7 @@ tensor* tensor2d_alloc(size_t rows, size_t cols)
 
     t->data = data;
     t->shape = shape;
+    t->node = NULL;
     
     return t;
 }

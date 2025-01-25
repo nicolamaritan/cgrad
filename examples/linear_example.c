@@ -51,7 +51,7 @@ int main()
     size_t out_dim = 1;
     linear_layer *linear1 = linear_create(in_dim, out_dim);
 
-    size_t epochs = 300000;
+    size_t epochs = 100000;
     for (size_t i = 0; i < epochs; i++)
     {
         // With graph
@@ -69,12 +69,10 @@ int main()
         add_entry(&table, x_entry);
 
         tensor *h1 = tensor2d_alloc(batch_size, out_dim);
-        computational_graph_node *h1_node = computational_graph_node_alloc();
-        linear_forward_graph(x, linear1, h1, x_node, h1_node, &targets, &table);
+        linear_forward_graph(x, linear1, h1, &targets, &table);
 
         tensor *z = tensor2d_alloc(1, 1);
-        computational_graph_node *z_node = computational_graph_node_alloc();
-        mse_loss_graph(h1, y_target, z, h1_node, z_node, &table);
+        mse_loss_graph(h1, y_target, z, &table);
 
         //printf("h1: ");
         //print_tensor(h1);
@@ -86,19 +84,22 @@ int main()
         print_tensor(z);
 
         // grad_table_print(&table);
-
-        /*print_computational_graph_node(x_node);
-        print_computational_graph_node(h1_node);
-        print_computational_graph_node(h1_node->children[1]);
-        print_computational_graph_node(h1_node->children[2]);
-        print_computational_graph_node(h1_node->parents[0]);
-        print_computational_graph_node(z_node->children[1]);
-        */
+        // print_computational_graph_node(x_node);
+        // print_computational_graph_node(h1_node);
+        // print_computational_graph_node(h1_node->children[1]);
+        // print_computational_graph_node(h1_node->children[2]);
+        // print_computational_graph_node(h1_node->parents[0]);
+        // print_computational_graph_node(z_node->children[1]);
 
         backpropagation(&targets, &table);
         // grad_table_print(&table);
 
         sgd_step(0.00001, &table, &targets);
+
+        free(linear1->weights->node);
+        linear1->weights->node = NULL;
+        free(linear1->biases->node);
+        linear1->biases->node = NULL;
     }
 
     print_tensor(linear1->weights);

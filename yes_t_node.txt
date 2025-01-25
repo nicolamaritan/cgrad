@@ -1,0 +1,742 @@
+z: [[282775.000000]]
+
+=== Grad Table (Entries: 6) ===
+Entry 0:
+  [NULL tensor]
+------------------------------
+Entry 1:
+  [NULL tensor]
+------------------------------
+Entry 2:
+  [NULL tensor]
+------------------------------
+Entry 3:
+  [NULL tensor]
+------------------------------
+Entry 4:
+  [NULL tensor]
+------------------------------
+Entry 5:
+  Tensor address: 0x562302edcad0
+=== End of Grad Table ===
+
+Node: 0x562302edb280
+├── Grad Table Index: 0
+├── Parents: 1
+│   ├── Parent 0: 0x562302edba10 (operand 0)
+├── Children: 0
+├── Backprop Data: (nil)
+└── Backprop Function: (nil)
+
+Node: 0x562302edba10
+├── Grad Table Index: 3
+├── Parents: 1
+│   ├── Parent 0: 0x562302edc450 (operand 0)
+├── Children: 3
+│   ├── Child 0: 0x562302edb280
+│   ├── Child 1: 0x562302edbd50
+│   ├── Child 2: 0x562302edc090
+├── Backprop Data: 0x562302edc3d0
+└── Backprop Function: 0x562301672bb3
+
+Node: 0x562302edbd50
+├── Grad Table Index: 1
+├── Parents: 1
+│   ├── Parent 0: 0x562302edba10 (operand 1)
+├── Children: 0
+├── Backprop Data: (nil)
+└── Backprop Function: (nil)
+
+Node: 0x562302edc090
+├── Grad Table Index: 2
+├── Parents: 1
+│   ├── Parent 0: 0x562302edba10 (operand 2)
+├── Children: 0
+├── Backprop Data: (nil)
+└── Backprop Function: (nil)
+
+Node: 0x562302edc450
+├── Grad Table Index: 5
+├── Parents: 0
+├── Children: 2
+│   ├── Child 0: 0x562302edba10
+│   ├── Child 1: 0x562302edc790
+├── Backprop Data: 0x562302edcb30
+└── Backprop Function: 0x56230167316d
+
+Node: 0x562302edc790
+├── Grad Table Index: 4
+├── Parents: 1
+│   ├── Parent 0: 0x562302edc450 (operand 1)
+├── Children: 0
+├── Backprop Data: (nil)
+└── Backprop Function: (nil)
+
+z: [[170432.736668]]
+
+=== Grad Table (Entries: 6) ===
+Entry 0:
+  [NULL tensor]
+------------------------------
+Entry 1:
+  [NULL tensor]
+------------------------------
+Entry 2:
+  [NULL tensor]
+------------------------------
+Entry 3:
+  [NULL tensor]
+------------------------------
+Entry 4:
+  [NULL tensor]
+------------------------------
+Entry 5:
+  Tensor address: 0x562302edf3e0
+=== End of Grad Table ===
+
+Node: 0x562302edc090
+├── Grad Table Index: 0
+├── Parents: 1
+│   ├── Parent 0: 0x562302edbd50 (operand 0)
+├── Children: 0
+├── Backprop Data: (nil)
+└── Backprop Function: (nil)
+
+Node: 0x562302edbd50
+├── Grad Table Index: 3
+├── Parents: 1
+│   ├── Parent 0: 0x562302edf0a0 (operand 0)
+├── Children: 3
+│   ├── Child 0: 0x562302edc090
+│   ├── Child 1: 0x562302ede9a0
+│   ├── Child 2: 0x562302edece0
+├── Backprop Data: 0x562302edf020
+└── Backprop Function: 0x562301672bb3
+
+Node: 0x562302ede9a0
+├── Grad Table Index: 1
+├── Parents: 1
+│   ├── Parent 0: 0x562302edbd50 (operand 1)
+├── Children: 0
+├── Backprop Data: 0x4032000000000000
+└── Backprop Function: 0x4033000000000000
+
+Node: 0x562302edece0
+├── Grad Table Index: 2
+├── Parents: 1
+│   ├── Parent 0: 0x562302edbd50 (operand 2)
+├── Children: 0
+├── Backprop Data: 0x405e800000000000
+└── Backprop Function: 0x405ec00000000000
+
+Node: 0x562302edf0a0
+├── Grad Table Index: 5
+├── Parents: 0
+├── Children: 2
+│   ├── Child 0: 0x562302edbd50
+│   ├── Child 1: 0x562302edf4e0
+├── Backprop Data: 0x562302edf820
+└── Backprop Function: 0x56230167316d
+
+Node: 0x562302edf4e0
+├── Grad Table Index: 4
+├── Parents: 1
+│   ├── Parent 0: 0x562302edf0a0 (operand 1)
+├── Children: 0
+├── Backprop Data: (nil)
+└── Backprop Function: (nil)
+
+z: [[102722.816972]]
+
+=== Grad Table (Entries: 6) ===
+Entry 0:
+  [NULL tensor]
+------------------------------
+Entry 1:
+  [NULL tensor]
+------------------------------
+Entry 2:
+  [NULL tensor]
+------------------------------
+Entry 3:
+  [NULL tensor]
+------------------------------
+Entry 4:
+  [NULL tensor]
+------------------------------
+Entry 5:
+  Tensor address: 0x562302ee10c0
+=== End of Grad Table ===
+
+Node: 0x562302edece0
+├── Grad Table Index: 0
+├── Parents: 1
+│   ├── Parent 0: 0x562302ede9a0 (operand 0)
+├── Children: 0
+├── Backprop Data: 0x405e800000000000
+└── Backprop Function: 0x405ec00000000000
+
+Node: 0x562302ede9a0
+├── Grad Table Index: 3
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee0d80 (operand 0)
+├── Children: 3
+│   ├── Child 0: 0x562302edece0
+│   ├── Child 1: 0x562302ee0680
+│   ├── Child 2: 0x562302ee09c0
+├── Backprop Data: 0x562302ee0d00
+└── Backprop Function: 0x562301672bb3
+
+Node: 0x562302ee0680
+├── Grad Table Index: 1
+├── Parents: 1
+│   ├── Parent 0: 0x562302ede9a0 (operand 1)
+├── Children: 0
+├── Backprop Data: 0x4032000000000000
+└── Backprop Function: 0x4033000000000000
+
+Node: 0x562302ee09c0
+├── Grad Table Index: 2
+├── Parents: 1
+│   ├── Parent 0: 0x562302ede9a0 (operand 2)
+├── Children: 0
+├── Backprop Data: 0x405e800000000000
+└── Backprop Function: 0x405ec00000000000
+
+Node: 0x562302ee0d80
+├── Grad Table Index: 5
+├── Parents: 0
+├── Children: 2
+│   ├── Child 0: 0x562302ede9a0
+│   ├── Child 1: 0x562302ee11c0
+├── Backprop Data: 0x562302ee1500
+└── Backprop Function: 0x56230167316d
+
+Node: 0x562302ee11c0
+├── Grad Table Index: 4
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee0d80 (operand 1)
+├── Children: 0
+├── Backprop Data: (nil)
+└── Backprop Function: (nil)
+
+z: [[61913.302450]]
+
+=== Grad Table (Entries: 6) ===
+Entry 0:
+  [NULL tensor]
+------------------------------
+Entry 1:
+  [NULL tensor]
+------------------------------
+Entry 2:
+  [NULL tensor]
+------------------------------
+Entry 3:
+  [NULL tensor]
+------------------------------
+Entry 4:
+  [NULL tensor]
+------------------------------
+Entry 5:
+  Tensor address: 0x562302ee2da0
+=== End of Grad Table ===
+
+Node: 0x562302ee09c0
+├── Grad Table Index: 0
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee0680 (operand 0)
+├── Children: 0
+├── Backprop Data: 0x405e800000000000
+└── Backprop Function: 0x405ec00000000000
+
+Node: 0x562302ee0680
+├── Grad Table Index: 3
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee2a60 (operand 0)
+├── Children: 3
+│   ├── Child 0: 0x562302ee09c0
+│   ├── Child 1: 0x562302ee2360
+│   ├── Child 2: 0x562302ee26a0
+├── Backprop Data: 0x562302ee29e0
+└── Backprop Function: 0x562301672bb3
+
+Node: 0x562302ee2360
+├── Grad Table Index: 1
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee0680 (operand 1)
+├── Children: 0
+├── Backprop Data: 0x4032000000000000
+└── Backprop Function: 0x4033000000000000
+
+Node: 0x562302ee26a0
+├── Grad Table Index: 2
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee0680 (operand 2)
+├── Children: 0
+├── Backprop Data: 0x405e800000000000
+└── Backprop Function: 0x405ec00000000000
+
+Node: 0x562302ee2a60
+├── Grad Table Index: 5
+├── Parents: 0
+├── Children: 2
+│   ├── Child 0: 0x562302ee0680
+│   ├── Child 1: 0x562302ee2ea0
+├── Backprop Data: 0x562302ee31e0
+└── Backprop Function: 0x56230167316d
+
+Node: 0x562302ee2ea0
+├── Grad Table Index: 4
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee2a60 (operand 1)
+├── Children: 0
+├── Backprop Data: (nil)
+└── Backprop Function: (nil)
+
+z: [[37316.958460]]
+
+=== Grad Table (Entries: 6) ===
+Entry 0:
+  [NULL tensor]
+------------------------------
+Entry 1:
+  [NULL tensor]
+------------------------------
+Entry 2:
+  [NULL tensor]
+------------------------------
+Entry 3:
+  [NULL tensor]
+------------------------------
+Entry 4:
+  [NULL tensor]
+------------------------------
+Entry 5:
+  Tensor address: 0x562302ee4a80
+=== End of Grad Table ===
+
+Node: 0x562302ee26a0
+├── Grad Table Index: 0
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee2360 (operand 0)
+├── Children: 0
+├── Backprop Data: 0x405e800000000000
+└── Backprop Function: 0x405ec00000000000
+
+Node: 0x562302ee2360
+├── Grad Table Index: 3
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee4740 (operand 0)
+├── Children: 3
+│   ├── Child 0: 0x562302ee26a0
+│   ├── Child 1: 0x562302ee4040
+│   ├── Child 2: 0x562302ee4380
+├── Backprop Data: 0x562302ee46c0
+└── Backprop Function: 0x562301672bb3
+
+Node: 0x562302ee4040
+├── Grad Table Index: 1
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee2360 (operand 1)
+├── Children: 0
+├── Backprop Data: 0x4032000000000000
+└── Backprop Function: 0x4033000000000000
+
+Node: 0x562302ee4380
+├── Grad Table Index: 2
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee2360 (operand 2)
+├── Children: 0
+├── Backprop Data: 0x405e800000000000
+└── Backprop Function: 0x405ec00000000000
+
+Node: 0x562302ee4740
+├── Grad Table Index: 5
+├── Parents: 0
+├── Children: 2
+│   ├── Child 0: 0x562302ee2360
+│   ├── Child 1: 0x562302ee4b80
+├── Backprop Data: 0x562302ee4ec0
+└── Backprop Function: 0x56230167316d
+
+Node: 0x562302ee4b80
+├── Grad Table Index: 4
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee4740 (operand 1)
+├── Children: 0
+├── Backprop Data: (nil)
+└── Backprop Function: (nil)
+
+z: [[22492.470953]]
+
+=== Grad Table (Entries: 6) ===
+Entry 0:
+  [NULL tensor]
+------------------------------
+Entry 1:
+  [NULL tensor]
+------------------------------
+Entry 2:
+  [NULL tensor]
+------------------------------
+Entry 3:
+  [NULL tensor]
+------------------------------
+Entry 4:
+  [NULL tensor]
+------------------------------
+Entry 5:
+  Tensor address: 0x562302ee6760
+=== End of Grad Table ===
+
+Node: 0x562302ee4380
+├── Grad Table Index: 0
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee4040 (operand 0)
+├── Children: 0
+├── Backprop Data: 0x405e800000000000
+└── Backprop Function: 0x405ec00000000000
+
+Node: 0x562302ee4040
+├── Grad Table Index: 3
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee6420 (operand 0)
+├── Children: 3
+│   ├── Child 0: 0x562302ee4380
+│   ├── Child 1: 0x562302ee5d20
+│   ├── Child 2: 0x562302ee6060
+├── Backprop Data: 0x562302ee63a0
+└── Backprop Function: 0x562301672bb3
+
+Node: 0x562302ee5d20
+├── Grad Table Index: 1
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee4040 (operand 1)
+├── Children: 0
+├── Backprop Data: 0x4032000000000000
+└── Backprop Function: 0x4033000000000000
+
+Node: 0x562302ee6060
+├── Grad Table Index: 2
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee4040 (operand 2)
+├── Children: 0
+├── Backprop Data: 0x405e800000000000
+└── Backprop Function: 0x405ec00000000000
+
+Node: 0x562302ee6420
+├── Grad Table Index: 5
+├── Parents: 0
+├── Children: 2
+│   ├── Child 0: 0x562302ee4040
+│   ├── Child 1: 0x562302ee6860
+├── Backprop Data: 0x562302ee6ba0
+└── Backprop Function: 0x56230167316d
+
+Node: 0x562302ee6860
+├── Grad Table Index: 4
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee6420 (operand 1)
+├── Children: 0
+├── Backprop Data: (nil)
+└── Backprop Function: (nil)
+
+z: [[13557.588994]]
+
+=== Grad Table (Entries: 6) ===
+Entry 0:
+  [NULL tensor]
+------------------------------
+Entry 1:
+  [NULL tensor]
+------------------------------
+Entry 2:
+  [NULL tensor]
+------------------------------
+Entry 3:
+  [NULL tensor]
+------------------------------
+Entry 4:
+  [NULL tensor]
+------------------------------
+Entry 5:
+  Tensor address: 0x562302ee8440
+=== End of Grad Table ===
+
+Node: 0x562302ee6060
+├── Grad Table Index: 0
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee5d20 (operand 0)
+├── Children: 0
+├── Backprop Data: 0x405e800000000000
+└── Backprop Function: 0x405ec00000000000
+
+Node: 0x562302ee5d20
+├── Grad Table Index: 3
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee8100 (operand 0)
+├── Children: 3
+│   ├── Child 0: 0x562302ee6060
+│   ├── Child 1: 0x562302ee7a00
+│   ├── Child 2: 0x562302ee7d40
+├── Backprop Data: 0x562302ee8080
+└── Backprop Function: 0x562301672bb3
+
+Node: 0x562302ee7a00
+├── Grad Table Index: 1
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee5d20 (operand 1)
+├── Children: 0
+├── Backprop Data: 0x4032000000000000
+└── Backprop Function: 0x4033000000000000
+
+Node: 0x562302ee7d40
+├── Grad Table Index: 2
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee5d20 (operand 2)
+├── Children: 0
+├── Backprop Data: 0x405e800000000000
+└── Backprop Function: 0x405ec00000000000
+
+Node: 0x562302ee8100
+├── Grad Table Index: 5
+├── Parents: 0
+├── Children: 2
+│   ├── Child 0: 0x562302ee5d20
+│   ├── Child 1: 0x562302ee8540
+├── Backprop Data: 0x562302ee8880
+└── Backprop Function: 0x56230167316d
+
+Node: 0x562302ee8540
+├── Grad Table Index: 4
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee8100 (operand 1)
+├── Children: 0
+├── Backprop Data: (nil)
+└── Backprop Function: (nil)
+
+z: [[8172.437178]]
+
+=== Grad Table (Entries: 6) ===
+Entry 0:
+  [NULL tensor]
+------------------------------
+Entry 1:
+  [NULL tensor]
+------------------------------
+Entry 2:
+  [NULL tensor]
+------------------------------
+Entry 3:
+  [NULL tensor]
+------------------------------
+Entry 4:
+  [NULL tensor]
+------------------------------
+Entry 5:
+  Tensor address: 0x562302eea120
+=== End of Grad Table ===
+
+Node: 0x562302ee7d40
+├── Grad Table Index: 0
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee7a00 (operand 0)
+├── Children: 0
+├── Backprop Data: 0x405e800000000000
+└── Backprop Function: 0x405ec00000000000
+
+Node: 0x562302ee7a00
+├── Grad Table Index: 3
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee9de0 (operand 0)
+├── Children: 3
+│   ├── Child 0: 0x562302ee7d40
+│   ├── Child 1: 0x562302ee96e0
+│   ├── Child 2: 0x562302ee9a20
+├── Backprop Data: 0x562302ee9d60
+└── Backprop Function: 0x562301672bb3
+
+Node: 0x562302ee96e0
+├── Grad Table Index: 1
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee7a00 (operand 1)
+├── Children: 0
+├── Backprop Data: 0x4032000000000000
+└── Backprop Function: 0x4033000000000000
+
+Node: 0x562302ee9a20
+├── Grad Table Index: 2
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee7a00 (operand 2)
+├── Children: 0
+├── Backprop Data: 0x405e800000000000
+└── Backprop Function: 0x405ec00000000000
+
+Node: 0x562302ee9de0
+├── Grad Table Index: 5
+├── Parents: 0
+├── Children: 2
+│   ├── Child 0: 0x562302ee7a00
+│   ├── Child 1: 0x562302eea220
+├── Backprop Data: 0x562302eea560
+└── Backprop Function: 0x56230167316d
+
+Node: 0x562302eea220
+├── Grad Table Index: 4
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee9de0 (operand 1)
+├── Children: 0
+├── Backprop Data: (nil)
+└── Backprop Function: (nil)
+
+z: [[4926.746823]]
+
+=== Grad Table (Entries: 6) ===
+Entry 0:
+  [NULL tensor]
+------------------------------
+Entry 1:
+  [NULL tensor]
+------------------------------
+Entry 2:
+  [NULL tensor]
+------------------------------
+Entry 3:
+  [NULL tensor]
+------------------------------
+Entry 4:
+  [NULL tensor]
+------------------------------
+Entry 5:
+  Tensor address: 0x562302eebe00
+=== End of Grad Table ===
+
+Node: 0x562302ee9a20
+├── Grad Table Index: 0
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee96e0 (operand 0)
+├── Children: 0
+├── Backprop Data: 0x405e800000000000
+└── Backprop Function: 0x405ec00000000000
+
+Node: 0x562302ee96e0
+├── Grad Table Index: 3
+├── Parents: 1
+│   ├── Parent 0: 0x562302eebac0 (operand 0)
+├── Children: 3
+│   ├── Child 0: 0x562302ee9a20
+│   ├── Child 1: 0x562302eeb3c0
+│   ├── Child 2: 0x562302eeb700
+├── Backprop Data: 0x562302eeba40
+└── Backprop Function: 0x562301672bb3
+
+Node: 0x562302eeb3c0
+├── Grad Table Index: 1
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee96e0 (operand 1)
+├── Children: 0
+├── Backprop Data: 0x4032000000000000
+└── Backprop Function: 0x4033000000000000
+
+Node: 0x562302eeb700
+├── Grad Table Index: 2
+├── Parents: 1
+│   ├── Parent 0: 0x562302ee96e0 (operand 2)
+├── Children: 0
+├── Backprop Data: 0x405e800000000000
+└── Backprop Function: 0x405ec00000000000
+
+Node: 0x562302eebac0
+├── Grad Table Index: 5
+├── Parents: 0
+├── Children: 2
+│   ├── Child 0: 0x562302ee96e0
+│   ├── Child 1: 0x562302eebf00
+├── Backprop Data: 0x562302eec240
+└── Backprop Function: 0x56230167316d
+
+Node: 0x562302eebf00
+├── Grad Table Index: 4
+├── Parents: 1
+│   ├── Parent 0: 0x562302eebac0 (operand 1)
+├── Children: 0
+├── Backprop Data: (nil)
+└── Backprop Function: (nil)
+
+z: [[2970.533459]]
+
+=== Grad Table (Entries: 6) ===
+Entry 0:
+  [NULL tensor]
+------------------------------
+Entry 1:
+  [NULL tensor]
+------------------------------
+Entry 2:
+  [NULL tensor]
+------------------------------
+Entry 3:
+  [NULL tensor]
+------------------------------
+Entry 4:
+  [NULL tensor]
+------------------------------
+Entry 5:
+  Tensor address: 0x562302eedae0
+=== End of Grad Table ===
+
+Node: 0x562302eeb700
+├── Grad Table Index: 0
+├── Parents: 1
+│   ├── Parent 0: 0x562302eeb3c0 (operand 0)
+├── Children: 0
+├── Backprop Data: 0x405e800000000000
+└── Backprop Function: 0x405ec00000000000
+
+Node: 0x562302eeb3c0
+├── Grad Table Index: 3
+├── Parents: 1
+│   ├── Parent 0: 0x562302eed7a0 (operand 0)
+├── Children: 3
+│   ├── Child 0: 0x562302eeb700
+│   ├── Child 1: 0x562302eed0a0
+│   ├── Child 2: 0x562302eed3e0
+├── Backprop Data: 0x562302eed720
+└── Backprop Function: 0x562301672bb3
+
+Node: 0x562302eed0a0
+├── Grad Table Index: 1
+├── Parents: 1
+│   ├── Parent 0: 0x562302eeb3c0 (operand 1)
+├── Children: 0
+├── Backprop Data: 0x4032000000000000
+└── Backprop Function: 0x4033000000000000
+
+Node: 0x562302eed3e0
+├── Grad Table Index: 2
+├── Parents: 1
+│   ├── Parent 0: 0x562302eeb3c0 (operand 2)
+├── Children: 0
+├── Backprop Data: 0x405e800000000000
+└── Backprop Function: 0x405ec00000000000
+
+Node: 0x562302eed7a0
+├── Grad Table Index: 5
+├── Parents: 0
+├── Children: 2
+│   ├── Child 0: 0x562302eeb3c0
+│   ├── Child 1: 0x562302eedbe0
+├── Backprop Data: 0x562302eedf20
+└── Backprop Function: 0x56230167316d
+
+Node: 0x562302eedbe0
+├── Grad Table Index: 4
+├── Parents: 1
+│   ├── Parent 0: 0x562302eed7a0 (operand 1)
+├── Children: 0
+├── Backprop Data: (nil)
+└── Backprop Function: (nil)
+
+[[2.273537], [2.300563], [2.327589], [2.354615]]
+[[0.027026]]
