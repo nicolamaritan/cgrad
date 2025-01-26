@@ -15,6 +15,7 @@ computational_graph_node* computational_graph_node_alloc()
 computational_graph_node* computational_graph_node_tensor_alloc(tensor* t)
 {
     computational_graph_node* node = computational_graph_node_alloc();
+    t->node = node;
     node->t = t;
     return node;
 }

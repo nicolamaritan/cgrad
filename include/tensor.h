@@ -3,9 +3,14 @@
 
 #include <stddef.h>
 
-typedef struct {
+typedef struct computational_graph_node computational_graph_node;
+typedef struct tensor tensor;
+
+typedef struct tensor{
     double* data;
     size_t* shape;
+    computational_graph_node* node;
+    tensor* grad;
 } tensor;
 
 typedef enum {

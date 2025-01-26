@@ -16,24 +16,19 @@ void mse_loss(const tensor* const y_pred, const tensor* const y_target, tensor* 
     z->data[0] /= batch_size;
 }
 
-void mse_loss_graph(const tensor* const y_pred, const tensor* const y_target, tensor* const z, computational_graph_node* y_pred_node, computational_graph_node* z_node, grad_table* table)
+void mse_loss_graph(tensor* const y_pred, tensor* const y_target, tensor* const z)
 {
     mse_loss(y_pred, y_target, z);
 
-    computational_graph_node* y_target_node = computational_graph_node_alloc();
-    grad_table_entry y_target_entry;
-    y_target_entry.grad = NULL;
-    y_target_node->grad_table_index = table->n_entries;
-    y_target_node->t = (tensor*)y_target;
-    add_entry(table, y_target_entry);
+    computational_graph_node* y_pred_node = y_pred->node ? y_pred->node : computational_graph_node_tensor_alloc(y_pred);
+    computational_graph_node* y_target_node = y_target->node ? y_target->node : computational_graph_node_tensor_alloc(y_target);
 
-    grad_table_entry out_entry;
+    y_target_node->t = (tensor*)y_target;
+
+    computational_graph_node* z_node = computational_graph_node_tensor_alloc(z);
     tensor* one = tensor2d_alloc(1, 1);
     one->data[0] = 1;
-    out_entry.grad = one;
-    z_node->grad_table_index = table->n_entries;
-    z_node->t = (tensor*)y_pred;
-    add_entry(table, out_entry);    
+    z->grad = one;   
 
     // Setup connections
     add_parent(y_pred_node, z_node, MSE_PREDICTED);

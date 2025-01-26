@@ -2,7 +2,6 @@
 #define LINEAR
 
 #include "tensor.h"
-#include "grad_table.h"
 #include "computational_graph.h"
 #include <stddef.h>
 
@@ -21,7 +20,7 @@ typedef enum linear_layer_operand {
 
 linear_layer* linear_create(size_t in_dim, size_t out_dim);
 tensor* linear_backpropagate(const backpropagation_function_data* const data, const tensor* const D, size_t operand);
-void linear_forward_graph(const tensor* const x, const linear_layer* const layer, tensor* const out, computational_graph_node* x_node, computational_graph_node* out_node, target_computational_graph_nodes* const targets, grad_table* table);
+void linear_forward_graph(tensor* const x, linear_layer* const layer, tensor* const out, target_computational_graph_nodes* const targets);
 void linear_forward(const tensor* const x, const linear_layer* const layer, tensor* const out);
 void linear_free(linear_layer* layer);
 
