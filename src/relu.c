@@ -11,10 +11,16 @@ tensor* relu_backpropagate(const backpropagation_function_data* const data, cons
     double* out_data = out->data;
     size_t out_data_size = out->data_size;
     
-    // Gradient computation: drelu(x)/dx
+    /*
+        Gradient computation of dz/dX.
+        dz/dX is the Hadamard Product of D = dz/drelu(X) and drelu(X)/dX,
+        since element (i, j) of relu(X) depends only on element (i, j) of X.
+    */
+    
     for (size_t i = 0; i < out_data_size; i++)
     {
-        out_data[i] = x_data[i] > 0 ? 1 : 0;
+        // Element wise product
+        out_data[i] = (x_data[i] > 0 ? 1 : 0) * D->data[i];
     }
 
     return out;

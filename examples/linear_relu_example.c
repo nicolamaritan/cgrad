@@ -5,6 +5,7 @@
 #include "backpropagation.h"
 #include "tensor.h"
 #include "sgd.h"
+#include "random.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -50,39 +51,61 @@ int main()
     // print_tensor(x);
     // print_tensor(y);
 
+    init_random();
+
     size_t in_dim = 4;
     size_t out_dim = 1;
     linear_layer *linear1 = linear_create(in_dim, out_dim);
+    linear_xavier_init(linear1);
 
-    size_t epochs = 5;
+    size_t epochs = 1000;
     for (size_t i = 0; i < epochs; i++)
     {
-        print_tensor(linear1->weights);
 
         target_computational_graph_nodes targets;
         targets.size = 0;
 
-        computational_graph_node *x_node = computational_graph_node_alloc();
-        //x_node->grad_table_index = table.n_entries;
-        x_node->t = x;
-
         tensor *h1 = tensor2d_alloc(batch_size, out_dim);
         linear_forward_graph(x, linear1, h1, &targets);
-        printf("h1: ");
-        print_tensor(h1);
+        // printf("h1: ");
+        // print_tensor(h1);
+        // printf("\n\n");
 
         tensor *h2 = tensor2d_alloc(batch_size, out_dim);
         relu_forward_graph(h1, h2);
-        printf("h2: ");
-        print_tensor(h2);
+        // printf("h2: ");
+        // print_tensor(h2);
+        // printf("\n\n");
 
         tensor *z = tensor2d_alloc(1, 1);
         mse_loss_graph(h2, y_target, z);
 
         printf("z: ");
         print_tensor(z);
+        printf("\n\n");
 
         backpropagation(&targets);
+
+        printf("z->grad:\n");
+        print_tensor(z->grad);
+        printf("\nh2->grad:\n");
+        print_tensor(h2->grad);
+        printf("\nh1->grad:\n");
+        print_tensor(h1->grad);
+        printf("\nlinear1->weights->grad:\n");
+        print_tensor(linear1->weights->grad);
+        printf("\nlinear1->biaeses->grad:\n");
+        print_tensor(linear1->biases->grad);
+        printf("\n");
+
+        print_computational_graph_node(x->node);
+        print_computational_graph_node(h1->node);
+        print_computational_graph_node(h1->node->children[1]);
+        print_computational_graph_node(h1->node->children[2]);
+        print_computational_graph_node(h1->node->parents[0]);
+        print_computational_graph_node(h2->node);
+        print_computational_graph_node(z->node);
+        print_computational_graph_node(z->node->children[1]);
 
         sgd_step(0.00001, &targets);
 
@@ -92,6 +115,13 @@ int main()
         linear1->weights->node = NULL;
         free(linear1->biases->node);
         linear1->biases->node = NULL;
+
+        free(x->node);
+        x->node = NULL;
+        free(y_target->node);
+        y_target->node = NULL;
+        free(z->node);
+        z->node = NULL;
     }
 
     print_tensor(linear1->weights);
