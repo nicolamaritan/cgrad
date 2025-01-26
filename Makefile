@@ -1,15 +1,20 @@
 CC = gcc
 CFLAGS = -Wall -Iinclude
-LDFLAGS = -lblas
+LDFLAGS = -lblas -lm
+
 SRC = $(wildcard src/*.c)
 OBJ = $(SRC:.c=.o)
-EXAMPLES = examples/linear_example.c
 
-all: $(OBJ) $(EXAMPLES)
-	$(CC) $(OBJ) $(EXAMPLES) -o linear_example $(CFLAGS) $(LDFLAGS)
+EXAMPLES = $(wildcard examples/*.c)
+EXECS = $(EXAMPLES:.c=)  # Converts .c to executable names without extension
+
+all: $(OBJ) $(EXECS)
+
+examples/%: examples/%.c $(OBJ)
+	$(CC) $(OBJ) $< -o $@ $(CFLAGS) $(LDFLAGS)
 
 src/%.o: src/%.c
 	$(CC) -c $< -o $@ $(CFLAGS)
 
 clean:
-	rm -f src/*.o linear_example
+	rm -f src/*.o examples/linear_example examples/linear_relu_example

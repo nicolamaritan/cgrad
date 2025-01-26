@@ -2,6 +2,7 @@
 #define TENSOR
 
 #include <stddef.h>
+#include <stdbool.h>
 
 typedef struct computational_graph_node computational_graph_node;
 typedef struct tensor tensor;
@@ -9,6 +10,8 @@ typedef struct tensor tensor;
 typedef struct tensor{
     double* data;
     size_t* shape;
+    size_t data_size;
+    size_t shape_size;
     computational_graph_node* node;
     tensor* grad;
 } tensor;
@@ -23,6 +26,7 @@ typedef enum {
 } tensor_error;
 
 tensor* tensor2d_alloc(size_t rows, size_t cols);
+tensor* tensor2d_alloc_like(tensor* t);
 void tensor_free(tensor* t);
 static inline void tensor2d_set_unchecked(tensor* t, size_t row, size_t col, double value);
 static inline tensor_error tensor2d_set(tensor* t, size_t row, size_t col, double value);
@@ -35,6 +39,7 @@ void tensor_add_inplace(tensor* A, const tensor* const B);
 void tensor2d_add_row_vector(tensor* const A, const tensor* const v);
 void tensor_copy(const tensor* const src, tensor* dest);
 tensor* tensor_clone(const tensor* const src);
+bool tensor_same_shape(const tensor* const A, const tensor* const B);
 
 static inline void tensor2d_set_unchecked(tensor* t, size_t row, size_t col, double value) 
 {
