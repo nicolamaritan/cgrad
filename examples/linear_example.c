@@ -96,6 +96,8 @@ int main()
 
         sgd_step(0.00001, &table, &targets);
 
+        zero_grad(z);
+
         free(linear1->weights->node);
         linear1->weights->node = NULL;
         free(linear1->biases->node);

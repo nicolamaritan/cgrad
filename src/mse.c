@@ -34,9 +34,10 @@ void mse_loss_graph(tensor* const y_pred, tensor* const y_target, tensor* const 
     grad_table_entry out_entry;
     tensor* one = tensor2d_alloc(1, 1);
     one->data[0] = 1;
+    z->grad = one;
     out_entry.grad = one;
     z_node->grad_table_index = table->n_entries;
-    z_node->t = (tensor*)y_pred;
+    //z_node->t = (tensor*)y_pred;
     add_entry(table, out_entry);    
 
     // Setup connections

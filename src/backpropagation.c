@@ -12,10 +12,12 @@ void backpropagation(target_computational_graph_nodes* const targets, grad_table
 
 tensor* build_grad(const computational_graph_node* const node, grad_table* const table)
 {
-    if (table->entries[node->grad_table_index].grad)
+    if (node->t->grad)
     {
-        return table->entries[node->grad_table_index].grad;
+        // return table->entries[node->grad_table_index].grad;
+        return node->t->grad;
     }
+    // print_computational_graph_node(node);
 
     tensor* parents_G[node->n_parents];
 
@@ -32,6 +34,32 @@ tensor* build_grad(const computational_graph_node* const node, grad_table* const
     {
         tensor_add_inplace(G, parents_G[i]);
     }
-    table->entries[node->grad_table_index].grad = G;
+    //table->entries[node->grad_table_index].grad = G;
+    node->t->grad = G;
     return G;
+}
+
+void zero_grad(tensor* const root)
+{
+    zero_grad_node(root->node);
+}
+
+void zero_grad_node(computational_graph_node* const root)
+{
+    // print_computational_graph_node(root);
+    //print_tensor(root->t->grad);
+
+    if (!root->t->grad)
+        return;
+
+    // printf("freeing...\n");
+    tensor_free(root->t->grad);
+    // printf("freed\n\n\n");
+    root->t->grad = NULL;
+
+    size_t n_children = root->n_children;
+    for (size_t i = 0; i < n_children; i++)
+    {
+        zero_grad_node(root->children[i]);
+    }
 }
