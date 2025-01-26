@@ -1,4 +1,6 @@
 #include "linear.h"
+#include "random.h"
+#include "math.h"
 #include <stdio.h>
 #include <cblas.h>
 #include <stdlib.h>
@@ -107,6 +109,21 @@ void linear_forward(const tensor* const x, const linear_layer* const layer, tens
 {
     tensor2d_mult(x, layer->weights, out);
     tensor2d_add_row_vector(out, layer->biases);
+}
+
+void linear_xavier_init(linear_layer* layer)
+{
+    double* data = layer->weights->data;
+    size_t in_dim = layer->in_dim;
+    size_t out_dim = layer->out_dim;
+    size_t data_size = layer->weights->data_size;
+
+    double xavier_init_bound = sqrt(6.0 / (in_dim + out_dim));
+
+    for (size_t i = 0; i < data_size; i++)
+    {
+        data[i] = sample_uniform(-xavier_init_bound, xavier_init_bound);
+    }
 }
 
 void linear_free(linear_layer* layer) 

@@ -22,6 +22,7 @@ linear_layer* linear_create(size_t in_dim, size_t out_dim);
 tensor* linear_backpropagate(const backpropagation_function_data* const data, const tensor* const D, size_t operand);
 void linear_forward_graph(tensor* const x, linear_layer* const layer, tensor* const out, target_computational_graph_nodes* const targets);
 void linear_forward(const tensor* const x, const linear_layer* const layer, tensor* const out);
+void linear_xavier_init(linear_layer* layer);
 void linear_free(linear_layer* layer);
 
 #endif

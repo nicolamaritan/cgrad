@@ -4,11 +4,14 @@
 #include "backpropagation.h"
 #include "tensor.h"
 #include "sgd.h"
+#include "random.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 int main()
 {
+    init_random();
+
     const size_t batch_size = 128;
 
     // Allocate tensors x (128x4) and y (128x1)
@@ -50,6 +53,9 @@ int main()
     size_t in_dim = 4;
     size_t out_dim = 1;
     linear_layer *linear1 = linear_create(in_dim, out_dim);
+    linear_xavier_init(linear1);
+
+    print_tensor(linear1->weights);
 
     size_t epochs = 100000;
     for (size_t i = 0; i < epochs; i++)
