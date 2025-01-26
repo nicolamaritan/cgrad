@@ -22,7 +22,7 @@ linear_layer* linear_create(size_t in_dim, size_t out_dim)
     return layer;
 }
 
-void linear_forward_graph( tensor* const x, linear_layer* const layer, tensor* const out, target_computational_graph_nodes* const targets, grad_table* table)
+void linear_forward_graph( tensor* const x, linear_layer* const layer, tensor* const out, target_computational_graph_nodes* const targets)
 {
     linear_forward(x, layer, out);
 
@@ -35,27 +35,7 @@ void linear_forward_graph( tensor* const x, linear_layer* const layer, tensor* c
     computational_graph_node* weights_node = weights->node ? weights->node : computational_graph_node_tensor_alloc(weights);
     computational_graph_node* biases_node = biases->node ? biases->node : computational_graph_node_tensor_alloc(biases);
 
-    // computational_graph_node* weights_node = computational_graph_node_alloc();
-    // computational_graph_node* biases_node = computational_graph_node_alloc();
-
-    grad_table_entry weights_entry;
-    weights_entry.grad = NULL;
-    weights_node->grad_table_index = table->n_entries;
-    add_entry(table, weights_entry);
-
-    grad_table_entry biases_entry;
-    biases_entry.grad = NULL;
-    biases_node->grad_table_index = table->n_entries;
-    add_entry(table, biases_entry);
-
     computational_graph_node* out_node = computational_graph_node_tensor_alloc(out);
-
-    grad_table_entry out_entry;
-    out_entry.grad = NULL;
-    //out_entry.grad = tensor2d_alloc(out->shape[0], out->shape[1]);
-    out_node->grad_table_index = table->n_entries;
-    //out_node->t = out;
-    add_entry(table, out_entry);    
 
     // Setup connections
     add_parent(x_node, out_node, PREDICTED);

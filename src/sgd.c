@@ -1,6 +1,6 @@
 #include "sgd.h"
 
-void sgd_step(double lr, grad_table* table, target_computational_graph_nodes* targets)
+void sgd_step(double lr, target_computational_graph_nodes* targets)
 {
     for (size_t i = 0; i < targets->size; i++)
     {

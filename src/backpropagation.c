@@ -1,16 +1,16 @@
 #include "backpropagation.h"
 #include <stdio.h>
 
-void backpropagation(target_computational_graph_nodes* const targets, grad_table* const table)
+void backpropagation(target_computational_graph_nodes* const targets)
 {
     size_t size = targets->size;
     for (size_t i = 0; i < size; i++)
     {
-        build_grad(targets->targets[i], table);
+        build_grad(targets->targets[i]);
     }
 }
 
-tensor* build_grad(const computational_graph_node* const node, grad_table* const table)
+tensor* build_grad(const computational_graph_node* const node)
 {
     if (node->t->grad)
     {
@@ -23,7 +23,7 @@ tensor* build_grad(const computational_graph_node* const node, grad_table* const
 
     for (size_t i = 0; i < node->n_parents; i++)
     {
-        tensor* D = build_grad(node->parents[i], table);
+        tensor* D = build_grad(node->parents[i]);
         size_t operand = node->parents_operands[i];     // Operand info is stored in current node
         backpropagation_function_data* data = node->parents[i]->data;
         parents_G[i] = node->parents[i]->function(data, D, operand);

@@ -54,25 +54,18 @@ int main()
     size_t epochs = 100000;
     for (size_t i = 0; i < epochs; i++)
     {
-        // With graph
-        grad_table table;
-        init_grad_table(&table);
-
         target_computational_graph_nodes targets;
         targets.size = 0;
 
         computational_graph_node *x_node = computational_graph_node_alloc();
-        x_node->grad_table_index = table.n_entries;
+        //x_node->grad_table_index = table.n_entries;
         x_node->t = x;
 
-        grad_table_entry x_entry;
-        add_entry(&table, x_entry);
-
         tensor *h1 = tensor2d_alloc(batch_size, out_dim);
-        linear_forward_graph(x, linear1, h1, &targets, &table);
+        linear_forward_graph(x, linear1, h1, &targets);
 
         tensor *z = tensor2d_alloc(1, 1);
-        mse_loss_graph(h1, y_target, z, &table);
+        mse_loss_graph(h1, y_target, z);
 
         //printf("h1: ");
         //print_tensor(h1);
@@ -91,10 +84,10 @@ int main()
         // print_computational_graph_node(h1_node->parents[0]);
         // print_computational_graph_node(z_node->children[1]);
 
-        backpropagation(&targets, &table);
+        backpropagation(&targets);
         // grad_table_print(&table);
 
-        sgd_step(0.00001, &table, &targets);
+        sgd_step(0.00001, &targets);
 
         zero_grad(z);
 
