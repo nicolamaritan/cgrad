@@ -86,27 +86,6 @@ int main()
 
         backpropagation(&targets);
 
-        printf("z->grad:\n");
-        print_tensor(z->grad);
-        printf("\nh2->grad:\n");
-        print_tensor(h2->grad);
-        printf("\nh1->grad:\n");
-        print_tensor(h1->grad);
-        printf("\nlinear1->weights->grad:\n");
-        print_tensor(linear1->weights->grad);
-        printf("\nlinear1->biaeses->grad:\n");
-        print_tensor(linear1->biases->grad);
-        printf("\n");
-
-        print_computational_graph_node(x->node);
-        print_computational_graph_node(h1->node);
-        print_computational_graph_node(h1->node->children[1]);
-        print_computational_graph_node(h1->node->children[2]);
-        print_computational_graph_node(h1->node->parents[0]);
-        print_computational_graph_node(h2->node);
-        print_computational_graph_node(z->node);
-        print_computational_graph_node(z->node->children[1]);
-
         sgd_step(0.00001, &targets);
 
         zero_grad(z);
