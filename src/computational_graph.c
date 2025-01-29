@@ -71,7 +71,6 @@ void print_computational_graph_node(const computational_graph_node* node)
     }
 
     printf("Node: %p\n", (void*)node);
-    printf("├── Grad Table Index: %zu\n", node->grad_table_index);
     printf("├── Parents: %zu\n", node->n_parents);
     for (size_t i = 0; i < node->n_parents; i++) {
         printf("│   ├── Parent %zu: %p (operand %zu)\n", 

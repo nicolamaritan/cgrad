@@ -26,8 +26,17 @@ tensor* tensor2d_alloc(size_t rows, size_t cols)
     t->shape = shape;
     t->node = NULL;
     t->grad = NULL;
-    
+    t->data_size = rows * cols;
+    t->shape_size = 2;
+
     return t;
+}
+
+tensor* tensor2d_alloc_like(tensor* t)
+{
+    if (!t->shape) return NULL;
+    if (!t->shape[0] || !t->shape[1]) return NULL;
+    return tensor2d_alloc(t->shape[0], t->shape[1]);
 }
 
 void tensor_free(tensor* t)
@@ -181,6 +190,24 @@ void tensor_add_inplace(tensor* A, const tensor* const B)
     for (size_t i = 0; i < rows * cols; i++) {
         A->data[i] += B->data[i];
     }
+}
+
+bool tensor_same_shape(const tensor* const A, const tensor* const B)
+{
+    if (A->shape_size != B->shape_size)
+    {
+        return false;
+    }
+
+    size_t shape_size = A->shape_size;
+    for (size_t i = 0; i < shape_size; i++)
+    {
+        if (A->shape[i] != B->shape[i])
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 void print_tensor_recursive(const double* data, const size_t* shape, size_t dimensions, size_t offset) {
