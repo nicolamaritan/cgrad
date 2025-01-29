@@ -1,12 +1,11 @@
 #include "sgd.h"
 
-void sgd_step(double lr, target_computational_graph_nodes* targets)
+void sgd_step(double lr, backpropagation_targets* targets)
 {
     for (size_t i = 0; i < targets->size; i++)
     {
-        computational_graph_node* target = targets->targets[i];
-        // tensor* gradient = table->entries[target->grad_table_index].grad;
-        tensor* gradient = target->t->grad;
+        tensor* target = targets->targets[i];
+        tensor* gradient = target->grad;
 
         // Compute number of elements in tensor
         size_t gradient_size = 1;
@@ -21,6 +20,6 @@ void sgd_step(double lr, target_computational_graph_nodes* targets)
             data[i] *= -lr;
         }
 
-        tensor_add_inplace(target->t, gradient);
+        tensor_add_inplace(target, gradient);
     }
 }

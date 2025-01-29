@@ -22,23 +22,10 @@ typedef struct computational_graph_node
     backpropagation_function function;
 } computational_graph_node;
 
-typedef struct 
-{
-    computational_graph_node* targets[MAX_TARGETS];
-    size_t size;
-} target_computational_graph_nodes;
-
-typedef struct 
-{
-    computational_graph_node* root;
-    size_t size;
-} computational_graph;
-
 computational_graph_node* computational_graph_node_alloc();
 computational_graph_node* computational_graph_node_tensor_alloc(tensor* t);
 int add_child(computational_graph_node* const node,  computational_graph_node* const child);
 int add_parent(computational_graph_node* const node,  computational_graph_node* const parent, const size_t operand);
-int add_target(target_computational_graph_nodes* const targets, computational_graph_node* const node);
 void print_computational_graph_node(const computational_graph_node* node);
 
 

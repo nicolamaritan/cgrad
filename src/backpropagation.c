@@ -4,12 +4,12 @@
 static tensor* build_grad(const computational_graph_node* const node);
 static void zero_grad_node(computational_graph_node* const root);
 
-void backpropagate(target_computational_graph_nodes* const targets)
+void backpropagate(backpropagation_targets* const targets)
 {
     size_t size = targets->size;
     for (size_t i = 0; i < size; i++)
     {
-        build_grad(targets->targets[i]);
+        build_grad(targets->targets[i]->node);
     }
 }
 
@@ -65,4 +65,18 @@ void zero_grad_node(computational_graph_node* const root)
     {
         zero_grad_node(root->children[i]);
     }
+}
+
+int add_target(backpropagation_targets* const targets, tensor* const node)
+{
+    size_t const size = targets->size;
+    if (size >= MAX_TARGETS)
+    {
+        return 1;
+    }
+
+    targets->targets[size] = node;
+    targets->size++;
+
+    return 0;
 }

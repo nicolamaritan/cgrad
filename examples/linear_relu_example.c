@@ -62,7 +62,7 @@ int main()
     for (size_t i = 0; i < epochs; i++)
     {
 
-        target_computational_graph_nodes targets;
+        backpropagation_targets targets;
         targets.size = 0;
 
         tensor *h1 = tensor2d_alloc(batch_size, out_dim);

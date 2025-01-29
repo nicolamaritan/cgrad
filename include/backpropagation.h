@@ -3,7 +3,14 @@
 
 #include "computational_graph.h"
 
-void backpropagate(target_computational_graph_nodes* const targets);
+typedef struct 
+{
+    tensor* targets[MAX_TARGETS];
+    size_t size;
+} backpropagation_targets;
+
+void backpropagate(backpropagation_targets* const targets);
 void zero_grad(tensor* const root);
+int add_target(backpropagation_targets* const targets, tensor* const node);
 
 #endif

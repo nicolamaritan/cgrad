@@ -1,6 +1,6 @@
 #include "linear.h"
 #include "random.h"
-#include "math.h"
+#include <math.h>
 #include <stdio.h>
 #include <cblas.h>
 #include <stdlib.h>
@@ -24,7 +24,7 @@ linear_layer* linear_create(size_t in_dim, size_t out_dim)
     return layer;
 }
 
-void linear_forward_graph( tensor* const x, linear_layer* const layer, tensor* const out, target_computational_graph_nodes* const targets)
+void linear_forward_graph( tensor* const x, linear_layer* const layer, tensor* const out, backpropagation_targets* const targets)
 {
     linear_forward(x, layer, out);
 
@@ -48,8 +48,8 @@ void linear_forward_graph( tensor* const x, linear_layer* const layer, tensor* c
     add_child(out_node, biases_node);
 
     // Setup targets
-    add_target(targets, weights_node);
-    add_target(targets, biases_node);
+    add_target(targets, weights);
+    add_target(targets, biases);
 
     backpropagation_function_data* data = malloc(sizeof(backpropagation_function_data));
     data->layer = (void*)layer;
