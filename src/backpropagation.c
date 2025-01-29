@@ -1,7 +1,10 @@
 #include "backpropagation.h"
 #include <stdio.h>
 
-void backpropagation(target_computational_graph_nodes* const targets)
+static tensor* build_grad(const computational_graph_node* const node);
+static void zero_grad_node(computational_graph_node* const root);
+
+void backpropagate(target_computational_graph_nodes* const targets)
 {
     size_t size = targets->size;
     for (size_t i = 0; i < size; i++)

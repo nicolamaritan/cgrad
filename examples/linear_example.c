@@ -57,7 +57,7 @@ int main()
 
     print_tensor(linear1->weights);
 
-    size_t epochs = 3;
+    size_t epochs = 10000;
     for (size_t i = 0; i < epochs; i++)
     {
         target_computational_graph_nodes targets;
@@ -90,18 +90,18 @@ int main()
         // print_computational_graph_node(h1_node->parents[0]);
         // print_computational_graph_node(z_node->children[1]);
 
-        backpropagation(&targets);
+        backpropagate(&targets);
         // grad_table_print(&table);
 
-        printf("z->grad:\n");
-        print_tensor(z->grad);
-        printf("\nh1->grad:\n");
-        print_tensor(h1->grad);
-        printf("\nlinear1->weights->grad:\n");
-        print_tensor(linear1->weights->grad);
-        printf("\nlinear1->biaeses->grad:\n");
-        print_tensor(linear1->biases->grad);
-        printf("\n");
+        // printf("z->grad:\n");
+        // print_tensor(z->grad);
+        // printf("\nh1->grad:\n");
+        // print_tensor(h1->grad);
+        // printf("\nlinear1->weights->grad:\n");
+        // print_tensor(linear1->weights->grad);
+        // printf("\nlinear1->biaeses->grad:\n");
+        // print_tensor(linear1->biases->grad);
+        // printf("\n");
 
         sgd_step(0.00001, &targets);
 

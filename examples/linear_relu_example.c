@@ -84,7 +84,7 @@ int main()
         print_tensor(z);
         printf("\n\n");
 
-        backpropagation(&targets);
+        backpropagate(&targets);
 
         sgd_step(0.00001, &targets);
 
