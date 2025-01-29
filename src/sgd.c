@@ -6,14 +6,9 @@ void sgd_step(double lr, backpropagation_targets* targets)
     {
         tensor* target = targets->targets[i];
         tensor* gradient = target->grad;
+        size_t gradient_size = gradient->data_size;
 
-        // Compute number of elements in tensor
-        size_t gradient_size = 1;
-        for (size_t i = 0; gradient->shape[i]; i++)
-        {
-            gradient_size *= gradient->shape[i];
-        }
-
+        // Ineficient, currently i am passing twice the gradient data. TODO create helper function for single pass
         double* data = gradient->data;
         for (size_t i = 0; i < gradient_size; i++)
         {
