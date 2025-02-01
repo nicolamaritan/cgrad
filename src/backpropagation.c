@@ -1,4 +1,5 @@
 #include "backpropagation.h"
+#include "computational_graph.h"
 #include <stdio.h>
 
 static tensor* build_grad(const computational_graph_node* const node);

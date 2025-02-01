@@ -19,5 +19,6 @@ typedef struct
 void mse_loss(const tensor* const y_pred, const tensor* const y_target, tensor* const z);
 void mse_loss_graph(tensor* const y_pred, tensor* const y_target, tensor* const out);
 tensor* mse_loss_backpropagate(const backpropagation_function_data* const data, const tensor* const D, size_t operand);
+void free_mse_backpropagation_function_data(backpropagation_function_data* data);
 
 #endif

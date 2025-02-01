@@ -1,7 +1,9 @@
 #ifndef BACKPROPAGATION_H
 #define BACKPROPAGATION_H
 
-#include "computational_graph.h"
+#include "tensor.h"
+
+#define MAX_TARGETS 1024
 
 typedef struct 
 {

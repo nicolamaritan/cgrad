@@ -20,6 +20,23 @@ computational_graph_node* computational_graph_node_tensor_alloc(tensor* t)
     return node;
 }
 
+// void free_computational_graph(computational_graph_node* root)
+// {
+    
+// }
+
+void free_computational_graph_node(computational_graph_node* node)
+{
+    /*
+        We allow node->free to be NULL to avoid free functions
+        that do nothing, e.g. in the linear layer.
+    */
+    if (node->free_data)
+        node->free_data(node->data);
+
+    free(node->data);
+}
+
 int add_child(computational_graph_node* const node, computational_graph_node* const child)
 {
     size_t const n_children = node->n_children;

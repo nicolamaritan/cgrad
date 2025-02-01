@@ -47,6 +47,8 @@ void mse_loss_graph(tensor* const y_pred, tensor* const y_target, tensor* const 
 
     backpropagation_function function = (backpropagation_function)&mse_loss_backpropagate;
     z_node->function = function;
+
+    z_node->free_data = (backpropagation_function_data_cleanup)&free_mse_backpropagation_function_data;
 }
 
 tensor* mse_loss_backpropagate(const backpropagation_function_data* const data, const tensor* const D, size_t operand)
@@ -70,4 +72,10 @@ tensor* mse_loss_backpropagate(const backpropagation_function_data* const data, 
     }
 
     return out;
+}
+
+void free_mse_backpropagation_function_data(backpropagation_function_data* data)
+{
+    // data->inputs points to a mse_inputs allocation, so we free it but not the prediction and target tensors
+    free(data->inputs);    
 }
