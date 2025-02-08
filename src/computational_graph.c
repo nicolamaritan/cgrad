@@ -8,6 +8,8 @@ computational_graph_node* computational_graph_node_alloc()
     node->n_children = 0;
     node->n_parents = 0;
     node->t = NULL;
+    node->is_involved_in_backprop = false;
+    node->is_grad_computed = false;
 
     return node;
 }

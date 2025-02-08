@@ -58,15 +58,17 @@ int main()
     linear_layer *linear1 = linear_create(in_dim, out_dim);
     linear_xavier_init(linear1);
 
+    // TODO work on a better interface
+    model_params params;
+    params.size = 0;
+    add_param(&params, linear1->weights);
+    add_param(&params, linear1->biases);
+
     size_t epochs = 1000;
     for (size_t i = 0; i < epochs; i++)
     {
-
-        backpropagation_targets targets;
-        targets.size = 0;
-
         tensor *h1 = tensor2d_alloc(batch_size, out_dim);
-        linear_forward_graph(x, linear1, h1, &targets);
+        linear_forward_graph(x, linear1, h1);
         // printf("h1: ");
         // print_tensor(h1);
         // printf("\n\n");
@@ -84,9 +86,9 @@ int main()
         print_tensor(z);
         printf("\n\n");
 
-        backpropagate(&targets);
+        backward(z);
 
-        sgd_step(0.00001, &targets);
+        sgd_step(0.00001, &params);
 
         zero_grad(z);
 
@@ -110,4 +112,6 @@ int main()
     tensor_free(x);
     tensor_free(y_target);
     return 0;
+    
+   return 0;
 }

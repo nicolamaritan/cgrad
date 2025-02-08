@@ -2,7 +2,8 @@
 #define SGD_H
 
 #include "backpropagation.h"
+#include "model_params.h"
 
-void sgd_step(double lr, backpropagation_targets* targets);
+void sgd_step(double lr, model_params* params);
 
 #endif

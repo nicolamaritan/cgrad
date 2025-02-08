@@ -2,6 +2,7 @@
 #include "mse.h"
 #include "computational_graph.h"
 #include "backpropagation.h"
+#include "model_params.h"
 #include "tensor.h"
 #include "sgd.h"
 #include "random.h"
@@ -17,12 +18,12 @@ int main()
     // Allocate tensors x (128x4) and y (128x1)
     tensor *x = tensor2d_alloc(batch_size, 4);
     tensor *y_target = tensor2d_alloc(batch_size, 1);
-    if (!x || !y_target)
-    {
-        tensor_free(x); // Handles NULL gracefully
-        tensor_free(y_target);
-        return 1; // Allocation failed
-    }
+    // if (!x || !y_target)
+    // {
+    //     tensor_free(x); // Handles NULL gracefully
+    //     tensor_free(y_target);
+    //     return 1; // Allocation failed
+    // }
 
     // Example: Define weights for the linear relationship (y = x0*1 + x1*2 + x2*3 + x3*4)
     const double weights[] = {1.0, 2.0, 3.0, 4.0};
@@ -57,14 +58,21 @@ int main()
 
     print_tensor(linear1->weights);
 
+    // TODO work on a better interface
+    model_params params;
+    params.size = 0;
+    add_param(&params, linear1->weights);
+    add_param(&params, linear1->biases);
+
     size_t epochs = 300000;
     for (size_t i = 0; i < epochs; i++)
     {
-        backpropagation_targets targets;
-        targets.size = 0;
+        // backpropagation_targets targets;
+        // targets.size = 0;
+        // printf("iter %ld\n", i);
 
         tensor *h1 = tensor2d_alloc(batch_size, out_dim);
-        linear_forward_graph(x, linear1, h1, &targets);
+        linear_forward_graph(x, linear1, h1);
 
         tensor *z = tensor2d_alloc(1, 1);
         mse_loss_graph(h1, y_target, z);
@@ -79,9 +87,10 @@ int main()
         print_tensor(z);
 
 
-        backpropagate(&targets);
+        // backpropagate(&targets);
+        backward(z);
 
-        sgd_step(0.00001, &targets);
+        sgd_step(0.00001, &params);
 
         zero_grad(z);
 

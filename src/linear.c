@@ -24,7 +24,7 @@ linear_layer* linear_create(size_t in_dim, size_t out_dim)
     return layer;
 }
 
-void linear_forward_graph( tensor* const x, linear_layer* const layer, tensor* const out, backpropagation_targets* const targets)
+void linear_forward_graph( tensor* const x, linear_layer* const layer, tensor* const out)
 {
     linear_forward(x, layer, out);
 
@@ -46,10 +46,6 @@ void linear_forward_graph( tensor* const x, linear_layer* const layer, tensor* c
     add_child(out_node, x_node);
     add_child(out_node, weights_node);
     add_child(out_node, biases_node);
-
-    // Setup targets
-    add_target(targets, weights);
-    add_target(targets, biases);
 
     backpropagation_function_data* data = malloc(sizeof(backpropagation_function_data));
     data->layer = (void*)layer;

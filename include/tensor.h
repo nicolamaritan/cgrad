@@ -26,6 +26,8 @@ typedef enum {
 } tensor_error;
 
 tensor* tensor2d_alloc(size_t rows, size_t cols);
+tensor* tensor2d_no_grad_alloc(size_t rows, size_t cols);
+tensor* tensor2d_no_grad_zero_alloc(size_t rows, size_t cols);
 tensor* tensor2d_alloc_like(tensor* t);
 void tensor_free(tensor* t);
 static inline void tensor2d_set_unchecked(tensor* t, size_t row, size_t col, double value);

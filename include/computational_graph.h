@@ -2,6 +2,7 @@
 #define COMPUTATIONAL_GRAPH
 
 #include "backpropagation_function.h"
+#include <stdbool.h>
 
 #define MAX_PARENTS 32
 #define MAX_CHILDREN 32
@@ -12,7 +13,6 @@ typedef struct computational_graph_node computational_graph_node;
 typedef struct computational_graph_node
 {
     tensor* t;
-    size_t grad_table_index;
     size_t n_parents;
     size_t n_children;
     computational_graph_node* parents[MAX_PARENTS];
@@ -21,6 +21,8 @@ typedef struct computational_graph_node
     backpropagation_function_data* data;
     backpropagation_function function;
     backpropagation_function_data_cleanup free_data;
+    bool is_involved_in_backprop;
+    bool is_grad_computed;
 } computational_graph_node;
 
 computational_graph_node* computational_graph_node_alloc();

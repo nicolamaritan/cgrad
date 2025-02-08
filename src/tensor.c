@@ -7,6 +7,13 @@
 
 tensor* tensor2d_alloc(size_t rows, size_t cols)
 {
+    tensor* t = tensor2d_no_grad_alloc(rows, cols);
+    t->grad = tensor2d_no_grad_zero_alloc(rows, cols);
+    return t;
+}
+
+tensor* tensor2d_no_grad_alloc(size_t rows, size_t cols)
+{
     tensor* t = (tensor*)malloc(sizeof(tensor));
     double* data = (double*)malloc(rows * cols * sizeof(double));
     size_t* shape = (size_t*)malloc(3 * sizeof(size_t));
@@ -25,11 +32,38 @@ tensor* tensor2d_alloc(size_t rows, size_t cols)
     t->data = data;
     t->shape = shape;
     t->node = NULL;
-    t->grad = NULL;
     t->data_size = rows * cols;
     t->shape_size = 2;
-
+    t->grad = NULL;
+    
     return t;
+}
+
+tensor* tensor2d_no_grad_zero_alloc(size_t rows, size_t cols)
+{
+    tensor* t = (tensor*)malloc(sizeof(tensor));
+    double* data = (double*)calloc(rows * cols, sizeof(double));    // Ensure 0 for all cells
+    size_t* shape = (size_t*)malloc(3 * sizeof(size_t));
+    shape[2] = 0;
+
+    if (!shape || !data || !t)
+    {
+        fprintf(stderr, "Error: Memory allocation failed.\n");
+        return NULL;
+    }
+
+    // Set the 2 dimensions
+    shape[0] = rows;
+    shape[1] = cols;
+
+    t->data = data;
+    t->shape = shape;
+    t->node = NULL;
+    t->data_size = rows * cols;
+    t->shape_size = 2;
+    t->grad = NULL;
+    
+    return t; 
 }
 
 tensor* tensor2d_alloc_like(tensor* t)
