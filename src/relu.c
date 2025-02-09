@@ -1,5 +1,6 @@
 #include "relu.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 tensor* relu_backpropagate(const backpropagation_function_data* const data, const tensor* const D, size_t operand)
 {
@@ -44,6 +45,8 @@ void relu_forward_graph(tensor* const x, tensor* const out)
 
     backpropagation_function function = (backpropagation_function)&relu_backpropagate;
     out_node->function = function;
+
+    out_node->free_data = (backpropagation_function_data_cleanup)&free_relu_backpropagation_function_data;
 }
 
 void relu_forward(const tensor* const x, tensor* const out)
@@ -62,4 +65,11 @@ void relu_forward(const tensor* const x, tensor* const out)
     {
         out_data[i] = x_data[i] > 0 ? x_data[i] : 0;
     }
+}
+
+void free_relu_backpropagation_function_data(backpropagation_function_data* data)
+{
+    printf("Relu free invoked\n");
+    free(data);
+    printf("Relu free ended\n");
 }
