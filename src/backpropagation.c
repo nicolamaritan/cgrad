@@ -12,19 +12,29 @@ typedef struct
 } backpropagation_targets;
 
 //static tensor* build_grad_old(const computational_graph_node* const node);
-static void zero_grad_node(computational_graph_node* const root);
+//static void zero_grad_node(computational_graph_node* const root);
 static void identify_backpropagation_nodes(computational_graph_node* const node, backpropagation_targets* targets);
 static tensor* build_gradient(computational_graph_node* const node);
 static void build_gradients(backpropagation_targets* const targets);
 int add_target(backpropagation_targets* const targets, computational_graph_node* const node);
 
-void backward(tensor* t)
+void backward(tensor* t, bool retain_graph)
 {
     backpropagation_targets targets;
     targets.size = 0;
 
     identify_backpropagation_nodes(t->node, &targets);
     build_gradients(&targets);
+
+    if (retain_graph)
+        return;
+
+    for (size_t i = 0; i < targets.size; i++)
+    {
+        computational_graph_node* node = targets.targets[i];
+        node->t->node = NULL;
+        free_computational_graph_node(node);
+    }
 }
 
 // void backpropagate(backpropagation_targets* const targets)
@@ -110,7 +120,7 @@ static void build_gradients(backpropagation_targets* const targets)
     }
 }
 
-void zero_grad(tensor* const root)
+/*void zero_grad(tensor* const root)
 {
     zero_grad_node(root->node);
 }
@@ -135,6 +145,7 @@ void zero_grad_node(computational_graph_node* const root)
         zero_grad_node(root->children[i]);
     }
 }
+*/
 
 int add_target(backpropagation_targets* const targets, computational_graph_node* const node)
 {

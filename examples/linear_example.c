@@ -64,7 +64,7 @@ int main()
     add_param(&params, linear1->weights);
     add_param(&params, linear1->biases);
 
-    size_t epochs = 300000;
+    size_t epochs = 200000;
     for (size_t i = 0; i < epochs; i++)
     {
         // backpropagation_targets targets;
@@ -88,16 +88,18 @@ int main()
 
 
         // backpropagate(&targets);
-        backward(z);
-
+        zero_grad(&params);        
+        backward(z, false);
         sgd_step(0.00001, &params);
 
-        zero_grad(z);
-
-        free(linear1->weights->node);
-        linear1->weights->node = NULL;
-        free(linear1->biases->node);
-        linear1->biases->node = NULL;
+        // free(linear1->weights->node);
+        // linear1->weights->node = NULL;
+        // free(linear1->biases->node);
+        // linear1->biases->node = NULL;
+        // free(y_target->node);
+        // y_target->node = NULL;
+        tensor_free(h1);
+        tensor_free(z);
     }
 
     print_tensor(linear1->weights);

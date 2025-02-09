@@ -76,6 +76,9 @@ tensor* mse_loss_backpropagate(const backpropagation_function_data* const data, 
 
 void free_mse_backpropagation_function_data(backpropagation_function_data* data)
 {
+    printf("MSE free invoked\n");
     // data->inputs points to a mse_inputs allocation, so we free it but not the prediction and target tensors
-    free(data->inputs);    
+    free(data->inputs);
+    free(data);
+    printf("MSE free ended\n");
 }

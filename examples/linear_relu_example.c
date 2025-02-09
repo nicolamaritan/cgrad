@@ -86,11 +86,9 @@ int main()
         print_tensor(z);
         printf("\n\n");
 
-        backward(z);
-
+        zero_grad(&params);        
+        backward(z, false);
         sgd_step(0.00001, &params);
-
-        zero_grad(z);
 
         free(linear1->weights->node);
         linear1->weights->node = NULL;

@@ -36,7 +36,8 @@ void free_computational_graph_node(computational_graph_node* node)
     if (node->free_data)
         node->free_data(node->data);
 
-    free(node->data);
+    //free(node->data);
+    free(node);
 }
 
 int add_child(computational_graph_node* const node, computational_graph_node* const child)
