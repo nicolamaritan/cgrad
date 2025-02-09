@@ -8,6 +8,9 @@ computational_graph_node* computational_graph_node_alloc()
     node->n_children = 0;
     node->n_parents = 0;
     node->t = NULL;
+    node->data = NULL;
+    node->free_data = NULL;
+    node->function = NULL;
     node->is_involved_in_backprop = false;
     node->is_grad_computed = false;
 
@@ -31,7 +34,7 @@ void free_computational_graph_node(computational_graph_node* node)
 {
     /*
         We allow node->free to be NULL to avoid free functions
-        that do nothing, e.g. in the linear layer.
+        that do nothing.
     */
     if (node->free_data)
         node->free_data(node->data);

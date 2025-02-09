@@ -86,18 +86,11 @@ int main()
         printf("z: ");
         print_tensor(z);
 
-
         // backpropagate(&targets);
         zero_grad(&params);        
         backward(z, false);
         sgd_step(0.00001, &params);
 
-        // free(linear1->weights->node);
-        // linear1->weights->node = NULL;
-        // free(linear1->biases->node);
-        // linear1->biases->node = NULL;
-        // free(y_target->node);
-        // y_target->node = NULL;
         tensor_free(h1);
         tensor_free(z);
     }

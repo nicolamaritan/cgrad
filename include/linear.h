@@ -25,5 +25,7 @@ void linear_forward_graph(tensor* const x, linear_layer* const layer, tensor* co
 void linear_forward(const tensor* const x, const linear_layer* const layer, tensor* const out);
 void linear_xavier_init(linear_layer* layer);
 void linear_free(linear_layer* layer);
+void free_linear_backpropagation_function_data(backpropagation_function_data* data);
+
 
 #endif
