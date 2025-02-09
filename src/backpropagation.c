@@ -105,7 +105,7 @@ static tensor* build_gradient(computational_graph_node* const node)
         // printf("node->t->grad: %p\n", node->t->grad);
         // printf("parent_i_gradient: %p\n", parent_i_gradient);
         tensor_add_inplace(node->t->grad, parent_i_gradient);
-        tensor_no_grad_free(parent_i_gradient);
+        tensor_free(parent_i_gradient);
     }
    
     node->is_grad_computed = true;

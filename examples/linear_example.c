@@ -8,6 +8,7 @@
 #include "random.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 int main()
 {
@@ -64,7 +65,7 @@ int main()
     add_param(&params, linear1->weights);
     add_param(&params, linear1->biases);
 
-    size_t epochs = 300000;
+    size_t epochs = 1000000;
     for (size_t i = 0; i < epochs; i++)
     {
         // backpropagation_targets targets;
@@ -93,6 +94,8 @@ int main()
 
         tensor_free(h1);
         tensor_free(z);
+
+        assert(!x->node && !h1->node && !linear1->weights->node && !linear1->biases->node && !y_target->node && !z->node);
     }
 
     print_tensor(linear1->weights);

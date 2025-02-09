@@ -55,7 +55,6 @@ void linear_forward_graph( tensor* const x, linear_layer* const layer, tensor* c
     backpropagation_function function = (backpropagation_function)&linear_backpropagate;
     out_node->function = function;
 
-    // We don't free the data as it is composed by the layer and tensor x
     out_node->free_data = (backpropagation_function_data_cleanup)&free_linear_backpropagation_function_data;
 }
 

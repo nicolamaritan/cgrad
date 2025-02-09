@@ -79,13 +79,18 @@ void tensor_free(tensor* t)
     free(t->shape);
     
     if (t->grad)
+    {
         tensor_no_grad_free(t->grad);
+    }
+    
+    free(t);
 }
 
 void tensor_no_grad_free(tensor* t)
 {
     free(t->data);
     free(t->shape);
+    free(t);
 }
 
 tensor_error tensor2d_mult(const tensor* const A, const tensor* const B, tensor* const out)

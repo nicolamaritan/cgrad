@@ -26,7 +26,7 @@ void mse_loss_graph(tensor* const y_pred, tensor* const y_target, tensor* const 
     y_target_node->t = (tensor*)y_target;
 
     computational_graph_node* z_node = computational_graph_node_tensor_alloc(z);
-    tensor* one = tensor2d_alloc(1, 1);
+    tensor* one = tensor2d_no_grad_alloc(1, 1);
     one->data[0] = 1;
     z->grad = one;   
 
@@ -56,7 +56,7 @@ tensor* mse_loss_backpropagate(const backpropagation_function_data* const data, 
     mse_inputs* input = (mse_inputs*)data->inputs;
 
     double batch_size = input->target->shape[0];
-    tensor* out = tensor2d_alloc(batch_size, 1);
+    tensor* out = tensor2d_no_grad_alloc(batch_size, 1);
     for (size_t i = 0; i < batch_size; i++)
     {
         out->data[i] = (input->predicted->data[i] - input->target->data[i]) / batch_size;
