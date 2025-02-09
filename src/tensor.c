@@ -77,7 +77,9 @@ void tensor_free(tensor* t)
 {
     free(t->data);
     free(t->shape);
-    tensor_no_grad_free(t->grad);
+    
+    if (t->grad)
+        tensor_no_grad_free(t->grad);
 }
 
 void tensor_no_grad_free(tensor* t)

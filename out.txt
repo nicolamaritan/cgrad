@@ -1,5002 +1,5002 @@
-z: [[58894.833576]]
+z: [[37289.609625]]
 
 
 MSE free invoked
 MSE free ended
-z: [[52998.017115]]
+z: [[33556.065855]]
 
 
 MSE free invoked
 MSE free ended
-z: [[47691.634685]]
+z: [[30196.352830]]
 
 
 MSE free invoked
 MSE free ended
-z: [[42916.567549]]
+z: [[27173.039779]]
 
 
 MSE free invoked
 MSE free ended
-z: [[38619.616385]]
+z: [[24452.443781]]
 
 
 MSE free invoked
 MSE free ended
-z: [[34752.908593]]
+z: [[22004.254507]]
 
 
 MSE free invoked
 MSE free ended
-z: [[31273.364939]]
+z: [[19801.196527]]
 
 
 MSE free invoked
 MSE free ended
-z: [[28142.219611]]
+z: [[17818.725436]]
 
 
 MSE free invoked
 MSE free ended
-z: [[25324.588322]]
+z: [[16034.754399]]
 
 
 MSE free invoked
 MSE free ended
-z: [[22789.079667]]
+z: [[14429.408083]]
 
 
 MSE free invoked
 MSE free ended
-z: [[20507.445386]]
+z: [[12984.801226]]
 
 
 MSE free invoked
 MSE free ended
-z: [[18454.265649]]
+z: [[11684.839372]]
 
 
 MSE free invoked
 MSE free ended
-z: [[16606.665852]]
+z: [[10515.039566]]
 
 
 MSE free invoked
 MSE free ended
-z: [[14944.061771]]
+z: [[9462.368994]]
 
 
 MSE free invoked
 MSE free ended
-z: [[13447.930231]]
+z: [[8515.099789]]
 
 
 MSE free invoked
 MSE free ended
-z: [[12101.602736]]
+z: [[7662.678366]]
 
 
 MSE free invoked
 MSE free ended
-z: [[10890.079769]]
+z: [[6895.607844]]
 
 
 MSE free invoked
 MSE free ended
-z: [[9799.863676]]
+z: [[6205.342244]]
 
 
 MSE free invoked
 MSE free ended
-z: [[8818.808292]]
+z: [[5584.191273]]
 
 
 MSE free invoked
 MSE free ended
-z: [[7935.983619]]
+z: [[5025.234650]]
 
 
 MSE free invoked
 MSE free ended
-z: [[7141.554051]]
+z: [[4522.245005]]
 
 
 MSE free invoked
 MSE free ended
-z: [[6426.668800]]
+z: [[4069.618498]]
 
 
 MSE free invoked
 MSE free ended
-z: [[5783.363284]]
+z: [[3662.312391]]
 
 
 MSE free invoked
 MSE free ended
-z: [[5204.470398]]
+z: [[3295.788860]]
 
 
 MSE free invoked
 MSE free ended
-z: [[4683.540659]]
+z: [[2965.964445]]
 
 
 MSE free invoked
 MSE free ended
-z: [[4214.770357]]
+z: [[2669.164551]]
 
 
 MSE free invoked
 MSE free ended
-z: [[3792.936894]]
+z: [[2402.082513]]
 
 
 MSE free invoked
 MSE free ended
-z: [[3413.340596]]
+z: [[2161.742753]]
 
 
 MSE free invoked
 MSE free ended
-z: [[3071.752359]]
+z: [[1945.467631]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2764.366526]]
+z: [[1750.847614]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2487.758493]]
+z: [[1575.714426]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2238.846553]]
+z: [[1418.116900]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2014.857563]]
+z: [[1276.299232]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1813.296047]]
+z: [[1148.681422]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1631.916398]]
+z: [[1033.841673]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1468.697853]]
+z: [[930.500548]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1321.821985]]
+z: [[837.506718]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1189.652440]]
+z: [[753.824133]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1070.716710]]
+z: [[678.520481]]
 
 
 MSE free invoked
 MSE free ended
-z: [[963.689725]]
+z: [[610.756799]]
 
 
 MSE free invoked
 MSE free ended
-z: [[867.379091]]
+z: [[549.778127]]
 
 
 MSE free invoked
 MSE free ended
-z: [[780.711806]]
+z: [[494.905101]]
 
 
 MSE free invoked
 MSE free ended
-z: [[702.722304]]
+z: [[445.526375]]
 
 
 MSE free invoked
 MSE free ended
-z: [[632.541700]]
+z: [[401.091818]]
 
 
 MSE free invoked
 MSE free ended
-z: [[569.388107]]
+z: [[361.106384]]
 
 
 MSE free invoked
 MSE free ended
-z: [[512.557928]]
+z: [[325.124592]]
 
 
 MSE free invoked
 MSE free ended
-z: [[461.418015]]
+z: [[292.745566]]
 
 
 MSE free invoked
 MSE free ended
-z: [[415.398614]]
+z: [[263.608572]]
 
 
 MSE free invoked
 MSE free ended
-z: [[373.987022]]
+z: [[237.388991]]
 
 
 MSE free invoked
 MSE free ended
-z: [[336.721870]]
+z: [[213.794710]]
 
 
 MSE free invoked
 MSE free ended
-z: [[303.187985]]
+z: [[192.562865]]
 
 
 MSE free invoked
 MSE free ended
-z: [[273.011763]]
+z: [[173.456910]]
 
 
 MSE free invoked
 MSE free ended
-z: [[245.857010]]
+z: [[156.263985]]
 
 
 MSE free invoked
 MSE free ended
-z: [[221.421194]]
+z: [[140.792543]]
 
 
 MSE free invoked
 MSE free ended
-z: [[199.432074]]
+z: [[126.870216]]
 
 
 MSE free invoked
 MSE free ended
-z: [[179.644669]]
+z: [[114.341895]]
 
 
 MSE free invoked
 MSE free ended
-z: [[161.838525]]
+z: [[103.068001]]
 
 
 MSE free invoked
 MSE free ended
-z: [[145.815264]]
+z: [[92.922932]]
 
 
 MSE free invoked
 MSE free ended
-z: [[131.396371]]
+z: [[83.793661]]
 
 
 MSE free invoked
 MSE free ended
-z: [[118.421203]]
+z: [[75.578478]]
 
 
 MSE free invoked
 MSE free ended
-z: [[106.745204]]
+z: [[68.185859]]
 
 
 MSE free invoked
 MSE free ended
-z: [[96.238291]]
+z: [[61.533442]]
 
 
 MSE free invoked
 MSE free ended
-z: [[86.783407]]
+z: [[55.547112]]
 
 
 MSE free invoked
 MSE free ended
-z: [[78.275215]]
+z: [[50.160176]]
 
 
 MSE free invoked
 MSE free ended
-z: [[70.618923]]
+z: [[45.312617]]
 
 
 MSE free invoked
 MSE free ended
-z: [[63.729235]]
+z: [[40.950430]]
 
 
 MSE free invoked
 MSE free ended
-z: [[57.529391]]
+z: [[37.025014]]
 
 
 MSE free invoked
 MSE free ended
-z: [[51.950319]]
+z: [[33.492638]]
 
 
 MSE free invoked
 MSE free ended
-z: [[46.929863]]
+z: [[30.313947]]
 
 
 MSE free invoked
 MSE free ended
-z: [[42.412090]]
+z: [[27.453527]]
 
 
 MSE free invoked
 MSE free ended
-z: [[38.346667]]
+z: [[24.879511]]
 
 
 MSE free invoked
 MSE free ended
-z: [[34.688301]]
+z: [[22.563222]]
 
 
 MSE free invoked
 MSE free ended
-z: [[31.396236]]
+z: [[20.478854]]
 
 
 MSE free invoked
 MSE free ended
-z: [[28.433794]]
+z: [[18.603186]]
 
 
 MSE free invoked
 MSE free ended
-z: [[25.767971]]
+z: [[16.915320]]
 
 
 MSE free invoked
 MSE free ended
-z: [[23.369067]]
+z: [[15.396453]]
 
 
 MSE free invoked
 MSE free ended
-z: [[21.210356]]
+z: [[14.029664]]
 
 
 MSE free invoked
 MSE free ended
-z: [[19.267788]]
+z: [[12.799724]]
 
 
 MSE free invoked
 MSE free ended
-z: [[17.519721]]
+z: [[11.692932]]
 
 
 MSE free invoked
 MSE free ended
-z: [[15.946681]]
+z: [[10.696957]]
 
 
 MSE free invoked
 MSE free ended
-z: [[14.531142]]
+z: [[9.800704]]
 
 
 MSE free invoked
 MSE free ended
-z: [[13.257335]]
+z: [[8.994187]]
 
 
 MSE free invoked
 MSE free ended
-z: [[12.111067]]
+z: [[8.268422]]
 
 
 MSE free invoked
 MSE free ended
-z: [[11.079569]]
+z: [[7.615322]]
 
 
 MSE free invoked
 MSE free ended
-z: [[10.151349]]
+z: [[7.027612]]
 
 
 MSE free invoked
 MSE free ended
-z: [[9.316066]]
+z: [[6.498746]]
 
 
 MSE free invoked
 MSE free ended
-z: [[8.564415]]
+z: [[6.022830]]
 
 
 MSE free invoked
 MSE free ended
-z: [[7.888021]]
+z: [[5.594563]]
 
 
 MSE free invoked
 MSE free ended
-z: [[7.279350]]
+z: [[5.209174]]
 
 
 MSE free invoked
 MSE free ended
-z: [[6.731620]]
+z: [[4.862370]]
 
 
 MSE free invoked
 MSE free ended
-z: [[6.238729]]
+z: [[4.550288]]
 
 
 MSE free invoked
 MSE free ended
-z: [[5.795187]]
+z: [[4.269450]]
 
 
 MSE free invoked
 MSE free ended
-z: [[5.396053]]
+z: [[4.016729]]
 
 
 MSE free invoked
 MSE free ended
-z: [[5.036880]]
+z: [[3.789308]]
 
 
 MSE free invoked
 MSE free ended
-z: [[4.713666]]
+z: [[3.584656]]
 
 
 MSE free invoked
 MSE free ended
-z: [[4.422812]]
+z: [[3.400492]]
 
 
 MSE free invoked
 MSE free ended
-z: [[4.161077]]
+z: [[3.234764]]
 
 
 MSE free invoked
 MSE free ended
-z: [[3.925545]]
+z: [[3.085627]]
 
 
 MSE free invoked
 MSE free ended
-z: [[3.713593]]
+z: [[2.951420]]
 
 
 MSE free invoked
 MSE free ended
-z: [[3.522860]]
+z: [[2.830647]]
 
 
 MSE free invoked
 MSE free ended
-z: [[3.351222]]
+z: [[2.721964]]
 
 
 MSE free invoked
 MSE free ended
-z: [[3.196766]]
+z: [[2.624159]]
 
 
 MSE free invoked
 MSE free ended
-z: [[3.057771]]
+z: [[2.536145]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2.932691]]
+z: [[2.456940]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2.820131]]
+z: [[2.385662]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2.718839]]
+z: [[2.321518]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2.627685]]
+z: [[2.263793]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2.545654]]
+z: [[2.211845]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2.471834]]
+z: [[2.165095]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2.405402]]
+z: [[2.123022]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2.345619]]
+z: [[2.085159]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2.291818]]
+z: [[2.051084]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2.243400]]
+z: [[2.020418]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2.199827]]
+z: [[1.992819]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2.160614]]
+z: [[1.967980]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2.125324]]
+z: [[1.945625]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2.093563]]
+z: [[1.925505]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2.064980]]
+z: [[1.907397]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2.039255]]
+z: [[1.891098]]
 
 
 MSE free invoked
 MSE free ended
-z: [[2.016103]]
+z: [[1.876428]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.995265]]
+z: [[1.863224]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.976511]]
+z: [[1.851338]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.959631]]
+z: [[1.840640]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.944437]]
+z: [[1.831009]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.930762]]
+z: [[1.822339]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.918453]]
+z: [[1.814535]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.907373]]
+z: [[1.807508]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.897398]]
+z: [[1.801182]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.888420]]
+z: [[1.795486]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.880337]]
+z: [[1.790357]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.873059]]
+z: [[1.785739]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.866508]]
+z: [[1.781579]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.860608]]
+z: [[1.777833]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.855297]]
+z: [[1.774459]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.850513]]
+z: [[1.771419]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.846206]]
+z: [[1.768681]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.842326]]
+z: [[1.766213]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.838831]]
+z: [[1.763989]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.835683]]
+z: [[1.761985]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.832847]]
+z: [[1.760178]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.830291]]
+z: [[1.758549]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.827988]]
+z: [[1.757080]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.825912]]
+z: [[1.755755]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.824041]]
+z: [[1.754559]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.822354]]
+z: [[1.753479]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.820832]]
+z: [[1.752505]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.819460]]
+z: [[1.751625]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.818221]]
+z: [[1.750829]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.817103]]
+z: [[1.750110]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.816094]]
+z: [[1.749460]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.815182]]
+z: [[1.748872]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.814358]]
+z: [[1.748339]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.813614]]
+z: [[1.747857]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.812941]]
+z: [[1.747419]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.812331]]
+z: [[1.747023]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.811780]]
+z: [[1.746662]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.811280]]
+z: [[1.746335]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.810827]]
+z: [[1.746037]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.810416]]
+z: [[1.745765]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.810043]]
+z: [[1.745518]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.809703]]
+z: [[1.745292]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.809395]]
+z: [[1.745086]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.809114]]
+z: [[1.744897]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.808858]]
+z: [[1.744723]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.808624]]
+z: [[1.744564]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.808410]]
+z: [[1.744418]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.808214]]
+z: [[1.744283]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.808034]]
+z: [[1.744158]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.807870]]
+z: [[1.744042]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.807718]]
+z: [[1.743935]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.807578]]
+z: [[1.743836]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.807449]]
+z: [[1.743743]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.807329]]
+z: [[1.743656]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.807218]]
+z: [[1.743574]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.807115]]
+z: [[1.743498]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.807019]]
+z: [[1.743426]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.806929]]
+z: [[1.743358]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.806844]]
+z: [[1.743293]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.806765]]
+z: [[1.743232]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.806690]]
+z: [[1.743174]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.806620]]
+z: [[1.743118]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.806553]]
+z: [[1.743065]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.806490]]
+z: [[1.743013]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.806429]]
+z: [[1.742964]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.806372]]
+z: [[1.742916]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.806316]]
+z: [[1.742870]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.806263]]
+z: [[1.742826]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.806212]]
+z: [[1.742782]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.806163]]
+z: [[1.742740]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.806115]]
+z: [[1.742699]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.806069]]
+z: [[1.742658]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.806024]]
+z: [[1.742619]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805980]]
+z: [[1.742580]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805937]]
+z: [[1.742542]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805895]]
+z: [[1.742504]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805854]]
+z: [[1.742467]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805814]]
+z: [[1.742430]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805774]]
+z: [[1.742394]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805735]]
+z: [[1.742358]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805697]]
+z: [[1.742323]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805659]]
+z: [[1.742288]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805621]]
+z: [[1.742253]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805584]]
+z: [[1.742219]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805548]]
+z: [[1.742184]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805511]]
+z: [[1.742150]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805475]]
+z: [[1.742116]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805439]]
+z: [[1.742082]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805404]]
+z: [[1.742049]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805369]]
+z: [[1.742015]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805333]]
+z: [[1.741982]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805298]]
+z: [[1.741949]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805264]]
+z: [[1.741916]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805229]]
+z: [[1.741883]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805194]]
+z: [[1.741850]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805160]]
+z: [[1.741817]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805126]]
+z: [[1.741784]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805091]]
+z: [[1.741751]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805057]]
+z: [[1.741719]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.805023]]
+z: [[1.741686]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804989]]
+z: [[1.741653]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804955]]
+z: [[1.741621]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804921]]
+z: [[1.741588]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804888]]
+z: [[1.741556]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804854]]
+z: [[1.741523]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804820]]
+z: [[1.741491]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804786]]
+z: [[1.741458]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804753]]
+z: [[1.741426]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804719]]
+z: [[1.741394]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804685]]
+z: [[1.741361]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804652]]
+z: [[1.741329]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804618]]
+z: [[1.741297]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804585]]
+z: [[1.741264]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804551]]
+z: [[1.741232]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804518]]
+z: [[1.741200]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804484]]
+z: [[1.741167]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804451]]
+z: [[1.741135]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804417]]
+z: [[1.741103]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804384]]
+z: [[1.741070]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804350]]
+z: [[1.741038]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804317]]
+z: [[1.741006]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804283]]
+z: [[1.740974]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804250]]
+z: [[1.740941]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804216]]
+z: [[1.740909]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804183]]
+z: [[1.740877]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804149]]
+z: [[1.740845]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804116]]
+z: [[1.740812]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804083]]
+z: [[1.740780]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804049]]
+z: [[1.740748]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.804016]]
+z: [[1.740716]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803982]]
+z: [[1.740684]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803949]]
+z: [[1.740651]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803916]]
+z: [[1.740619]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803882]]
+z: [[1.740587]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803849]]
+z: [[1.740555]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803815]]
+z: [[1.740522]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803782]]
+z: [[1.740490]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803749]]
+z: [[1.740458]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803715]]
+z: [[1.740426]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803682]]
+z: [[1.740394]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803648]]
+z: [[1.740361]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803615]]
+z: [[1.740329]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803582]]
+z: [[1.740297]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803548]]
+z: [[1.740265]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803515]]
+z: [[1.740233]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803482]]
+z: [[1.740200]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803448]]
+z: [[1.740168]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803415]]
+z: [[1.740136]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803381]]
+z: [[1.740104]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803348]]
+z: [[1.740072]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803315]]
+z: [[1.740039]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803281]]
+z: [[1.740007]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803248]]
+z: [[1.739975]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803215]]
+z: [[1.739943]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803181]]
+z: [[1.739911]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803148]]
+z: [[1.739878]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803114]]
+z: [[1.739846]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803081]]
+z: [[1.739814]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803048]]
+z: [[1.739782]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.803014]]
+z: [[1.739750]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802981]]
+z: [[1.739717]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802948]]
+z: [[1.739685]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802914]]
+z: [[1.739653]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802881]]
+z: [[1.739621]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802848]]
+z: [[1.739589]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802814]]
+z: [[1.739556]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802781]]
+z: [[1.739524]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802748]]
+z: [[1.739492]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802714]]
+z: [[1.739460]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802681]]
+z: [[1.739428]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802647]]
+z: [[1.739395]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802614]]
+z: [[1.739363]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802581]]
+z: [[1.739331]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802547]]
+z: [[1.739299]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802514]]
+z: [[1.739267]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802481]]
+z: [[1.739235]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802447]]
+z: [[1.739202]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802414]]
+z: [[1.739170]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802381]]
+z: [[1.739138]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802347]]
+z: [[1.739106]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802314]]
+z: [[1.739074]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802281]]
+z: [[1.739041]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802247]]
+z: [[1.739009]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802214]]
+z: [[1.738977]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802181]]
+z: [[1.738945]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802147]]
+z: [[1.738913]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802114]]
+z: [[1.738881]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802080]]
+z: [[1.738848]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802047]]
+z: [[1.738816]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.802014]]
+z: [[1.738784]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801980]]
+z: [[1.738752]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801947]]
+z: [[1.738720]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801914]]
+z: [[1.738688]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801880]]
+z: [[1.738655]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801847]]
+z: [[1.738623]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801814]]
+z: [[1.738591]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801780]]
+z: [[1.738559]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801747]]
+z: [[1.738527]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801714]]
+z: [[1.738495]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801680]]
+z: [[1.738462]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801647]]
+z: [[1.738430]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801614]]
+z: [[1.738398]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801580]]
+z: [[1.738366]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801547]]
+z: [[1.738334]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801514]]
+z: [[1.738302]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801480]]
+z: [[1.738269]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801447]]
+z: [[1.738237]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801414]]
+z: [[1.738205]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801380]]
+z: [[1.738173]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801347]]
+z: [[1.738141]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801314]]
+z: [[1.738109]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801280]]
+z: [[1.738076]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801247]]
+z: [[1.738044]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801214]]
+z: [[1.738012]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801180]]
+z: [[1.737980]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801147]]
+z: [[1.737948]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801114]]
+z: [[1.737916]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801080]]
+z: [[1.737883]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801047]]
+z: [[1.737851]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.801014]]
+z: [[1.737819]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800980]]
+z: [[1.737787]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800947]]
+z: [[1.737755]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800914]]
+z: [[1.737723]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800880]]
+z: [[1.737691]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800847]]
+z: [[1.737658]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800814]]
+z: [[1.737626]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800781]]
+z: [[1.737594]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800747]]
+z: [[1.737562]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800714]]
+z: [[1.737530]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800681]]
+z: [[1.737498]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800647]]
+z: [[1.737465]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800614]]
+z: [[1.737433]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800581]]
+z: [[1.737401]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800547]]
+z: [[1.737369]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800514]]
+z: [[1.737337]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800481]]
+z: [[1.737305]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800447]]
+z: [[1.737273]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800414]]
+z: [[1.737240]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800381]]
+z: [[1.737208]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800347]]
+z: [[1.737176]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800314]]
+z: [[1.737144]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800281]]
+z: [[1.737112]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800247]]
+z: [[1.737080]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800214]]
+z: [[1.737048]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800181]]
+z: [[1.737015]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800148]]
+z: [[1.736983]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800114]]
+z: [[1.736951]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800081]]
+z: [[1.736919]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800048]]
+z: [[1.736887]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.800014]]
+z: [[1.736855]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799981]]
+z: [[1.736823]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799948]]
+z: [[1.736790]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799914]]
+z: [[1.736758]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799881]]
+z: [[1.736726]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799848]]
+z: [[1.736694]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799814]]
+z: [[1.736662]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799781]]
+z: [[1.736630]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799748]]
+z: [[1.736598]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799715]]
+z: [[1.736566]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799681]]
+z: [[1.736533]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799648]]
+z: [[1.736501]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799615]]
+z: [[1.736469]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799581]]
+z: [[1.736437]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799548]]
+z: [[1.736405]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799515]]
+z: [[1.736373]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799481]]
+z: [[1.736341]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799448]]
+z: [[1.736308]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799415]]
+z: [[1.736276]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799382]]
+z: [[1.736244]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799348]]
+z: [[1.736212]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799315]]
+z: [[1.736180]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799282]]
+z: [[1.736148]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799248]]
+z: [[1.736116]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799215]]
+z: [[1.736084]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799182]]
+z: [[1.736051]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799149]]
+z: [[1.736019]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799115]]
+z: [[1.735987]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799082]]
+z: [[1.735955]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799049]]
+z: [[1.735923]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.799015]]
+z: [[1.735891]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798982]]
+z: [[1.735859]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798949]]
+z: [[1.735827]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798916]]
+z: [[1.735795]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798882]]
+z: [[1.735762]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798849]]
+z: [[1.735730]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798816]]
+z: [[1.735698]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798782]]
+z: [[1.735666]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798749]]
+z: [[1.735634]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798716]]
+z: [[1.735602]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798683]]
+z: [[1.735570]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798649]]
+z: [[1.735538]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798616]]
+z: [[1.735505]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798583]]
+z: [[1.735473]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798549]]
+z: [[1.735441]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798516]]
+z: [[1.735409]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798483]]
+z: [[1.735377]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798450]]
+z: [[1.735345]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798416]]
+z: [[1.735313]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798383]]
+z: [[1.735281]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798350]]
+z: [[1.735249]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798316]]
+z: [[1.735216]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798283]]
+z: [[1.735184]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798250]]
+z: [[1.735152]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798217]]
+z: [[1.735120]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798183]]
+z: [[1.735088]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798150]]
+z: [[1.735056]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798117]]
+z: [[1.735024]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798084]]
+z: [[1.734992]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798050]]
+z: [[1.734960]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.798017]]
+z: [[1.734928]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797984]]
+z: [[1.734895]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797950]]
+z: [[1.734863]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797917]]
+z: [[1.734831]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797884]]
+z: [[1.734799]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797851]]
+z: [[1.734767]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797817]]
+z: [[1.734735]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797784]]
+z: [[1.734703]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797751]]
+z: [[1.734671]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797718]]
+z: [[1.734639]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797684]]
+z: [[1.734607]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797651]]
+z: [[1.734574]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797618]]
+z: [[1.734542]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797585]]
+z: [[1.734510]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797551]]
+z: [[1.734478]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797518]]
+z: [[1.734446]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797485]]
+z: [[1.734414]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797452]]
+z: [[1.734382]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797418]]
+z: [[1.734350]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797385]]
+z: [[1.734318]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797352]]
+z: [[1.734286]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797318]]
+z: [[1.734254]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797285]]
+z: [[1.734221]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797252]]
+z: [[1.734189]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797219]]
+z: [[1.734157]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797185]]
+z: [[1.734125]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797152]]
+z: [[1.734093]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797119]]
+z: [[1.734061]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797086]]
+z: [[1.734029]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797052]]
+z: [[1.733997]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.797019]]
+z: [[1.733965]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796986]]
+z: [[1.733933]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796953]]
+z: [[1.733901]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796919]]
+z: [[1.733868]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796886]]
+z: [[1.733836]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796853]]
+z: [[1.733804]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796820]]
+z: [[1.733772]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796786]]
+z: [[1.733740]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796753]]
+z: [[1.733708]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796720]]
+z: [[1.733676]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796687]]
+z: [[1.733644]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796653]]
+z: [[1.733612]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796620]]
+z: [[1.733580]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796587]]
+z: [[1.733548]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796554]]
+z: [[1.733516]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796521]]
+z: [[1.733484]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796487]]
+z: [[1.733451]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796454]]
+z: [[1.733419]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796421]]
+z: [[1.733387]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796388]]
+z: [[1.733355]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796354]]
+z: [[1.733323]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796321]]
+z: [[1.733291]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796288]]
+z: [[1.733259]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796255]]
+z: [[1.733227]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796221]]
+z: [[1.733195]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796188]]
+z: [[1.733163]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796155]]
+z: [[1.733131]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796122]]
+z: [[1.733099]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796088]]
+z: [[1.733067]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796055]]
+z: [[1.733035]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.796022]]
+z: [[1.733002]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795989]]
+z: [[1.732970]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795955]]
+z: [[1.732938]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795922]]
+z: [[1.732906]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795889]]
+z: [[1.732874]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795856]]
+z: [[1.732842]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795823]]
+z: [[1.732810]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795789]]
+z: [[1.732778]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795756]]
+z: [[1.732746]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795723]]
+z: [[1.732714]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795690]]
+z: [[1.732682]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795656]]
+z: [[1.732650]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795623]]
+z: [[1.732618]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795590]]
+z: [[1.732586]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795557]]
+z: [[1.732554]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795524]]
+z: [[1.732522]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795490]]
+z: [[1.732489]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795457]]
+z: [[1.732457]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795424]]
+z: [[1.732425]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795391]]
+z: [[1.732393]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795357]]
+z: [[1.732361]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795324]]
+z: [[1.732329]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795291]]
+z: [[1.732297]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795258]]
+z: [[1.732265]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795225]]
+z: [[1.732233]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795191]]
+z: [[1.732201]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795158]]
+z: [[1.732169]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795125]]
+z: [[1.732137]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795092]]
+z: [[1.732105]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795058]]
+z: [[1.732073]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.795025]]
+z: [[1.732041]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794992]]
+z: [[1.732009]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794959]]
+z: [[1.731977]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794926]]
+z: [[1.731945]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794892]]
+z: [[1.731913]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794859]]
+z: [[1.731881]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794826]]
+z: [[1.731848]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794793]]
+z: [[1.731816]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794760]]
+z: [[1.731784]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794726]]
+z: [[1.731752]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794693]]
+z: [[1.731720]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794660]]
+z: [[1.731688]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794627]]
+z: [[1.731656]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794594]]
+z: [[1.731624]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794560]]
+z: [[1.731592]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794527]]
+z: [[1.731560]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794494]]
+z: [[1.731528]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794461]]
+z: [[1.731496]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794427]]
+z: [[1.731464]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794394]]
+z: [[1.731432]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794361]]
+z: [[1.731400]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794328]]
+z: [[1.731368]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794295]]
+z: [[1.731336]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794261]]
+z: [[1.731304]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794228]]
+z: [[1.731272]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794195]]
+z: [[1.731240]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794162]]
+z: [[1.731208]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794129]]
+z: [[1.731176]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794095]]
+z: [[1.731144]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794062]]
+z: [[1.731112]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.794029]]
+z: [[1.731080]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793996]]
+z: [[1.731048]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793963]]
+z: [[1.731015]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793930]]
+z: [[1.730983]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793896]]
+z: [[1.730951]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793863]]
+z: [[1.730919]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793830]]
+z: [[1.730887]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793797]]
+z: [[1.730855]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793764]]
+z: [[1.730823]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793730]]
+z: [[1.730791]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793697]]
+z: [[1.730759]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793664]]
+z: [[1.730727]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793631]]
+z: [[1.730695]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793598]]
+z: [[1.730663]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793564]]
+z: [[1.730631]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793531]]
+z: [[1.730599]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793498]]
+z: [[1.730567]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793465]]
+z: [[1.730535]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793432]]
+z: [[1.730503]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793398]]
+z: [[1.730471]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793365]]
+z: [[1.730439]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793332]]
+z: [[1.730407]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793299]]
+z: [[1.730375]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793266]]
+z: [[1.730343]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793233]]
+z: [[1.730311]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793199]]
+z: [[1.730279]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793166]]
+z: [[1.730247]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793133]]
+z: [[1.730215]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793100]]
+z: [[1.730183]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793067]]
+z: [[1.730151]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793033]]
+z: [[1.730119]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.793000]]
+z: [[1.730087]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792967]]
+z: [[1.730055]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792934]]
+z: [[1.730023]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792901]]
+z: [[1.729991]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792868]]
+z: [[1.729959]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792834]]
+z: [[1.729927]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792801]]
+z: [[1.729895]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792768]]
+z: [[1.729863]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792735]]
+z: [[1.729831]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792702]]
+z: [[1.729799]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792669]]
+z: [[1.729767]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792635]]
+z: [[1.729735]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792602]]
+z: [[1.729703]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792569]]
+z: [[1.729671]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792536]]
+z: [[1.729639]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792503]]
+z: [[1.729607]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792470]]
+z: [[1.729575]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792436]]
+z: [[1.729543]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792403]]
+z: [[1.729511]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792370]]
+z: [[1.729479]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792337]]
+z: [[1.729447]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792304]]
+z: [[1.729415]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792271]]
+z: [[1.729383]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792237]]
+z: [[1.729351]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792204]]
+z: [[1.729319]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792171]]
+z: [[1.729287]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792138]]
+z: [[1.729255]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792105]]
+z: [[1.729223]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792072]]
+z: [[1.729191]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792038]]
+z: [[1.729159]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.792005]]
+z: [[1.729127]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791972]]
+z: [[1.729095]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791939]]
+z: [[1.729063]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791906]]
+z: [[1.729031]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791873]]
+z: [[1.728999]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791840]]
+z: [[1.728967]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791806]]
+z: [[1.728935]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791773]]
+z: [[1.728903]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791740]]
+z: [[1.728871]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791707]]
+z: [[1.728839]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791674]]
+z: [[1.728807]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791641]]
+z: [[1.728775]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791607]]
+z: [[1.728743]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791574]]
+z: [[1.728711]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791541]]
+z: [[1.728679]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791508]]
+z: [[1.728647]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791475]]
+z: [[1.728615]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791442]]
+z: [[1.728583]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791409]]
+z: [[1.728551]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791375]]
+z: [[1.728519]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791342]]
+z: [[1.728487]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791309]]
+z: [[1.728455]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791276]]
+z: [[1.728423]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791243]]
+z: [[1.728391]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791210]]
+z: [[1.728359]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791177]]
+z: [[1.728327]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791143]]
+z: [[1.728295]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791110]]
+z: [[1.728263]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791077]]
+z: [[1.728231]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791044]]
+z: [[1.728199]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.791011]]
+z: [[1.728167]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790978]]
+z: [[1.728135]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790945]]
+z: [[1.728103]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790911]]
+z: [[1.728071]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790878]]
+z: [[1.728039]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790845]]
+z: [[1.728007]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790812]]
+z: [[1.727975]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790779]]
+z: [[1.727943]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790746]]
+z: [[1.727911]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790713]]
+z: [[1.727879]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790679]]
+z: [[1.727847]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790646]]
+z: [[1.727815]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790613]]
+z: [[1.727784]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790580]]
+z: [[1.727752]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790547]]
+z: [[1.727720]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790514]]
+z: [[1.727688]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790481]]
+z: [[1.727656]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790448]]
+z: [[1.727624]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790414]]
+z: [[1.727592]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790381]]
+z: [[1.727560]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790348]]
+z: [[1.727528]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790315]]
+z: [[1.727496]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790282]]
+z: [[1.727464]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790249]]
+z: [[1.727432]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790216]]
+z: [[1.727400]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790183]]
+z: [[1.727368]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790149]]
+z: [[1.727336]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790116]]
+z: [[1.727304]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790083]]
+z: [[1.727272]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790050]]
+z: [[1.727240]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.790017]]
+z: [[1.727208]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789984]]
+z: [[1.727176]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789951]]
+z: [[1.727144]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789918]]
+z: [[1.727112]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789884]]
+z: [[1.727080]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789851]]
+z: [[1.727048]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789818]]
+z: [[1.727016]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789785]]
+z: [[1.726984]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789752]]
+z: [[1.726952]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789719]]
+z: [[1.726921]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789686]]
+z: [[1.726889]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789653]]
+z: [[1.726857]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789619]]
+z: [[1.726825]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789586]]
+z: [[1.726793]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789553]]
+z: [[1.726761]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789520]]
+z: [[1.726729]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789487]]
+z: [[1.726697]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789454]]
+z: [[1.726665]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789421]]
+z: [[1.726633]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789388]]
+z: [[1.726601]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789355]]
+z: [[1.726569]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789321]]
+z: [[1.726537]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789288]]
+z: [[1.726505]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789255]]
+z: [[1.726473]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789222]]
+z: [[1.726441]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789189]]
+z: [[1.726409]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789156]]
+z: [[1.726377]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789123]]
+z: [[1.726345]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789090]]
+z: [[1.726314]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789057]]
+z: [[1.726282]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.789024]]
+z: [[1.726250]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788990]]
+z: [[1.726218]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788957]]
+z: [[1.726186]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788924]]
+z: [[1.726154]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788891]]
+z: [[1.726122]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788858]]
+z: [[1.726090]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788825]]
+z: [[1.726058]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788792]]
+z: [[1.726026]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788759]]
+z: [[1.725994]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788726]]
+z: [[1.725962]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788693]]
+z: [[1.725930]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788659]]
+z: [[1.725898]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788626]]
+z: [[1.725866]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788593]]
+z: [[1.725834]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788560]]
+z: [[1.725803]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788527]]
+z: [[1.725771]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788494]]
+z: [[1.725739]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788461]]
+z: [[1.725707]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788428]]
+z: [[1.725675]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788395]]
+z: [[1.725643]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788362]]
+z: [[1.725611]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788328]]
+z: [[1.725579]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788295]]
+z: [[1.725547]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788262]]
+z: [[1.725515]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788229]]
+z: [[1.725483]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788196]]
+z: [[1.725451]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788163]]
+z: [[1.725419]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788130]]
+z: [[1.725387]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788097]]
+z: [[1.725355]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788064]]
+z: [[1.725324]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.788031]]
+z: [[1.725292]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787998]]
+z: [[1.725260]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787965]]
+z: [[1.725228]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787931]]
+z: [[1.725196]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787898]]
+z: [[1.725164]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787865]]
+z: [[1.725132]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787832]]
+z: [[1.725100]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787799]]
+z: [[1.725068]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787766]]
+z: [[1.725036]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787733]]
+z: [[1.725004]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787700]]
+z: [[1.724972]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787667]]
+z: [[1.724941]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787634]]
+z: [[1.724909]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787601]]
+z: [[1.724877]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787568]]
+z: [[1.724845]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787535]]
+z: [[1.724813]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787501]]
+z: [[1.724781]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787468]]
+z: [[1.724749]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787435]]
+z: [[1.724717]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787402]]
+z: [[1.724685]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787369]]
+z: [[1.724653]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787336]]
+z: [[1.724621]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787303]]
+z: [[1.724589]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787270]]
+z: [[1.724558]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787237]]
+z: [[1.724526]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787204]]
+z: [[1.724494]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787171]]
+z: [[1.724462]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787138]]
+z: [[1.724430]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787105]]
+z: [[1.724398]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787072]]
+z: [[1.724366]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787038]]
+z: [[1.724334]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.787005]]
+z: [[1.724302]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786972]]
+z: [[1.724270]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786939]]
+z: [[1.724238]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786906]]
+z: [[1.724207]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786873]]
+z: [[1.724175]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786840]]
+z: [[1.724143]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786807]]
+z: [[1.724111]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786774]]
+z: [[1.724079]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786741]]
+z: [[1.724047]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786708]]
+z: [[1.724015]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786675]]
+z: [[1.723983]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786642]]
+z: [[1.723951]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786609]]
+z: [[1.723919]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786576]]
+z: [[1.723888]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786543]]
+z: [[1.723856]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786509]]
+z: [[1.723824]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786476]]
+z: [[1.723792]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786443]]
+z: [[1.723760]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786410]]
+z: [[1.723728]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786377]]
+z: [[1.723696]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786344]]
+z: [[1.723664]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786311]]
+z: [[1.723632]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786278]]
+z: [[1.723601]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786245]]
+z: [[1.723569]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786212]]
+z: [[1.723537]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786179]]
+z: [[1.723505]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786146]]
+z: [[1.723473]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786113]]
+z: [[1.723441]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786080]]
+z: [[1.723409]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786047]]
+z: [[1.723377]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.786014]]
+z: [[1.723345]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785981]]
+z: [[1.723313]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785948]]
+z: [[1.723282]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785915]]
+z: [[1.723250]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785881]]
+z: [[1.723218]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785848]]
+z: [[1.723186]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785815]]
+z: [[1.723154]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785782]]
+z: [[1.723122]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785749]]
+z: [[1.723090]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785716]]
+z: [[1.723058]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785683]]
+z: [[1.723027]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785650]]
+z: [[1.722995]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785617]]
+z: [[1.722963]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785584]]
+z: [[1.722931]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785551]]
+z: [[1.722899]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785518]]
+z: [[1.722867]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785485]]
+z: [[1.722835]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785452]]
+z: [[1.722803]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785419]]
+z: [[1.722771]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785386]]
+z: [[1.722740]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785353]]
+z: [[1.722708]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785320]]
+z: [[1.722676]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785287]]
+z: [[1.722644]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785254]]
+z: [[1.722612]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785221]]
+z: [[1.722580]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785188]]
+z: [[1.722548]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785155]]
+z: [[1.722516]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785122]]
+z: [[1.722485]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785089]]
+z: [[1.722453]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785056]]
+z: [[1.722421]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.785023]]
+z: [[1.722389]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784990]]
+z: [[1.722357]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784956]]
+z: [[1.722325]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784923]]
+z: [[1.722293]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784890]]
+z: [[1.722262]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784857]]
+z: [[1.722230]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784824]]
+z: [[1.722198]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784791]]
+z: [[1.722166]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784758]]
+z: [[1.722134]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784725]]
+z: [[1.722102]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784692]]
+z: [[1.722070]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784659]]
+z: [[1.722038]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784626]]
+z: [[1.722007]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784593]]
+z: [[1.721975]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784560]]
+z: [[1.721943]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784527]]
+z: [[1.721911]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784494]]
+z: [[1.721879]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784461]]
+z: [[1.721847]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784428]]
+z: [[1.721815]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784395]]
+z: [[1.721784]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784362]]
+z: [[1.721752]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784329]]
+z: [[1.721720]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784296]]
+z: [[1.721688]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784263]]
+z: [[1.721656]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784230]]
+z: [[1.721624]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784197]]
+z: [[1.721592]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784164]]
+z: [[1.721561]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784131]]
+z: [[1.721529]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784098]]
+z: [[1.721497]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784065]]
+z: [[1.721465]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.784032]]
+z: [[1.721433]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783999]]
+z: [[1.721401]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783966]]
+z: [[1.721369]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783933]]
+z: [[1.721338]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783900]]
+z: [[1.721306]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783867]]
+z: [[1.721274]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783834]]
+z: [[1.721242]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783801]]
+z: [[1.721210]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783768]]
+z: [[1.721178]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783735]]
+z: [[1.721147]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783702]]
+z: [[1.721115]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783669]]
+z: [[1.721083]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783636]]
+z: [[1.721051]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783603]]
+z: [[1.721019]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783570]]
+z: [[1.720987]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783537]]
+z: [[1.720955]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783504]]
+z: [[1.720924]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783471]]
+z: [[1.720892]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783438]]
+z: [[1.720860]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783405]]
+z: [[1.720828]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783372]]
+z: [[1.720796]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783339]]
+z: [[1.720764]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783306]]
+z: [[1.720733]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783273]]
+z: [[1.720701]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783240]]
+z: [[1.720669]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783207]]
+z: [[1.720637]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783174]]
+z: [[1.720605]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783141]]
+z: [[1.720573]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783108]]
+z: [[1.720542]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783075]]
+z: [[1.720510]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783042]]
+z: [[1.720478]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.783009]]
+z: [[1.720446]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782976]]
+z: [[1.720414]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782943]]
+z: [[1.720382]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782910]]
+z: [[1.720351]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782877]]
+z: [[1.720319]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782844]]
+z: [[1.720287]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782811]]
+z: [[1.720255]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782778]]
+z: [[1.720223]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782745]]
+z: [[1.720191]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782712]]
+z: [[1.720160]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782679]]
+z: [[1.720128]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782646]]
+z: [[1.720096]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782613]]
+z: [[1.720064]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782580]]
+z: [[1.720032]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782547]]
+z: [[1.720000]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782514]]
+z: [[1.719969]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782481]]
+z: [[1.719937]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782448]]
+z: [[1.719905]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782415]]
+z: [[1.719873]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782382]]
+z: [[1.719841]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782349]]
+z: [[1.719809]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782316]]
+z: [[1.719778]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782283]]
+z: [[1.719746]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782250]]
+z: [[1.719714]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782217]]
+z: [[1.719682]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782184]]
+z: [[1.719650]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782151]]
+z: [[1.719619]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782118]]
+z: [[1.719587]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782085]]
+z: [[1.719555]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782052]]
+z: [[1.719523]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.782019]]
+z: [[1.719491]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781986]]
+z: [[1.719459]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781953]]
+z: [[1.719428]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781920]]
+z: [[1.719396]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781888]]
+z: [[1.719364]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781855]]
+z: [[1.719332]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781822]]
+z: [[1.719300]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781789]]
+z: [[1.719269]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781756]]
+z: [[1.719237]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781723]]
+z: [[1.719205]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781690]]
+z: [[1.719173]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781657]]
+z: [[1.719141]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781624]]
+z: [[1.719110]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781591]]
+z: [[1.719078]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781558]]
+z: [[1.719046]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781525]]
+z: [[1.719014]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781492]]
+z: [[1.718982]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781459]]
+z: [[1.718950]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781426]]
+z: [[1.718919]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781393]]
+z: [[1.718887]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781360]]
+z: [[1.718855]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781327]]
+z: [[1.718823]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781294]]
+z: [[1.718791]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781261]]
+z: [[1.718760]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781228]]
+z: [[1.718728]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781195]]
+z: [[1.718696]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781162]]
+z: [[1.718664]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781129]]
+z: [[1.718632]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781096]]
+z: [[1.718601]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781063]]
+z: [[1.718569]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.781030]]
+z: [[1.718537]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780998]]
+z: [[1.718505]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780965]]
+z: [[1.718473]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780932]]
+z: [[1.718442]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780899]]
+z: [[1.718410]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780866]]
+z: [[1.718378]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780833]]
+z: [[1.718346]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780800]]
+z: [[1.718314]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780767]]
+z: [[1.718283]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780734]]
+z: [[1.718251]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780701]]
+z: [[1.718219]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780668]]
+z: [[1.718187]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780635]]
+z: [[1.718155]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780602]]
+z: [[1.718124]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780569]]
+z: [[1.718092]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780536]]
+z: [[1.718060]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780503]]
+z: [[1.718028]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780470]]
+z: [[1.717997]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780437]]
+z: [[1.717965]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780404]]
+z: [[1.717933]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780371]]
+z: [[1.717901]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780339]]
+z: [[1.717869]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780306]]
+z: [[1.717838]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780273]]
+z: [[1.717806]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780240]]
+z: [[1.717774]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780207]]
+z: [[1.717742]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780174]]
+z: [[1.717710]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780141]]
+z: [[1.717679]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780108]]
+z: [[1.717647]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780075]]
+z: [[1.717615]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780042]]
+z: [[1.717583]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.780009]]
+z: [[1.717552]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779976]]
+z: [[1.717520]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779943]]
+z: [[1.717488]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779910]]
+z: [[1.717456]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779877]]
+z: [[1.717424]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779844]]
+z: [[1.717393]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779812]]
+z: [[1.717361]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779779]]
+z: [[1.717329]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779746]]
+z: [[1.717297]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779713]]
+z: [[1.717266]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779680]]
+z: [[1.717234]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779647]]
+z: [[1.717202]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779614]]
+z: [[1.717170]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779581]]
+z: [[1.717138]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779548]]
+z: [[1.717107]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779515]]
+z: [[1.717075]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779482]]
+z: [[1.717043]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779449]]
+z: [[1.717011]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779416]]
+z: [[1.716980]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779383]]
+z: [[1.716948]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779351]]
+z: [[1.716916]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779318]]
+z: [[1.716884]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779285]]
+z: [[1.716853]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779252]]
+z: [[1.716821]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779219]]
+z: [[1.716789]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779186]]
+z: [[1.716757]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779153]]
+z: [[1.716725]]
 
 
 MSE free invoked
 MSE free ended
-z: [[1.779120]]
+z: [[1.716694]]
 
 
 MSE free invoked
 MSE free ended
-[[2.965678], [2.108678], [1.877740], [3.139109]]
-[[0.052891]]
+[[2.101983], [2.836401], [2.916531], [2.234675]]
+[[0.043474]]

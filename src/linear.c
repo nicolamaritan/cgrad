@@ -69,25 +69,25 @@ tensor* linear_backpropagate(const backpropagation_function_data* const data, co
     {
     case PREDICTED:
         tensor* weights = layer->weights;
-        tensor* weights_trans = tensor2d_alloc(weights->shape[1], weights->shape[0]);
+        tensor* weights_trans = tensor2d_no_grad_alloc(weights->shape[1], weights->shape[0]);
         tensor2d_trans(weights, weights_trans);
-        out = tensor2d_alloc(D->shape[0], weights_trans->shape[1]);
+        out = tensor2d_no_grad_alloc(D->shape[0], weights_trans->shape[1]);
         tensor2d_mult(D, weights_trans, out);
-        tensor_free(weights_trans);
+        tensor_no_grad_free(weights_trans);
         break;
 
     case WEIGHTS:
-        tensor* x_trans = tensor2d_alloc(x->shape[1], x->shape[0]);
+        tensor* x_trans = tensor2d_no_grad_alloc(x->shape[1], x->shape[0]);
         tensor2d_trans(x, x_trans);
-        out = tensor2d_alloc(x_trans->shape[0], D->shape[1]);
+        out = tensor2d_no_grad_alloc(x_trans->shape[0], D->shape[1]);
         tensor2d_mult(x_trans, D, out);
-        tensor_free(x_trans);
+        tensor_no_grad_free(x_trans);
         break;
     
     case BIASES:
         size_t G_rows = D->shape[0];
         size_t G_cols = D->shape[1];
-        out = tensor2d_alloc(1, G_cols);
+        out = tensor2d_no_grad_alloc(1, G_cols);
         
         for (size_t j = 0; j < G_cols; j++)
             out->data[j] = 0;

@@ -4,7 +4,8 @@
 tensor* relu_backpropagate(const backpropagation_function_data* const data, const tensor* const D, size_t operand)
 {
     tensor* x = (tensor*)data->inputs;
-    tensor* out = tensor2d_alloc_like(x);
+    //tensor* out = tensor2d_alloc_like(x);
+    tensor* out = tensor2d_no_grad_alloc(x->shape[0], x->shape[1]);
     
     // Avoid multiple indirections for performance
     double* x_data = x->data;

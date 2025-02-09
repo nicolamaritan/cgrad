@@ -56,7 +56,7 @@ tensor* mse_loss_backpropagate(const backpropagation_function_data* const data, 
     mse_inputs* input = (mse_inputs*)data->inputs;
 
     double batch_size = input->target->shape[0];
-    tensor* out = tensor2d_alloc(batch_size, 1);
+    tensor* out = tensor2d_no_grad_alloc(batch_size, 1);
     for (size_t i = 0; i < batch_size; i++)
     {
         out->data[i] = (input->predicted->data[i] - input->target->data[i]) / batch_size;
