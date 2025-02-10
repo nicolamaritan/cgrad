@@ -6,7 +6,7 @@ SRC = $(wildcard src/*.c)
 OBJ = $(SRC:.c=.o)
 
 EXAMPLES = $(wildcard examples/*.c)
-EXECS = $(EXAMPLES:.c=)  # Converts .c to executable names without extension
+EXECS = $(EXAMPLES:.c=.out)  # Converts .c to executable names without extension + .out
 
 all: $(OBJ) $(EXECS)
 
