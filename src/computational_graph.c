@@ -14,6 +14,8 @@ computational_graph_node* computational_graph_node_alloc()
     node->is_involved_in_backprop = false;
     node->is_grad_computed = false;
 
+    printf("Allocated node %p\n", node);
+
     return node;
 }
 
@@ -32,12 +34,16 @@ computational_graph_node* computational_graph_node_tensor_alloc(tensor* t)
 
 void free_computational_graph_node(computational_graph_node* node)
 {
+    printf("Freeing node %p.\n", node);
     /*
         We allow node->free to be NULL to avoid free functions
         that do nothing.
     */
     if (node->free_data)
         node->free_data(node->data);
+    
+    if (node->t->node)
+        node->t->node = NULL;
 
     //free(node->data);
     free(node);

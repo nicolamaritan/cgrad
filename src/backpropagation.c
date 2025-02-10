@@ -36,9 +36,11 @@ void backward(tensor* t, bool retain_graph)
     for (size_t i = 0; i < targets.size; i++)
     {
         computational_graph_node* node = targets.targets[i];
+        printf("Freeing node %p\n", node);
         node->t->node = NULL;
         free_computational_graph_node(node);
     }
+    printf("End backward.\n");
 }
 
 // void backpropagate(backpropagation_targets* const targets)

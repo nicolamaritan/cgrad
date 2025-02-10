@@ -57,7 +57,7 @@ int main()
     linear_layer *linear1 = linear_create(in_dim, out_dim);
     linear_xavier_init(linear1);
 
-    print_tensor(linear1->weights);
+    // print_tensor(linear1->weights);
 
     // TODO work on a better interface
     model_params params;
@@ -65,12 +65,18 @@ int main()
     add_param(&params, linear1->weights);
     add_param(&params, linear1->biases);
 
-    size_t epochs = 2000000;
+    // size_t epochs = 10000000;
+    size_t epochs = 1000;
     for (size_t i = 0; i < epochs; i++)
     {
-        // backpropagation_targets targets;
-        // targets.size = 0;
-        // printf("iter %ld\n", i);
+        // tensor *h0 = tensor2d_alloc(batch_size, out_dim);
+        // linear_forward_graph(x, linear1, h0);
+        // free_computational_graph_node(x->node);
+        // free_computational_graph_node(h0->node);
+        // free_computational_graph_node(linear1->weights->node);
+        // free_computational_graph_node(linear1->biases->node);
+        // tensor_free(h0);
+        // continue;
 
         tensor *h1 = tensor2d_alloc(batch_size, out_dim);
         linear_forward_graph(x, linear1, h1);
@@ -98,11 +104,12 @@ int main()
         assert(!x->node && !h1->node && !linear1->weights->node && !linear1->biases->node && !y_target->node && !z->node);
     }
 
-    print_tensor(linear1->weights);
-    print_tensor(linear1->biases);
+    // print_tensor(linear1->weights);
+    // print_tensor(linear1->biases);
 
     // Cleanup
     tensor_free(x);
     tensor_free(y_target);
+    linear_free(linear1);
     return 0;
 }
