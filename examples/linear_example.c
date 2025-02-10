@@ -65,7 +65,7 @@ int main()
     add_param(&params, linear1->weights);
     add_param(&params, linear1->biases);
 
-    size_t epochs = 1000000;
+    size_t epochs = 2000000;
     for (size_t i = 0; i < epochs; i++)
     {
         // backpropagation_targets targets;

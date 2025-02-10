@@ -2,6 +2,7 @@
 #include "computational_graph.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define MAX_TARGETS 1024
 
@@ -17,6 +18,7 @@ static void identify_backpropagation_nodes(computational_graph_node* const node,
 static tensor* build_gradient(computational_graph_node* const node);
 static void build_gradients(backpropagation_targets* const targets);
 int add_target(backpropagation_targets* const targets, computational_graph_node* const node);
+void set_gradient_wrt_itself(tensor* const t);
 
 void backward(tensor* t, bool retain_graph)
 {
@@ -24,6 +26,8 @@ void backward(tensor* t, bool retain_graph)
     targets.size = 0;
 
     identify_backpropagation_nodes(t->node, &targets);
+
+    set_gradient_wrt_itself(t);
     build_gradients(&targets);
 
     if (retain_graph)
@@ -160,4 +164,15 @@ int add_target(backpropagation_targets* const targets, computational_graph_node*
     targets->size++;
 
     return 0;
+}
+
+void set_gradient_wrt_itself(tensor* const t)
+{
+    if (t->data_size == 1)
+    {
+        tensor2d_set_unchecked(t->grad, 0, 0, 1);
+        return;
+    }
+    perror("Error: Not implemented yet");
+    exit(1);
 }

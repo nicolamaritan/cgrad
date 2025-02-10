@@ -26,9 +26,9 @@ void mse_loss_graph(tensor* const y_pred, tensor* const y_target, tensor* const 
     y_target_node->t = (tensor*)y_target;
 
     computational_graph_node* z_node = computational_graph_node_tensor_alloc(z);
-    tensor* one = tensor2d_no_grad_alloc(1, 1);
-    one->data[0] = 1;
-    z->grad = one;   
+    // tensor* one = tensor2d_no_grad_alloc(1, 1);
+    // one->data[0] = 1;
+    // z->grad = one;   
 
     // Setup connections
     add_parent(y_pred_node, z_node, MSE_PREDICTED);
