@@ -125,7 +125,22 @@ void tensor2d_mult_unchecked(const tensor* const A, const tensor* const B, tenso
     );
 }
 
-void tensor2d_trans(const tensor* const t, tensor* const out)
+tensor_error tensor2d_trans(const tensor* const t, tensor* const out)
+{
+    if (!t || !out)
+        return TENSOR_NULL;
+    if (!t->shape || !out->shape)
+        return TENSOR_SHAPE_NULL;
+    if (!t->data || !out->data)
+        return TENSOR_DATA_NULL;   
+    if (t->shape[0] != out->shape[1] || t->shape[1] != out->shape[0])
+        return TENSOR_SHAPE_MISMATCH;
+    
+    tensor2d_trans_unchecked(t, out);
+    return TENSOR_OK;
+}
+
+void tensor2d_trans_unchecked(const tensor* const t, tensor* const out)
 {
     // Extract the shape of the input tensor (t)
     size_t rows = t->shape[0];

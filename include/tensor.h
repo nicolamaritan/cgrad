@@ -33,16 +33,17 @@ void tensor_free(tensor* t);
 void tensor_no_grad_free(tensor* t);
 static inline void tensor2d_set_unchecked(tensor* t, size_t row, size_t col, double value);
 static inline tensor_error tensor2d_set(tensor* t, size_t row, size_t col, double value);
-void print_tensor(const tensor* const t);
 tensor_error tensor2d_mult(const tensor* const A, const tensor* const B, tensor* const out);
 void tensor2d_mult_unchecked(const tensor* const A, const tensor* const B, tensor* const out);
-void tensor2d_trans(const tensor* const t, tensor* const out);
+tensor_error tensor2d_trans(const tensor* const t, tensor* const out);
+void tensor2d_trans_unchecked(const tensor* const t, tensor* const out);
 void tensor_add(const tensor* const A, const tensor* const B, tensor* const out);
 void tensor_add_inplace(tensor* A, const tensor* const B);
 void tensor2d_add_row_vector(tensor* const A, const tensor* const v);
 void tensor_copy(const tensor* const src, tensor* dest);
 tensor* tensor_clone(const tensor* const src);
 bool tensor_same_shape(const tensor* const A, const tensor* const B);
+void print_tensor(const tensor* const t);
 
 static inline void tensor2d_set_unchecked(tensor* t, size_t row, size_t col, double value) 
 {
