@@ -22,6 +22,7 @@ typedef enum
     TENSOR_OK = 0,
     TENSOR_NULL,
     TENSOR_SHAPE_NULL,
+    TENSOR_WRONG_SHAPE,
     TENSOR_DATA_NULL,
     TENSOR_INDEX_OUT_OF_BOUNDS,
     TENSOR_SHAPE_MISMATCH,
@@ -44,7 +45,8 @@ tensor_error tensor_add(const tensor *const A, const tensor *const B, tensor *co
 void tensor_add_unchecked(const tensor *const A, const tensor *const B, tensor *const out);
 tensor_error tensor_add_inplace(tensor *A, const tensor *const B);
 void tensor_add_inplace_unchecked(tensor *A, const tensor *const B);
-void tensor2d_add_row_vector(tensor *const A, const tensor *const v);
+tensor_error tensor2d_add_row_vector(tensor *const A, const tensor *const v);
+void tensor2d_add_row_vector_unchecked(tensor *const A, const tensor *const v);
 void tensor_copy(const tensor *const src, tensor *dest);
 tensor *tensor_clone(const tensor *const src);
 bool tensor_same_shape(const tensor *const A, const tensor *const B);

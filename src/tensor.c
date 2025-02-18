@@ -193,7 +193,26 @@ tensor *tensor_clone(const tensor *const src)
     return new_tensor;
 }
 
-void tensor2d_add_row_vector(tensor *const A, const tensor *const v)
+tensor_error tensor2d_add_row_vector(tensor *const A, const tensor *const v)
+{
+    if (!A || !v)
+        return TENSOR_NULL;
+    if (!A->data || !v->data)
+        return TENSOR_DATA_NULL;
+    if (!A->shape || !v->shape)
+        return TENSOR_SHAPE_NULL;
+    if (A->shape_size != 2 || v->shape_size != 2)
+        return TENSOR_WRONG_SHAPE;
+    if (v->shape[1] != 1)
+        return TENSOR_WRONG_SHAPE;
+    if (A->shape[1] != v->shape[0])
+        return TENSOR_SHAPE_MISMATCH;
+
+    tensor2d_add_row_vector_unchecked(A, v);
+    return TENSOR_OK;
+}
+
+void tensor2d_add_row_vector_unchecked(tensor *const A, const tensor *const v)
 {
     size_t rows = A->shape[0]; // Number of rows
     size_t cols = A->shape[1]; // Number of columns
