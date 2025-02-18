@@ -205,32 +205,31 @@ void tensor2d_add_row_vector(tensor* const A, const tensor* const v)
     }
 }
 
-// Function to perform element-wise addition of two tensors
-void tensor_add(const tensor* const A, const tensor* const B, tensor* const out) 
-{
-    if (!A || !B || !out) {
-        fprintf(stderr, "Error: Null tensor pointer(s) provided.\n");
-        return;
-    }
-
-    // Ensure tensor dimensions match
-    if (A->shape[0] != B->shape[0] || A->shape[1] != B->shape[1]) {
-        fprintf(stderr, "Error: Tensor shapes do not match for addition.\n");
-        return;
-    }
-
-    size_t rows = A->shape[0];
-    size_t cols = A->shape[1];
-
-    // Ensure output tensor has the correct shape
-    if (out->shape[0] != rows || out->shape[1] != cols) {
-        fprintf(stderr, "Error: Output tensor shape mismatch.\n");
-        return;
-    }
-
-    for (size_t i = 0; i < rows * cols; i++) {
+void tensor_add_unchecked(const tensor* const A, const tensor* const B, tensor* const out)
+{    
+    for (size_t i = 0; i < A->data_size; i++) {
         out->data[i] = A->data[i] + B->data[i];
     }
+}
+
+tensor_error tensor_add(const tensor* const A, const tensor* const B, tensor* const out) 
+{
+    if (tensor_is_null(A) || tensor_is_null(B) || tensor_is_null(out))
+        return TENSOR_NULL;
+    if (A->data_size != B->data_size || B->data_size != out->data_size)
+        return TENSOR_DATA_SIZE_MISMATCH;
+    if (A->shape_size != B->shape_size || B->shape_size != out->shape_size)
+        return TENSOR_SHAPE_MISMATCH;
+    
+    // Check each dimension shape, assuming all the tensors having the same shape_size
+    for (size_t i = 0; i < A->shape_size; i++)
+    {
+        if (A->shape[i] != B->shape[i] || B->shape[i] != out->shape[i])
+            return TENSOR_SHAPE_MISMATCH;
+    }
+
+    tensor_add_unchecked(A, B, out);
+    return TENSOR_OK;
 }
 
 // Function to perform in-place element-wise addition: A += B
