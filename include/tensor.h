@@ -29,6 +29,9 @@ typedef enum
     TENSOR_DATA_SIZE_MISMATCH
 } tensor_error;
 
+tensor *tensor_alloc(size_t *shape, size_t shape_size);
+tensor* tensor_no_grad_alloc(size_t *shape, size_t shape_size);
+tensor* tensor_no_grad_zero_alloc(size_t *shape, size_t shape_size);
 tensor *tensor2d_alloc(size_t rows, size_t cols);
 tensor *tensor2d_no_grad_alloc(size_t rows, size_t cols);
 tensor *tensor2d_no_grad_zero_alloc(size_t rows, size_t cols);

@@ -58,11 +58,11 @@ void linear_forward_graph(tensor *const x, linear_layer *const layer, tensor *co
     out_node->free_data = (backpropagation_function_data_cleanup)&free_linear_backpropagation_function_data;
 }
 
-tensor *linear_backpropagate(const backpropagation_function_data *const data, const tensor *const D, size_t operand)
+void linear_backpropagate(const backpropagation_function_data *const data, const tensor *const grad_wrt_out, tensor* grad_wrt_operand, size_t operand)
 {
     tensor *x = (tensor *)data->inputs;
     linear_layer *layer = (linear_layer *)data->layer;
-    tensor *out;
+    // tensor *out;
 
     switch (operand)
     {
@@ -70,37 +70,32 @@ tensor *linear_backpropagate(const backpropagation_function_data *const data, co
         tensor *weights = layer->weights;
         tensor *weights_trans = tensor2d_no_grad_alloc(weights->shape[1], weights->shape[0]);
         tensor2d_trans(weights, weights_trans);
-        out = tensor2d_no_grad_alloc(D->shape[0], weights_trans->shape[1]);
-        tensor2d_mult(D, weights_trans, out);
+        tensor2d_mult(grad_wrt_out, weights_trans, grad_wrt_operand);
         tensor_no_grad_free(weights_trans);
         break;
 
     case WEIGHTS:
         tensor *x_trans = tensor2d_no_grad_alloc(x->shape[1], x->shape[0]);
         tensor2d_trans(x, x_trans);
-        out = tensor2d_no_grad_alloc(x_trans->shape[0], D->shape[1]);
-        tensor2d_mult(x_trans, D, out);
+        tensor2d_mult(x_trans, grad_wrt_out, grad_wrt_operand);
         tensor_no_grad_free(x_trans);
         break;
 
     case BIASES:
-        size_t G_rows = D->shape[0];
-        size_t G_cols = D->shape[1];
-        out = tensor2d_no_grad_alloc(1, G_cols);
+        size_t G_rows = grad_wrt_out->shape[0];
+        size_t G_cols = grad_wrt_out->shape[1];
 
         for (size_t j = 0; j < G_cols; j++)
-            out->data[j] = 0;
+            grad_wrt_operand->data[j] = 0;
 
         // Iterating by row since vectors are stored in row-major
         for (size_t i = 0; i < G_rows; i++)
             for (size_t j = 0; j < G_cols; j++)
-                out->data[j] += D->data[i * G_cols + j];
+                grad_wrt_operand->data[j] += grad_wrt_out->data[i * G_cols + j];
         break;
     default:
         break;
     }
-
-    return out;
 }
 
 void linear_forward(const tensor *const x, const linear_layer *const layer, tensor *const out)

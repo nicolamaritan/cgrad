@@ -5,6 +5,66 @@
 #include <string.h>
 #include <stddef.h>
 
+tensor *tensor_alloc(size_t *shape, size_t shape_size)
+{
+    tensor *t = tensor_no_grad_alloc(shape, shape_size);
+    t->grad = tensor_no_grad_zero_alloc(shape, shape_size);
+    return t;
+}
+
+tensor* tensor_no_grad_alloc(size_t *shape, size_t shape_size)
+{
+    // Compute data_size, needed for data allocation
+    size_t data_size = 1;
+    for (size_t i = 0; i < shape_size; i++)
+    {
+       data_size *= shape[i];
+    }
+
+    tensor *t = (tensor *)malloc(sizeof(tensor));
+    double* data = (double *)malloc(data_size * sizeof(double));
+    size_t *_shape = (size_t *)malloc((shape_size + 1)* sizeof(size_t));
+
+    // Init _shape
+    memcpy(_shape, shape, sizeof(size_t) * shape_size);
+    _shape[shape_size] = 0;
+
+    t->data = data;
+    t->shape = _shape;
+    t->node = NULL;
+    t->data_size = data_size;
+    t->shape_size = shape_size;
+    t->grad = NULL;
+
+    return t;
+}
+
+tensor* tensor_no_grad_zero_alloc(size_t *shape, size_t shape_size)
+{
+    // Compute data_size, needed for data allocation
+    size_t data_size = 1;
+    for (size_t i = 0; i < shape_size; i++)
+        data_size *= shape[i];
+
+    tensor *t = (tensor *)malloc(sizeof(tensor));
+    double* data = (double *)calloc(data_size, sizeof(double));
+    size_t *_shape = (size_t *)malloc((shape_size + 1)* sizeof(size_t));
+
+    // Init _shape
+    memcpy(_shape, shape, shape_size);
+    _shape[shape_size] = 0;
+
+
+    t->data = data;
+    t->shape = _shape;
+    t->node = NULL;
+    t->data_size = data_size;
+    t->shape_size = shape_size;
+    t->grad = NULL;
+
+    return t;
+}
+
 tensor *tensor2d_alloc(size_t rows, size_t cols)
 {
     tensor *t = tensor2d_no_grad_alloc(rows, cols);

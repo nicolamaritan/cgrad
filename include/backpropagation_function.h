@@ -7,7 +7,7 @@ typedef struct backpropagation_function_data backpropagation_function_data;
 
 typedef void (*backpropagation_function_data_cleanup)(backpropagation_function_data* data);
 
-typedef tensor* (*backpropagation_function)(const backpropagation_function_data* const data, const tensor* const G, size_t operand);
+typedef void (*backpropagation_function)(const backpropagation_function_data* const data, const tensor* const grad_wrt_out, tensor* grad_wrt_operand, size_t operand);
 
 typedef struct backpropagation_function_data
 {

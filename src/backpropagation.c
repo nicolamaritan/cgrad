@@ -67,7 +67,10 @@ static tensor* build_gradient(computational_graph_node* const node)
         backpropagation_function_data* data = node->parents[i]->data;
         
         // Compute gradient and add to current grad
-        tensor* parent_i_gradient = node->parents[i]->function(data, D, operand);
+        tensor* parent_i_gradient = tensor_no_grad_alloc(node->t->shape, node->t->shape_size);
+
+        node->parents[i]->function(data, D, parent_i_gradient, operand);
+
         tensor_add_inplace(node->t->grad, parent_i_gradient);
         tensor_free(parent_i_gradient);
     }

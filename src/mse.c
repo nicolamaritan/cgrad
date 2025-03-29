@@ -51,27 +51,25 @@ void mse_loss_graph(tensor *const y_pred, tensor *const y_target, tensor *const 
     z_node->free_data = (backpropagation_function_data_cleanup)&free_mse_backpropagation_function_data;
 }
 
-tensor *mse_loss_backpropagate(const backpropagation_function_data *const data, const tensor *const D, size_t operand)
+void mse_loss_backpropagate(const backpropagation_function_data* const data, const tensor* const grad_wrt_out, tensor* grad_wrt_operand, size_t operand)
 {
     mse_inputs *input = (mse_inputs *)data->inputs;
 
     double batch_size = input->target->shape[0];
-    tensor *out = tensor2d_no_grad_alloc(batch_size, 1);
+    // tensor *grad_wrt_operand = tensor2d_no_grad_alloc(batch_size, 1);
     for (size_t i = 0; i < batch_size; i++)
     {
-        out->data[i] = (input->predicted->data[i] - input->target->data[i]) / batch_size;
+        grad_wrt_operand->data[i] = (input->predicted->data[i] - input->target->data[i]) / batch_size;
     }
 
     if (operand == MSE_TARGET)
     {
         // Gradient is the same but mult by -1
-        for (size_t i = 0; i < out->shape[0]; i++)
+        for (size_t i = 0; i < grad_wrt_operand->shape[0]; i++)
         {
-            out->data[i] *= -1;
+            grad_wrt_operand->data[i] *= -1;
         }
     }
-
-    return out;
 }
 
 void free_mse_backpropagation_function_data(backpropagation_function_data *data)
