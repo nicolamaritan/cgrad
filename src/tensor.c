@@ -171,6 +171,30 @@ void tensor2d_copy(const tensor *const src, tensor *const dest)
     }
 }
 
+void tensor_copy(const tensor *const src, tensor *const dest)
+{
+    if (!src || !dest)
+        return;
+    
+    if (src->shape_size != dest->shape_size)
+    {
+        fprintf(stderr, "Error: Tensor shapes do not match for copy operation.\n");
+        return;
+    }
+
+    for (size_t i = 0; i < src->shape_size; i++)
+    {
+        if (src->shape[i] != dest->shape[i])
+        {
+            fprintf(stderr, "Error: Tensor shapes do not match for copy operation.\n");
+            return;
+        }
+    }
+
+    memcpy(dest->data, src->data, sizeof(double) * src->data_size);
+}
+
+
 // Function to create a copy of a tensor and return a new instance
 tensor *tensor_clone(const tensor *const src)
 {
@@ -185,30 +209,16 @@ tensor *tensor_clone(const tensor *const src)
     return new_tensor;
 }
 
-
-void tensor_add_unchecked(const tensor *const A, const tensor *const B, tensor *const out, bool build_graph)
+void tensor_fill(tensor *const t, double value)
 {
-    for (size_t i = 0; i < A->data_size; i++)
+    if (!t || !t->data)
+        return;
+
+    size_t data_size = t->data_size;
+    for (size_t i = 0; i < data_size; i++)
     {
-        out->data[i] = A->data[i] + B->data[i];
+        t->data[i] = value;
     }
-}
-
-tensor_error tensor_add(const tensor *const A, const tensor *const B, tensor *const out, bool build_graph)
-{
-    if (!A || !B || !out)
-        return TENSOR_NULL;
-    if (!A->data || !B->data || !out->data)
-        return TENSOR_DATA_NULL;
-    if (!A->shape || !B->shape || !out->shape)
-        return TENSOR_SHAPE_NULL;
-    if (A->data_size != B->data_size || B->data_size != out->data_size)
-        return TENSOR_DATA_SIZE_MISMATCH;
-    if (tensor_same_shape(A, B))
-        return TENSOR_SHAPE_MISMATCH;
-
-    tensor_add_unchecked(A, B, out, build_graph);
-    return TENSOR_OK;
 }
 
 tensor_error tensor_add_inplace(tensor *A, const tensor *const B)

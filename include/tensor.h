@@ -29,6 +29,7 @@ typedef enum
     TENSOR_DATA_SIZE_MISMATCH
 } tensor_error;
 
+// Tensor allocation
 tensor *tensor_alloc(size_t *shape, size_t shape_size);
 tensor* tensor_no_grad_alloc(size_t *shape, size_t shape_size);
 tensor* tensor_no_grad_zero_alloc(size_t *shape, size_t shape_size);
@@ -39,20 +40,23 @@ tensor *tensor2d_alloc_like(tensor *t);
 void tensor_free(tensor *t);
 void tensor_no_grad_free(tensor *t);
 
+// Non-differentiable tensor operations
 static inline void tensor2d_set_unchecked(tensor *t, size_t row, size_t col, double value);
 static inline tensor_error tensor2d_set(tensor *t, size_t row, size_t col, double value);
 tensor_error tensor_add_inplace(tensor *A, const tensor *const B);
 void tensor_add_inplace_unchecked(tensor *A, const tensor *const B);
 tensor *tensor_clone(const tensor *const src);
 void tensor2d_copy(const tensor *const src, tensor *const dest);
+void tensor_copy(const tensor *const src, tensor *const dest);
+void tensor_fill(tensor *const t, double value);
+
+// Helper functions
 bool tensor_same_shape(const tensor *const A, const tensor *const B);
 
-// Differentiable operations
-tensor_error tensor_add(const tensor *const A, const tensor *const B, tensor *const out, bool requires_grad);
-void tensor_add_unchecked(const tensor *const A, const tensor *const B, tensor *const out, bool requires_grad);
-
+// Debug
 void print_tensor(const tensor *const t);
 
+// Inline definitions
 static inline void tensor2d_set_unchecked(tensor *t, size_t row, size_t col, double value)
 {
     t->data[row * t->shape[1] + col] = value;
