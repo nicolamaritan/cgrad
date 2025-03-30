@@ -66,13 +66,13 @@ void tensor2d_add_row_vector_unchecked(const tensor *const A, const tensor *cons
 
     double *A_data = A->data;
     double *v_data = v->data;
-    double *out_data = out->data;
 
     for (size_t i = 0; i < rows; i++)
     {
         for (size_t j = 0; j < cols; j++)
         {
-            out_data[i * cols + j] = A_data[i * cols + j] + v_data[j];
+            // Unchecked is invoked for performance reasons.
+            tensor2d_set_unchecked(out, i, j, A_data[i * cols + j] + v_data[j]);
         }
     }
 }

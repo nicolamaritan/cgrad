@@ -33,76 +33,6 @@ void linear_forward_graph(tensor *const x, linear_layer *const layer, tensor *co
 
     // XW + b computation
     tensor2d_add_row_vector_graph(mult, layer->biases, out);
-    // linear_forward(x, layer, out);
-
-    // computational_graph_node *x_node = x->node ? x->node : computational_graph_node_tensor_alloc(x);
-
-    // tensor *weights = layer->weights;
-    // tensor *biases = layer->biases;
-
-    // // Create children node, the parameters nodes in this case
-    // computational_graph_node *weights_node = weights->node ? weights->node : computational_graph_node_tensor_alloc(weights);
-    // computational_graph_node *biases_node = biases->node ? biases->node : computational_graph_node_tensor_alloc(biases);
-
-    // computational_graph_node *out_node = computational_graph_node_tensor_alloc(out);
-
-    // // Setup connections
-    // add_parent(x_node, out_node, PREDICTED);
-    // add_parent(weights_node, out_node, WEIGHTS);
-    // add_parent(biases_node, out_node, BIASES);
-    // add_child(out_node, x_node);
-    // add_child(out_node, weights_node);
-    // add_child(out_node, biases_node);
-
-    // backpropagation_function_data *data = malloc(sizeof(backpropagation_function_data));
-    // data->layer = (void *)layer;
-    // data->inputs = (void *)x;
-    // out_node->data = data;
-
-    // backpropagation_function function = (backpropagation_function)&linear_backpropagate;
-    // out_node->function = function;
-
-    // out_node->free_data = (backpropagation_function_data_cleanup)&free_linear_backpropagation_function_data;
-}
-
-void linear_backpropagate(const backpropagation_function_data *const data, const tensor *const grad_wrt_out, tensor* grad_wrt_operand, size_t operand)
-{
-    tensor *x = (tensor *)data->inputs;
-    linear_layer *layer = (linear_layer *)data->layer;
-    // tensor *out;
-
-    switch (operand)
-    {
-    case PREDICTED:
-        tensor *weights = layer->weights;
-        tensor *weights_trans = tensor2d_no_grad_alloc(weights->shape[1], weights->shape[0]);
-        tensor2d_trans(weights, weights_trans);
-        tensor2d_mult(grad_wrt_out, weights_trans, grad_wrt_operand);
-        tensor_no_grad_free(weights_trans);
-        break;
-
-    case WEIGHTS:
-        tensor *x_trans = tensor2d_no_grad_alloc(x->shape[1], x->shape[0]);
-        tensor2d_trans(x, x_trans);
-        tensor2d_mult(x_trans, grad_wrt_out, grad_wrt_operand);
-        tensor_no_grad_free(x_trans);
-        break;
-
-    case BIASES:
-        size_t G_rows = grad_wrt_out->shape[0];
-        size_t G_cols = grad_wrt_out->shape[1];
-
-        for (size_t j = 0; j < G_cols; j++)
-            grad_wrt_operand->data[j] = 0;
-
-        // Iterating by row since vectors are stored in row-major
-        for (size_t i = 0; i < G_rows; i++)
-            for (size_t j = 0; j < G_cols; j++)
-                grad_wrt_operand->data[j] += grad_wrt_out->data[i * G_cols + j];
-        break;
-    default:
-        break;
-    }
 }
 
 void linear_forward(const tensor *const x, const linear_layer *const layer, tensor *const mult, tensor *const out)
@@ -135,9 +65,4 @@ void linear_free(linear_layer *layer)
     tensor_free(layer->weights);
     tensor_free(layer->biases);
     free(layer);
-}
-
-void free_linear_backpropagation_function_data(backpropagation_function_data *data)
-{
-    free(data);
 }
