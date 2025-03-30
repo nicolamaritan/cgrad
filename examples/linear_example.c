@@ -75,11 +75,13 @@ int main()
     size_t epochs = 10000;
     for (size_t i = 0; i < epochs; i++)
     {
+        // tensor *mult = tensor2d_alloc(batch_size, out_dim);
+        // tensor2d_mult_graph(x, linear1->weights, mult);
+        // tensor *h1 = tensor2d_alloc(batch_size, out_dim);
+        // tensor2d_add_row_vector_graph(mult, linear1->biases, h1);
         tensor *mult = tensor2d_alloc(batch_size, out_dim);
-        tensor2d_mult_graph(x, linear1->weights, mult);
-
         tensor *h1 = tensor2d_alloc(batch_size, out_dim);
-        tensor2d_add_row_vector_graph(mult, linear1->biases, h1);
+        linear_forward_graph(x, linear1, mult, h1);
 
         tensor *z = tensor2d_alloc(1, 1);
         mse_loss_graph(h1, y_target, z);

@@ -8,17 +8,26 @@
 #include <stdlib.h>
 #include <string.h>
 
+const char* LINEAR_LAYER_MEMORY_ALLOCATION_ERROR = "Error: Linear layer memory allocation failed.";
+
 linear_layer *linear_create(size_t in_dim, size_t out_dim)
 {
     linear_layer *layer = (linear_layer *)malloc(sizeof(linear_layer));
     tensor *weights = tensor2d_alloc(in_dim, out_dim);
     tensor *biases = tensor2d_alloc(out_dim, 1);
 
-    if (!layer || !weights)
+    if (!layer)
     {
-        fprintf(stderr, "Error: Memory allocation failed.\n");
+        fprintf(stderr, LINEAR_LAYER_MEMORY_ALLOCATION_ERROR);
         return NULL;
     }
+
+    if (!weights || !biases)
+    {
+        // stderr already written by tensor allocation functions 
+        return NULL;
+    }
+
     layer->in_dim = in_dim;
     layer->out_dim = out_dim;
     layer->weights = weights;
@@ -26,23 +35,26 @@ linear_layer *linear_create(size_t in_dim, size_t out_dim)
     return layer;
 }
 
-void linear_forward_graph(tensor *const x, linear_layer *const layer, tensor *const mult, tensor *const out)
+tensor_error linear_forward_graph(tensor *const x, linear_layer *const layer, tensor *const mult, tensor *const out)
 {
     // XW computation 
-    tensor2d_mult_graph(x, layer->weights, mult);
+    tensor_error error = tensor2d_mult_graph(x, layer->weights, mult);
+    if (error != TENSOR_OK)
+        return error;
 
     // XW + b computation
-    tensor2d_add_row_vector_graph(mult, layer->biases, out);
+    return tensor2d_add_row_vector_graph(mult, layer->biases, out);
 }
 
-void linear_forward(const tensor *const x, const linear_layer *const layer, tensor *const mult, tensor *const out)
+tensor_error linear_forward(const tensor *const x, const linear_layer *const layer, tensor *const mult, tensor *const out)
 {
     // XW computation 
-    // tensor* mult = tensor2d_alloc(x->shape[0], layer->weights->shape[1]);
-    tensor2d_mult(x, layer->weights, mult);
+    tensor_error error = tensor2d_mult(x, layer->weights, mult);
+    if (error != TENSOR_OK)
+        return error;
 
     // XW + b computation
-    tensor2d_add_row_vector(mult, layer->biases, out);
+    return tensor2d_add_row_vector(mult, layer->biases, out);
 }
 
 void linear_xavier_init(linear_layer *layer)
