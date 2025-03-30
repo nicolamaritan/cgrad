@@ -155,40 +155,6 @@ void tensor_no_grad_free(tensor *t)
     free(t);
 }
 
-tensor_error tensor2d_mult(const tensor *const A, const tensor *const B, tensor *const out)
-{
-    if (!A || !B || !out)
-        return TENSOR_NULL;
-    if (!A->shape || !B->shape || !out->shape)
-        return TENSOR_SHAPE_NULL;
-    if (A->shape[1] != B->shape[0])
-        return TENSOR_SHAPE_MISMATCH; // Columns of A != rows of B
-    if (out->shape[0] != A->shape[0] || out->shape[1] != B->shape[1])
-        return TENSOR_SHAPE_MISMATCH; // Output shape mismatch
-
-    tensor2d_mult_unchecked(A, B, out);
-    return TENSOR_OK;
-}
-
-void tensor2d_mult_unchecked(const tensor *const A, const tensor *const B, tensor *const out)
-{
-    cblas_dgemm(
-        CblasRowMajor,
-        CblasNoTrans,
-        CblasNoTrans,
-        A->shape[0], // M
-        B->shape[1], // N
-        A->shape[1], // K (must match B->shape[0])
-        1.0,
-        A->data,
-        A->shape[1], // lda
-        B->data,
-        B->shape[1], // ldb
-        0.0,
-        out->data,
-        out->shape[1] // ldc
-    );
-}
 
 tensor_error tensor2d_trans(const tensor *const t, tensor *const out)
 {
@@ -223,7 +189,7 @@ void tensor2d_trans_unchecked(const tensor *const t, tensor *const out)
     }
 }
 
-void tensor_copy(const tensor *const src, tensor *dest)
+void tensor2d_copy(const tensor *const src, tensor *const dest)
 {
     if (!src || !dest)
         return;
@@ -253,49 +219,8 @@ tensor *tensor_clone(const tensor *const src)
     return new_tensor;
 }
 
-tensor_error tensor2d_add_row_vector(tensor *const A, const tensor *const v)
-{
-    if (!A || !v)
-        return TENSOR_NULL;
-    if (!A->data || !v->data)
-        return TENSOR_DATA_NULL;
-    if (!A->shape || !v->shape)
-        return TENSOR_SHAPE_NULL;
-    if (A->shape_size != 2 || v->shape_size != 2)
-        return TENSOR_WRONG_SHAPE;
-    if (v->shape[1] != 1)
-        return TENSOR_WRONG_SHAPE;
-    if (A->shape[1] != v->shape[0])
-        return TENSOR_SHAPE_MISMATCH;
 
-    tensor2d_add_row_vector_unchecked(A, v);
-    return TENSOR_OK;
-}
-
-void tensor2d_add_row_vector_unchecked(tensor *const A, const tensor *const v)
-{
-    size_t rows = A->shape[0]; // Number of rows
-    size_t cols = A->shape[1]; // Number of columns
-
-    if (v->shape[0] != cols || v->shape[1] != 1)
-    {
-        // Handle dimension mismatch (bias should have shape [out_dim, 1])
-        return;
-    }
-
-    double *out_data = A->data;
-    double *bias_data = v->data;
-
-    for (size_t i = 0; i < rows; i++)
-    {
-        for (size_t j = 0; j < cols; j++)
-        {
-            out_data[i * cols + j] += bias_data[j];
-        }
-    }
-}
-
-void tensor_add_unchecked(const tensor *const A, const tensor *const B, tensor *const out)
+void tensor_add_unchecked(const tensor *const A, const tensor *const B, tensor *const out, bool build_graph)
 {
     for (size_t i = 0; i < A->data_size; i++)
     {
@@ -303,7 +228,7 @@ void tensor_add_unchecked(const tensor *const A, const tensor *const B, tensor *
     }
 }
 
-tensor_error tensor_add(const tensor *const A, const tensor *const B, tensor *const out)
+tensor_error tensor_add(const tensor *const A, const tensor *const B, tensor *const out, bool build_graph)
 {
     if (!A || !B || !out)
         return TENSOR_NULL;
@@ -316,7 +241,7 @@ tensor_error tensor_add(const tensor *const A, const tensor *const B, tensor *co
     if (tensor_same_shape(A, B))
         return TENSOR_SHAPE_MISMATCH;
 
-    tensor_add_unchecked(A, B, out);
+    tensor_add_unchecked(A, B, out, build_graph);
     return TENSOR_OK;
 }
 

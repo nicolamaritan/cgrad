@@ -17,7 +17,7 @@ computational_graph_node *computational_graph_node_alloc()
     return node;
 }
 
-computational_graph_node *computational_graph_node_tensor_alloc(tensor *t)
+computational_graph_node *computational_graph_node_tensor_alloc(tensor *const t)
 {
     computational_graph_node *node = computational_graph_node_alloc();
     t->node = node;
@@ -25,7 +25,7 @@ computational_graph_node *computational_graph_node_tensor_alloc(tensor *t)
     return node;
 }
 
-void free_computational_graph_node(computational_graph_node *node)
+void free_computational_graph_node(computational_graph_node *const node)
 {
     /*
         We allow node->free to be NULL to avoid free functions

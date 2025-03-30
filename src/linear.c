@@ -1,5 +1,7 @@
 #include "linear.h"
 #include "random.h"
+#include "tensor2d_mult.h"
+#include "tensor2d_add_row_vector.h"
 #include <math.h>
 #include <stdio.h>
 #include <cblas.h>
@@ -24,38 +26,45 @@ linear_layer *linear_create(size_t in_dim, size_t out_dim)
     return layer;
 }
 
-void linear_forward_graph(tensor *const x, linear_layer *const layer, tensor *const out)
+void linear_forward_graph(tensor *const x, linear_layer *const layer, tensor *const mult, tensor *const out)
 {
-    linear_forward(x, layer, out);
+    // XW computation 
+    // tensor* mult = tensor2d_alloc(x->shape[0], layer->weights->shape[1]);
+    tensor2d_mult_graph(x, layer->weights, out);
+    return;
 
-    computational_graph_node *x_node = x->node ? x->node : computational_graph_node_tensor_alloc(x);
+    // XW + b computation
+    tensor2d_add_row_vector_graph(mult, layer->biases, out);
+    // linear_forward(x, layer, out);
 
-    tensor *weights = layer->weights;
-    tensor *biases = layer->biases;
+    // computational_graph_node *x_node = x->node ? x->node : computational_graph_node_tensor_alloc(x);
 
-    // Create children node, the parameters nodes in this case
-    computational_graph_node *weights_node = weights->node ? weights->node : computational_graph_node_tensor_alloc(weights);
-    computational_graph_node *biases_node = biases->node ? biases->node : computational_graph_node_tensor_alloc(biases);
+    // tensor *weights = layer->weights;
+    // tensor *biases = layer->biases;
 
-    computational_graph_node *out_node = computational_graph_node_tensor_alloc(out);
+    // // Create children node, the parameters nodes in this case
+    // computational_graph_node *weights_node = weights->node ? weights->node : computational_graph_node_tensor_alloc(weights);
+    // computational_graph_node *biases_node = biases->node ? biases->node : computational_graph_node_tensor_alloc(biases);
 
-    // Setup connections
-    add_parent(x_node, out_node, PREDICTED);
-    add_parent(weights_node, out_node, WEIGHTS);
-    add_parent(biases_node, out_node, BIASES);
-    add_child(out_node, x_node);
-    add_child(out_node, weights_node);
-    add_child(out_node, biases_node);
+    // computational_graph_node *out_node = computational_graph_node_tensor_alloc(out);
 
-    backpropagation_function_data *data = malloc(sizeof(backpropagation_function_data));
-    data->layer = (void *)layer;
-    data->inputs = (void *)x;
-    out_node->data = data;
+    // // Setup connections
+    // add_parent(x_node, out_node, PREDICTED);
+    // add_parent(weights_node, out_node, WEIGHTS);
+    // add_parent(biases_node, out_node, BIASES);
+    // add_child(out_node, x_node);
+    // add_child(out_node, weights_node);
+    // add_child(out_node, biases_node);
 
-    backpropagation_function function = (backpropagation_function)&linear_backpropagate;
-    out_node->function = function;
+    // backpropagation_function_data *data = malloc(sizeof(backpropagation_function_data));
+    // data->layer = (void *)layer;
+    // data->inputs = (void *)x;
+    // out_node->data = data;
 
-    out_node->free_data = (backpropagation_function_data_cleanup)&free_linear_backpropagation_function_data;
+    // backpropagation_function function = (backpropagation_function)&linear_backpropagate;
+    // out_node->function = function;
+
+    // out_node->free_data = (backpropagation_function_data_cleanup)&free_linear_backpropagation_function_data;
 }
 
 void linear_backpropagate(const backpropagation_function_data *const data, const tensor *const grad_wrt_out, tensor* grad_wrt_operand, size_t operand)
@@ -98,10 +107,14 @@ void linear_backpropagate(const backpropagation_function_data *const data, const
     }
 }
 
-void linear_forward(const tensor *const x, const linear_layer *const layer, tensor *const out)
+void linear_forward(const tensor *const x, const linear_layer *const layer, tensor *const mult, tensor *const out)
 {
-    tensor2d_mult(x, layer->weights, out);
-    tensor2d_add_row_vector(out, layer->biases);
+    // XW computation 
+    // tensor* mult = tensor2d_alloc(x->shape[0], layer->weights->shape[1]);
+    tensor2d_mult(x, layer->weights, mult);
+
+    // XW + b computation
+    tensor2d_add_row_vector(mult, layer->biases, out);
 }
 
 void linear_xavier_init(linear_layer *layer)

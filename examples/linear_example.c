@@ -14,7 +14,7 @@ int main()
 {
     init_random();
 
-    const size_t batch_size = 128;
+    const size_t batch_size = 4;
 
     // Allocate tensors x (128x4) and y (128x1)
     tensor *x = tensor2d_alloc(batch_size, 4);
@@ -66,39 +66,53 @@ int main()
     add_param(&params, linear1->biases);
 
     // size_t epochs = 10000000;
-    size_t epochs = 1000;
+    size_t epochs = 10;
     for (size_t i = 0; i < epochs; i++)
     {
-        // tensor *h0 = tensor2d_alloc(batch_size, out_dim);
-        // linear_forward_graph(x, linear1, h0);
-        // free_computational_graph_node(x->node);
-        // free_computational_graph_node(h0->node);
-        // free_computational_graph_node(linear1->weights->node);
-        // free_computational_graph_node(linear1->biases->node);
-        // tensor_free(h0);
-        // continue;
-
         tensor *h1 = tensor2d_alloc(batch_size, out_dim);
-        linear_forward_graph(x, linear1, h1);
+        tensor *mult = tensor2d_alloc(batch_size, out_dim);
+        linear_forward_graph(x, linear1, mult, h1);
 
         tensor *z = tensor2d_alloc(1, 1);
         mse_loss_graph(h1, y_target, z);
 
-        //printf("h1: ");
-        //print_tensor(h1);
+        // print_computational_graph_node(x->node);
+        // print_computational_graph_node(linear1->weights->node);
+        // print_computational_graph_node(x->node->parents[0]);
+        // print_computational_graph_node(linear1->biases->node);
+        // print_computational_graph_node(h1->node);
+        // print_computational_graph_node(z->node);
+        // printf("\n\n");
 
-        // printf("y_target: ");
-        // print_tensor(y_target);
+
 
         printf("z: ");
         print_tensor(z);
 
         // backpropagate(&targets);
         zero_grad(&params);        
+        print_tensor(x->grad);
+        print_tensor(linear1->weights->grad);
+        // print_tensor(mult->grad);
+        print_tensor(linear1->biases->grad);
+        print_tensor(h1->grad);
+        print_tensor(z->grad);
+        printf("\n\n");
+
         backward(z, false);
+
+        print_tensor(x->grad);
+        print_tensor(linear1->weights->grad);
+        // print_tensor(mult->grad);
+        print_tensor(linear1->biases->grad);
+        print_tensor(h1->grad);
+        print_tensor(z->grad);
+        printf("\n\n");
+
         sgd_step(0.00001, &params);
 
         tensor_free(h1);
+        // tensor_free(mult);
         tensor_free(z);
 
         assert(!x->node && !h1->node && !linear1->weights->node && !linear1->biases->node && !y_target->node && !z->node);

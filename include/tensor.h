@@ -38,21 +38,21 @@ tensor *tensor2d_no_grad_zero_alloc(size_t rows, size_t cols);
 tensor *tensor2d_alloc_like(tensor *t);
 void tensor_free(tensor *t);
 void tensor_no_grad_free(tensor *t);
+
 static inline void tensor2d_set_unchecked(tensor *t, size_t row, size_t col, double value);
 static inline tensor_error tensor2d_set(tensor *t, size_t row, size_t col, double value);
-tensor_error tensor2d_mult(const tensor *const A, const tensor *const B, tensor *const out);
-void tensor2d_mult_unchecked(const tensor *const A, const tensor *const B, tensor *const out);
-tensor_error tensor2d_trans(const tensor *const t, tensor *const out);
-void tensor2d_trans_unchecked(const tensor *const t, tensor *const out);
-tensor_error tensor_add(const tensor *const A, const tensor *const B, tensor *const out);
-void tensor_add_unchecked(const tensor *const A, const tensor *const B, tensor *const out);
 tensor_error tensor_add_inplace(tensor *A, const tensor *const B);
 void tensor_add_inplace_unchecked(tensor *A, const tensor *const B);
-tensor_error tensor2d_add_row_vector(tensor *const A, const tensor *const v);
-void tensor2d_add_row_vector_unchecked(tensor *const A, const tensor *const v);
-void tensor_copy(const tensor *const src, tensor *dest);
 tensor *tensor_clone(const tensor *const src);
+void tensor2d_copy(const tensor *const src, tensor *const dest);
 bool tensor_same_shape(const tensor *const A, const tensor *const B);
+tensor_error tensor2d_trans(const tensor *const t, tensor *const out);
+void tensor2d_trans_unchecked(const tensor *const t, tensor *const out);
+
+// Differentiable operations
+tensor_error tensor_add(const tensor *const A, const tensor *const B, tensor *const out, bool requires_grad);
+void tensor_add_unchecked(const tensor *const A, const tensor *const B, tensor *const out, bool requires_grad);
+
 void print_tensor(const tensor *const t);
 
 static inline void tensor2d_set_unchecked(tensor *t, size_t row, size_t col, double value)

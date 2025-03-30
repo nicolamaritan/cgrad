@@ -68,13 +68,14 @@ int main()
     for (size_t i = 0; i < epochs; i++)
     {
         tensor *h1 = tensor2d_alloc(batch_size, out_dim);
-        linear_forward_graph(x, linear1, h1);
+        tensor *mult= tensor2d_alloc(batch_size, out_dim);
+        linear_forward(x, linear1, mult, h1);
         // printf("h1: ");
         // print_tensor(h1);
         // printf("\n\n");
 
         tensor *h2 = tensor2d_alloc(batch_size, out_dim);
-        relu_forward_graph(h1, h2);
+        relu_forward(h1, h2);
         // printf("h2: ");
         // print_tensor(h2);
         // printf("\n\n");
