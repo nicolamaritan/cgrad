@@ -1,5 +1,6 @@
 #include "tensor.h"
 #include "tensor2d_mult.h"
+#include "tensor2d_trans.h"
 #include "computational_graph.h"
 #include <cblas.h>
 #include <stdlib.h>

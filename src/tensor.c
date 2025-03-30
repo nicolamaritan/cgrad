@@ -155,40 +155,6 @@ void tensor_no_grad_free(tensor *t)
     free(t);
 }
 
-
-tensor_error tensor2d_trans(const tensor *const t, tensor *const out)
-{
-    if (!t || !out)
-        return TENSOR_NULL;
-    if (!t->shape || !out->shape)
-        return TENSOR_SHAPE_NULL;
-    if (!t->data || !out->data)
-        return TENSOR_DATA_NULL;
-    if (t->shape[0] != out->shape[1] || t->shape[1] != out->shape[0])
-        return TENSOR_SHAPE_MISMATCH;
-
-    tensor2d_trans_unchecked(t, out);
-    return TENSOR_OK;
-}
-
-void tensor2d_trans_unchecked(const tensor *const t, tensor *const out)
-{
-    // Extract the shape of the input tensor (t)
-    size_t rows = t->shape[0];
-    size_t cols = t->shape[1];
-
-    out->shape[0] = cols;
-    out->shape[1] = rows;
-
-    for (size_t i = 0; i < rows; i++)
-    {
-        for (size_t j = 0; j < cols; j++)
-        {
-            out->data[j * rows + i] = t->data[i * cols + j];
-        }
-    }
-}
-
 void tensor2d_copy(const tensor *const src, tensor *const dest)
 {
     if (!src || !dest)

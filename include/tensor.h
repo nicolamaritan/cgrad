@@ -46,8 +46,6 @@ void tensor_add_inplace_unchecked(tensor *A, const tensor *const B);
 tensor *tensor_clone(const tensor *const src);
 void tensor2d_copy(const tensor *const src, tensor *const dest);
 bool tensor_same_shape(const tensor *const A, const tensor *const B);
-tensor_error tensor2d_trans(const tensor *const t, tensor *const out);
-void tensor2d_trans_unchecked(const tensor *const t, tensor *const out);
 
 // Differentiable operations
 tensor_error tensor_add(const tensor *const A, const tensor *const B, tensor *const out, bool requires_grad);
