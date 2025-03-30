@@ -5,6 +5,8 @@
 #include <string.h>
 #include <stddef.h>
 
+const char* TENSOR_MEMORY_ALLOCATION_ERROR = "Error: Tensor memory allocation failed.";
+
 tensor *tensor_alloc(size_t *shape, size_t shape_size)
 {
     tensor *t = tensor_no_grad_alloc(shape, shape_size);
@@ -81,7 +83,7 @@ tensor *tensor2d_no_grad_alloc(size_t rows, size_t cols)
 
     if (!shape || !data || !t)
     {
-        fprintf(stderr, "Error: Memory allocation failed.\n");
+        fprintf(stderr, TENSOR_MEMORY_ALLOCATION_ERROR);
         return NULL;
     }
 
@@ -108,7 +110,7 @@ tensor *tensor2d_no_grad_zero_alloc(size_t rows, size_t cols)
 
     if (!shape || !data || !t)
     {
-        fprintf(stderr, "Error: Memory allocation failed.\n");
+        fprintf(stderr, TENSOR_MEMORY_ALLOCATION_ERROR);
         return NULL;
     }
 
@@ -155,43 +157,41 @@ void tensor_no_grad_free(tensor *t)
     free(t);
 }
 
-void tensor2d_copy(const tensor *const src, tensor *const dest)
+tensor_error tensor2d_copy(const tensor *const src, tensor *const dest)
 {
     if (!src || !dest)
-        return;
-
-    // Ensure shapes are identical before copying
-    if (src->shape[0] == dest->shape[0] && src->shape[1] == dest->shape[1])
-    {
-        memcpy(dest->data, src->data, src->shape[0] * src->shape[1] * sizeof(double));
-    }
-    else
-    {
-        fprintf(stderr, "Error: Tensor shapes do not match for copy operation.\n");
-    }
+        return TENSOR_NULL;
+    if (!src->data || !dest->data)
+        return TENSOR_DATA_NULL;
+    if (!src->shape || !dest->shape_size)
+        return TENSOR_SHAPE_NULL;
+    if (src->shape[0] != dest->shape[0] || src->shape[1] != dest->shape[1])
+        return TENSOR_SHAPE_MISMATCH;
+        
+    memcpy(dest->data, src->data, src->shape[0] * src->shape[1] * sizeof(double));
+    return TENSOR_OK;
 }
 
-void tensor_copy(const tensor *const src, tensor *const dest)
+tensor_error tensor_copy(const tensor *const src, tensor *const dest)
 {
     if (!src || !dest)
-        return;
-    
+        return TENSOR_NULL;
+    if (!src->data || !dest->data)
+        return TENSOR_DATA_NULL;
+    if (!src->shape || !dest->shape_size)
+        return TENSOR_SHAPE_NULL;
     if (src->shape_size != dest->shape_size)
-    {
-        fprintf(stderr, "Error: Tensor shapes do not match for copy operation.\n");
-        return;
-    }
+        return TENSOR_SHAPE_MISMATCH;
 
     for (size_t i = 0; i < src->shape_size; i++)
     {
         if (src->shape[i] != dest->shape[i])
-        {
-            fprintf(stderr, "Error: Tensor shapes do not match for copy operation.\n");
-            return;
-        }
+            return TENSOR_SHAPE_MISMATCH;
     }
 
     memcpy(dest->data, src->data, sizeof(double) * src->data_size);
+
+    return TENSOR_OK;
 }
 
 

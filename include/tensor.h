@@ -46,8 +46,8 @@ static inline tensor_error tensor2d_set(tensor *t, size_t row, size_t col, doubl
 tensor_error tensor_add_inplace(tensor *A, const tensor *const B);
 void tensor_add_inplace_unchecked(tensor *A, const tensor *const B);
 tensor *tensor_clone(const tensor *const src);
-void tensor2d_copy(const tensor *const src, tensor *const dest);
-void tensor_copy(const tensor *const src, tensor *const dest);
+tensor_error tensor2d_copy(const tensor *const src, tensor *const dest);
+tensor_error tensor_copy(const tensor *const src, tensor *const dest);
 void tensor_fill(tensor *const t, double value);
 
 // Helper functions
