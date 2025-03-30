@@ -10,6 +10,9 @@ const char* TENSOR_MEMORY_ALLOCATION_ERROR = "Error: Tensor memory allocation fa
 tensor *tensor_alloc(size_t *shape, size_t shape_size)
 {
     tensor *t = tensor_no_grad_alloc(shape, shape_size);
+    if (!t)
+        return NULL;
+
     t->grad = tensor_no_grad_zero_alloc(shape, shape_size);
     return t;
 }
@@ -27,8 +30,14 @@ tensor* tensor_no_grad_alloc(size_t *shape, size_t shape_size)
     double* data = (double *)malloc(data_size * sizeof(double));
     size_t *_shape = (size_t *)malloc((shape_size + 1)* sizeof(size_t));
 
+    if (!_shape || !data || !t)
+    {
+        fprintf(stderr, TENSOR_MEMORY_ALLOCATION_ERROR);
+        return NULL;
+    }
+
     // Init _shape
-    memcpy(_shape, shape, sizeof(size_t) * shape_size);
+    memcpy(_shape, shape, shape_size * sizeof(size_t));
     _shape[shape_size] = 0;
 
     t->data = data;
@@ -52,8 +61,14 @@ tensor* tensor_no_grad_zero_alloc(size_t *shape, size_t shape_size)
     double* data = (double *)calloc(data_size, sizeof(double));
     size_t *_shape = (size_t *)malloc((shape_size + 1)* sizeof(size_t));
 
+    if (!_shape || !data || !t)
+    {
+        fprintf(stderr, TENSOR_MEMORY_ALLOCATION_ERROR);
+        return NULL;
+    }
+
     // Init _shape
-    memcpy(_shape, shape, shape_size);
+    memcpy(_shape, shape, shape_size * sizeof(size_t));
     _shape[shape_size] = 0;
 
 
@@ -70,6 +85,9 @@ tensor* tensor_no_grad_zero_alloc(size_t *shape, size_t shape_size)
 tensor *tensor2d_alloc(size_t rows, size_t cols)
 {
     tensor *t = tensor2d_no_grad_alloc(rows, cols);
+    if (!t)
+        return NULL;
+
     t->grad = tensor2d_no_grad_zero_alloc(rows, cols);
     return t;
 }
@@ -79,7 +97,6 @@ tensor *tensor2d_no_grad_alloc(size_t rows, size_t cols)
     tensor *t = (tensor *)malloc(sizeof(tensor));
     double *data = (double *)malloc(rows * cols * sizeof(double));
     size_t *shape = (size_t *)malloc(3 * sizeof(size_t));
-    shape[2] = 0;
 
     if (!shape || !data || !t)
     {
@@ -87,9 +104,10 @@ tensor *tensor2d_no_grad_alloc(size_t rows, size_t cols)
         return NULL;
     }
 
-    // Set the 2 dimensions
+    // Set the 2 dimensions and null terminator
     shape[0] = rows;
     shape[1] = cols;
+    shape[2] = 0;
 
     t->data = data;
     t->shape = shape;
@@ -106,7 +124,6 @@ tensor *tensor2d_no_grad_zero_alloc(size_t rows, size_t cols)
     tensor *t = (tensor *)malloc(sizeof(tensor));
     double *data = (double *)calloc(rows * cols, sizeof(double)); // Ensure 0 for all cells
     size_t *shape = (size_t *)malloc(3 * sizeof(size_t));
-    shape[2] = 0;
 
     if (!shape || !data || !t)
     {
@@ -114,9 +131,10 @@ tensor *tensor2d_no_grad_zero_alloc(size_t rows, size_t cols)
         return NULL;
     }
 
-    // Set the 2 dimensions
+    // Set the 2 dimensions and null terminator
     shape[0] = rows;
     shape[1] = cols;
+    shape[2] = 0;
 
     t->data = data;
     t->shape = shape;
