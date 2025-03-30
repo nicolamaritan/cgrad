@@ -51,14 +51,8 @@ tensor_error tensor2d_add_row_vector_graph(tensor *const A, tensor *const v, ten
     add_child(out_node, A_node);
     add_child(out_node, v_node);
 
-    // backpropagation_function_data *data = malloc(sizeof(backpropagation_function_data));
-    // data->layer = NULL;
-    // data->inputs = NULL;
-    // out_node->data = data;
-
     backpropagation_function function = (backpropagation_function)&tensor2d_add_row_vector_backpropagate;
     out_node->function = function;
-
     out_node->data = NULL;
     out_node->free_data = NULL;
 
@@ -70,20 +64,15 @@ void tensor2d_add_row_vector_unchecked(const tensor *const A, const tensor *cons
     size_t rows = A->shape[0]; // Number of rows
     size_t cols = A->shape[1]; // Number of columns
 
-    if (v->shape[0] != cols || v->shape[1] != 1)
-    {
-        // Handle dimension mismatch (bias should have shape [out_dim, 1])
-        return;
-    }
-
-    double *out_data = A->data;
-    double *bias_data = v->data;
+    double *A_data = A->data;
+    double *v_data = v->data;
+    double *out_data = out->data;
 
     for (size_t i = 0; i < rows; i++)
     {
         for (size_t j = 0; j < cols; j++)
         {
-            out_data[i * cols + j] += bias_data[j];
+            out_data[i * cols + j] = A_data[i * cols + j] + v_data[j];
         }
     }
 }
@@ -109,6 +98,7 @@ void tensor2d_add_row_vector_backpropagate(const backpropagation_function_data *
                 grad_wrt_operand->data[j] += grad_wrt_out->data[i * G_cols + j];
         break;
     default:
+        exit(1);
         break;
     }
 }

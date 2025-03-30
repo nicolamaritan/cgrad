@@ -29,9 +29,7 @@ linear_layer *linear_create(size_t in_dim, size_t out_dim)
 void linear_forward_graph(tensor *const x, linear_layer *const layer, tensor *const mult, tensor *const out)
 {
     // XW computation 
-    // tensor* mult = tensor2d_alloc(x->shape[0], layer->weights->shape[1]);
-    tensor2d_mult_graph(x, layer->weights, out);
-    return;
+    tensor2d_mult_graph(x, layer->weights, mult);
 
     // XW + b computation
     tensor2d_add_row_vector_graph(mult, layer->biases, out);
