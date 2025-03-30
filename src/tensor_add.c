@@ -17,7 +17,7 @@ tensor_error tensor_add(const tensor *const A, const tensor *const B, tensor *co
         return TENSOR_SHAPE_NULL;
     if (A->data_size != B->data_size || B->data_size != out->data_size)
         return TENSOR_DATA_SIZE_MISMATCH;
-    if (tensor_same_shape(A, B))
+    if (!tensor_same_shape(A, B))
         return TENSOR_SHAPE_MISMATCH;
 
     tensor_add_unchecked(A, B, out);

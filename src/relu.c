@@ -2,35 +2,33 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-tensor* relu_backpropagate(const backpropagation_function_data* const data, const tensor* const D, size_t operand)
+void relu_backpropagate(const backpropagation_function_data* const data, const tensor* const grad_wrt_out, tensor *grad_wrt_operand, size_t operand)
 {
     tensor* x = (tensor*)data->inputs;
-    //tensor* out = tensor2d_alloc_like(x);
-    tensor* out = tensor2d_no_grad_alloc(x->shape[0], x->shape[1]);
     
     // Avoid multiple indirections for performance
     double* x_data = x->data;
-    double* out_data = out->data;
-    size_t out_data_size = out->data_size;
+    double* grad_wrt_operand_data = grad_wrt_operand->data;
+    size_t grad_wrt_operand_data_size = grad_wrt_operand->data_size;
     
     /*
         Gradient computation of dz/dX.
-        dz/dX is the Hadamard Product of D = dz/drelu(X) and drelu(X)/dX,
+        dz/dX is the Hadamard Product of grad_wrt_out = dz/drelu(X) and drelu(X)/dX,
         since element (i, j) of relu(X) depends only on element (i, j) of X.
     */
     
-    for (size_t i = 0; i < out_data_size; i++)
+    for (size_t i = 0; i < grad_wrt_operand_data_size; i++)
     {
         // Element wise product
-        out_data[i] = (x_data[i] > 0 ? 1 : 0) * D->data[i];
+        grad_wrt_operand_data[i] = (x_data[i] > 0 ? 1 : 0) * grad_wrt_out->data[i];
     }
-
-    return out;
 }
 
-void relu_forward_graph(tensor* const x, tensor* const out)
+tensor_error relu_forward_graph(tensor* const x, tensor* const out)
 {
-    relu_forward(x, out);
+    tensor_error error = relu_forward(x, out);
+    if (error != TENSOR_OK)
+        return error;
 
     computational_graph_node* x_node = x->node ? x->node : computational_graph_node_tensor_alloc(x);
     computational_graph_node* out_node = computational_graph_node_tensor_alloc(out);
@@ -43,18 +41,23 @@ void relu_forward_graph(tensor* const x, tensor* const out)
     data->inputs = (void*)x;
     out_node->data = data;
 
-    backpropagation_function function = (backpropagation_function)&relu_backpropagate;
-    out_node->function = function;
+    out_node->function = (backpropagation_function)&relu_backpropagate;
 
     out_node->free_data = (backpropagation_function_data_cleanup)&free_relu_backpropagation_function_data;
+
+    return TENSOR_OK;
 }
 
-void relu_forward(const tensor* const x, tensor* const out)
+tensor_error relu_forward(const tensor* const x, tensor* const out)
 {
+    if (!x || !out)
+        return TENSOR_NULL;
+    if (!x->data || !out->data)
+        return TENSOR_DATA_NULL;
+    if (!x->shape || !out->shape)
+        return TENSOR_SHAPE_NULL;
     if (!tensor_same_shape(x, out))
-    {
-        return;
-    }
+        return TENSOR_SHAPE_MISMATCH;
 
     // Avoid multiple indirections for performance
     double* x_data = x->data;
@@ -65,11 +68,11 @@ void relu_forward(const tensor* const x, tensor* const out)
     {
         out_data[i] = x_data[i] > 0 ? x_data[i] : 0;
     }
+
+    return TENSOR_OK;
 }
 
 void free_relu_backpropagation_function_data(backpropagation_function_data* data)
 {
-    printf("Relu free invoked\n");
     free(data);
-    printf("Relu free ended\n");
 }

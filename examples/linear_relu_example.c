@@ -69,13 +69,19 @@ int main()
     {
         tensor *h1 = tensor2d_alloc(batch_size, out_dim);
         tensor *mult= tensor2d_alloc(batch_size, out_dim);
-        linear_forward(x, linear1, mult, h1);
+        linear_forward_graph(x, linear1, mult, h1);
         // printf("h1: ");
         // print_tensor(h1);
         // printf("\n\n");
 
         tensor *h2 = tensor2d_alloc(batch_size, out_dim);
-        relu_forward(h1, h2);
+        tensor_error err = relu_forward_graph(h1, h2);
+        if (err != TENSOR_OK)
+        {
+            fprintf(stderr, "Error: %d.\n", err);
+            exit(1);
+        }
+        
         // printf("h2: ");
         // print_tensor(h2);
         // printf("\n\n");
@@ -89,6 +95,19 @@ int main()
 
         zero_grad(&params);        
         backward(z, false);
+
+        if (i + 1 == epochs)
+        {
+            printf("Gradients:\n");
+            print_tensor(mult->grad);
+            printf("\n");
+            print_tensor(h1->grad);
+            printf("\n");
+            print_tensor(h2->grad);
+            printf("\n");
+            print_tensor(z->grad);
+        }
+
         sgd_step(0.00001, &params);
 
         free(linear1->weights->node);
