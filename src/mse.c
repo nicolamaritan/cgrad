@@ -2,8 +2,19 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void mse_loss(const tensor *const y_pred, const tensor *const y_target, tensor *const z)
+tensor_error mse_loss(const tensor *const y_pred, const tensor *const y_target, tensor *const z)
 {
+    if (!y_pred || !y_target || !z)
+        return TENSOR_NULL;
+    if (!y_pred->data || !y_target->data || !z->data)
+        return TENSOR_DATA_NULL;
+    if (!y_pred->shape || !y_target->shape || !z->shape)
+        return TENSOR_SHAPE_NULL;
+    if (y_pred->data_size != y_target->data_size)
+        return TENSOR_DATA_SIZE_MISMATCH;
+    if (!tensor_same_shape(y_pred, y_target))
+        return TENSOR_SHAPE_MISMATCH;
+
     double batch_size = y_pred->shape[0];
     z->data[0] = 0;
     // tensor* z = tensor2d_alloc(1, 1);
@@ -14,11 +25,15 @@ void mse_loss(const tensor *const y_pred, const tensor *const y_target, tensor *
         z->data[0] += (0.5 * difference * difference);
     }
     z->data[0] /= batch_size;
+
+    return TENSOR_OK;
 }
 
-void mse_loss_graph(tensor *const y_pred, tensor *const y_target, tensor *const z)
+tensor_error mse_loss_graph(tensor *const y_pred, tensor *const y_target, tensor *const z)
 {
-    mse_loss(y_pred, y_target, z);
+    tensor_error err = mse_loss(y_pred, y_target, z);
+    if (err != TENSOR_OK)
+        return err;
 
     computational_graph_node *y_pred_node = y_pred->node ? y_pred->node : computational_graph_node_tensor_alloc(y_pred);
     computational_graph_node *y_target_node = y_target->node ? y_target->node : computational_graph_node_tensor_alloc(y_target);
@@ -49,6 +64,8 @@ void mse_loss_graph(tensor *const y_pred, tensor *const y_target, tensor *const 
     z_node->function = function;
 
     z_node->free_data = (backpropagation_function_data_cleanup)&free_mse_backpropagation_function_data;
+
+    return TENSOR_OK;
 }
 
 void mse_loss_backpropagate(const backpropagation_function_data* const data, const tensor* const grad_wrt_out, tensor* grad_wrt_operand, size_t operand)
