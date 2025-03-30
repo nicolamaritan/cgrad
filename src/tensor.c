@@ -5,6 +5,8 @@
 #include <string.h>
 #include <stddef.h>
 
+const char* TENSOR_MEMORY_ALLOCATION_ERROR = "Error: Tensor memory allocation failed.";
+
 tensor *tensor_alloc(size_t *shape, size_t shape_size)
 {
     tensor *t = tensor_no_grad_alloc(shape, shape_size);
@@ -81,7 +83,7 @@ tensor *tensor2d_no_grad_alloc(size_t rows, size_t cols)
 
     if (!shape || !data || !t)
     {
-        fprintf(stderr, "Error: Memory allocation failed.\n");
+        fprintf(stderr, TENSOR_MEMORY_ALLOCATION_ERROR);
         return NULL;
     }
 
@@ -108,7 +110,7 @@ tensor *tensor2d_no_grad_zero_alloc(size_t rows, size_t cols)
 
     if (!shape || !data || !t)
     {
-        fprintf(stderr, "Error: Memory allocation failed.\n");
+        fprintf(stderr, TENSOR_MEMORY_ALLOCATION_ERROR);
         return NULL;
     }
 
@@ -155,89 +157,43 @@ void tensor_no_grad_free(tensor *t)
     free(t);
 }
 
-tensor_error tensor2d_mult(const tensor *const A, const tensor *const B, tensor *const out)
-{
-    if (!A || !B || !out)
-        return TENSOR_NULL;
-    if (!A->shape || !B->shape || !out->shape)
-        return TENSOR_SHAPE_NULL;
-    if (A->shape[1] != B->shape[0])
-        return TENSOR_SHAPE_MISMATCH; // Columns of A != rows of B
-    if (out->shape[0] != A->shape[0] || out->shape[1] != B->shape[1])
-        return TENSOR_SHAPE_MISMATCH; // Output shape mismatch
-
-    tensor2d_mult_unchecked(A, B, out);
-    return TENSOR_OK;
-}
-
-void tensor2d_mult_unchecked(const tensor *const A, const tensor *const B, tensor *const out)
-{
-    cblas_dgemm(
-        CblasRowMajor,
-        CblasNoTrans,
-        CblasNoTrans,
-        A->shape[0], // M
-        B->shape[1], // N
-        A->shape[1], // K (must match B->shape[0])
-        1.0,
-        A->data,
-        A->shape[1], // lda
-        B->data,
-        B->shape[1], // ldb
-        0.0,
-        out->data,
-        out->shape[1] // ldc
-    );
-}
-
-tensor_error tensor2d_trans(const tensor *const t, tensor *const out)
-{
-    if (!t || !out)
-        return TENSOR_NULL;
-    if (!t->shape || !out->shape)
-        return TENSOR_SHAPE_NULL;
-    if (!t->data || !out->data)
-        return TENSOR_DATA_NULL;
-    if (t->shape[0] != out->shape[1] || t->shape[1] != out->shape[0])
-        return TENSOR_SHAPE_MISMATCH;
-
-    tensor2d_trans_unchecked(t, out);
-    return TENSOR_OK;
-}
-
-void tensor2d_trans_unchecked(const tensor *const t, tensor *const out)
-{
-    // Extract the shape of the input tensor (t)
-    size_t rows = t->shape[0];
-    size_t cols = t->shape[1];
-
-    out->shape[0] = cols;
-    out->shape[1] = rows;
-
-    for (size_t i = 0; i < rows; i++)
-    {
-        for (size_t j = 0; j < cols; j++)
-        {
-            out->data[j * rows + i] = t->data[i * cols + j];
-        }
-    }
-}
-
-void tensor_copy(const tensor *const src, tensor *dest)
+tensor_error tensor2d_copy(const tensor *const src, tensor *const dest)
 {
     if (!src || !dest)
-        return;
-
-    // Ensure shapes are identical before copying
-    if (src->shape[0] == dest->shape[0] && src->shape[1] == dest->shape[1])
-    {
-        memcpy(dest->data, src->data, src->shape[0] * src->shape[1] * sizeof(double));
-    }
-    else
-    {
-        fprintf(stderr, "Error: Tensor shapes do not match for copy operation.\n");
-    }
+        return TENSOR_NULL;
+    if (!src->data || !dest->data)
+        return TENSOR_DATA_NULL;
+    if (!src->shape || !dest->shape_size)
+        return TENSOR_SHAPE_NULL;
+    if (src->shape[0] != dest->shape[0] || src->shape[1] != dest->shape[1])
+        return TENSOR_SHAPE_MISMATCH;
+        
+    memcpy(dest->data, src->data, src->shape[0] * src->shape[1] * sizeof(double));
+    return TENSOR_OK;
 }
+
+tensor_error tensor_copy(const tensor *const src, tensor *const dest)
+{
+    if (!src || !dest)
+        return TENSOR_NULL;
+    if (!src->data || !dest->data)
+        return TENSOR_DATA_NULL;
+    if (!src->shape || !dest->shape_size)
+        return TENSOR_SHAPE_NULL;
+    if (src->shape_size != dest->shape_size)
+        return TENSOR_SHAPE_MISMATCH;
+
+    for (size_t i = 0; i < src->shape_size; i++)
+    {
+        if (src->shape[i] != dest->shape[i])
+            return TENSOR_SHAPE_MISMATCH;
+    }
+
+    memcpy(dest->data, src->data, sizeof(double) * src->data_size);
+
+    return TENSOR_OK;
+}
+
 
 // Function to create a copy of a tensor and return a new instance
 tensor *tensor_clone(const tensor *const src)
@@ -253,71 +209,16 @@ tensor *tensor_clone(const tensor *const src)
     return new_tensor;
 }
 
-tensor_error tensor2d_add_row_vector(tensor *const A, const tensor *const v)
+void tensor_fill(tensor *const t, double value)
 {
-    if (!A || !v)
-        return TENSOR_NULL;
-    if (!A->data || !v->data)
-        return TENSOR_DATA_NULL;
-    if (!A->shape || !v->shape)
-        return TENSOR_SHAPE_NULL;
-    if (A->shape_size != 2 || v->shape_size != 2)
-        return TENSOR_WRONG_SHAPE;
-    if (v->shape[1] != 1)
-        return TENSOR_WRONG_SHAPE;
-    if (A->shape[1] != v->shape[0])
-        return TENSOR_SHAPE_MISMATCH;
-
-    tensor2d_add_row_vector_unchecked(A, v);
-    return TENSOR_OK;
-}
-
-void tensor2d_add_row_vector_unchecked(tensor *const A, const tensor *const v)
-{
-    size_t rows = A->shape[0]; // Number of rows
-    size_t cols = A->shape[1]; // Number of columns
-
-    if (v->shape[0] != cols || v->shape[1] != 1)
-    {
-        // Handle dimension mismatch (bias should have shape [out_dim, 1])
+    if (!t || !t->data)
         return;
-    }
 
-    double *out_data = A->data;
-    double *bias_data = v->data;
-
-    for (size_t i = 0; i < rows; i++)
+    size_t data_size = t->data_size;
+    for (size_t i = 0; i < data_size; i++)
     {
-        for (size_t j = 0; j < cols; j++)
-        {
-            out_data[i * cols + j] += bias_data[j];
-        }
+        t->data[i] = value;
     }
-}
-
-void tensor_add_unchecked(const tensor *const A, const tensor *const B, tensor *const out)
-{
-    for (size_t i = 0; i < A->data_size; i++)
-    {
-        out->data[i] = A->data[i] + B->data[i];
-    }
-}
-
-tensor_error tensor_add(const tensor *const A, const tensor *const B, tensor *const out)
-{
-    if (!A || !B || !out)
-        return TENSOR_NULL;
-    if (!A->data || !B->data || !out->data)
-        return TENSOR_DATA_NULL;
-    if (!A->shape || !B->shape || !out->shape)
-        return TENSOR_SHAPE_NULL;
-    if (A->data_size != B->data_size || B->data_size != out->data_size)
-        return TENSOR_DATA_SIZE_MISMATCH;
-    if (tensor_same_shape(A, B))
-        return TENSOR_SHAPE_MISMATCH;
-
-    tensor_add_unchecked(A, B, out);
-    return TENSOR_OK;
 }
 
 tensor_error tensor_add_inplace(tensor *A, const tensor *const B)
