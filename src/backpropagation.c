@@ -12,8 +12,6 @@ typedef struct
     size_t size;
 } backpropagation_targets;
 
-//static tensor* build_grad_old(const computational_graph_node* const node);
-//static void zero_grad_node(computational_graph_node* const root);
 static void identify_backpropagation_nodes(computational_graph_node* const node, backpropagation_targets* targets);
 static tensor* build_gradient(computational_graph_node* const node);
 static void build_gradients(backpropagation_targets* const targets);
@@ -51,12 +49,6 @@ static void identify_backpropagation_nodes(computational_graph_node* const node,
 
 static tensor* build_gradient(computational_graph_node* const node)
 {
-    computational_graph_node* root = node;
-    while (root->n_parents != 0)
-        root = root->parents[0];
-    printf("0. root->t->grad");
-    print_tensor(root->t->grad);
-
     if (node->is_grad_computed)
     {
         return node->t->grad;
@@ -68,8 +60,6 @@ static tensor* build_gradient(computational_graph_node* const node)
         {
             continue;
         }
-        printf("1. root->t->grad");
-        print_tensor(root->t->grad);
 
         tensor* D = build_gradient(node->parents[i]);
 
@@ -83,40 +73,16 @@ static tensor* build_gradient(computational_graph_node* const node)
         // Compute gradient and add to current grad
         tensor* parent_i_gradient = tensor_no_grad_alloc(node->t->shape, node->t->shape_size);
         
-        printf("2. root->t->grad");
-        print_tensor(root->t->grad);
-
         parent_node->function[operand](operands, D, parent_i_gradient);
-
-        printf("3. root->t->grad");
-        print_tensor(root->t->grad);
-
 
         int terror = tensor_add_inplace(node->t->grad, parent_i_gradient);
         if (terror != TENSOR_OK)
             exit(1); 
 
-        printf("4. root->t->grad");
-        print_tensor(root->t->grad);
-
         tensor_free(parent_i_gradient);
     }
 
-    printf("5. root->t->grad");
-    print_tensor(root->t->grad);
-
-    printf("%p\n%p\n%p\n", node, &node->is_grad_computed, root->t->grad->shape);
-
-    printf("sizes: %ld, %ld, %ld\n", sizeof(node->is_grad_computed), sizeof(bool), sizeof(true));
     node->is_grad_computed = true;
-
-    // printf("node->t->grad, node %p", node);
-    // print_tensor(node->t->grad);
-
-    printf("6. root->t->grad");
-    print_tensor(root->t->grad);
-    printf("data_shape: %ld, %ld, %ld\n", root->t->grad->shape[0], root->t->grad->shape[1], root->t->grad->shape[2]);
-
     return node->t->grad;
 }
 
@@ -125,7 +91,6 @@ static void build_gradients(backpropagation_targets* const targets)
     size_t size = targets->size;
     for (size_t i = 0; i < size; i++)
     {
-        printf(">>>%ld\n", i);
         build_gradient(targets->targets[i]);
     }
 }

@@ -94,18 +94,6 @@ int main()
         zero_grad(&params);        
         backward(z, false);
 
-        printf("x, node %p\n", x->node);
-        print_tensor(x->grad);
-        printf("weights, node %p\n", linear1->weights->node);
-        print_tensor(linear1->weights->grad);
-        printf("biases, node %p\n", linear1->biases->node);
-        print_tensor(linear1->biases->grad);
-        printf("h1, node %p\n", h1->node);
-        print_tensor(h1->grad);
-        printf("z\n");
-        print_tensor(z->grad);
-        printf("%ld, %ld\n", z->grad->shape[0], z->grad->shape[1]);
-
         sgd_step(0.00001, &params);
 
         tensor_free(h1);
