@@ -32,7 +32,7 @@ typedef struct computational_graph_node
 
 computational_graph_node *computational_graph_node_alloc();
 computational_graph_node *computational_graph_node_tensor_alloc(tensor *const t);
-// void free_computational_graph(computational_graph_node* root);
+void add_computational_graph_link(tensor* operand, size_t operand_id, tensor* result, backpropagation_function backprop_function);
 void free_computational_graph_node(computational_graph_node *const node);
 int add_child(computational_graph_node *const node, computational_graph_node *const child);
 int add_parent(computational_graph_node *const node, computational_graph_node *const parent, const size_t operand);

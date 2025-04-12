@@ -39,6 +39,22 @@ void free_computational_graph_node(computational_graph_node *const node)
     free(node);
 }
 
+void add_computational_graph_link(tensor* operand, size_t operand_id, tensor* result, backpropagation_function backprop_function)
+{
+    computational_graph_node *operand_node = operand->node ? operand->node : computational_graph_node_tensor_alloc(operand);
+    computational_graph_node *result_node = result->node ? result->node : computational_graph_node_tensor_alloc(result);
+
+    // Setup connection
+    add_parent(operand_node, result_node, operand_id);
+    add_child(result_node, operand_node);
+
+    // Setup backpropagation function
+    result_node->function[operand_id] = backprop_function; 
+
+    // Setup operand in the tensor operands pointer
+    result_node->tensor_operands[operand_id] = operand;
+}
+
 int add_child(computational_graph_node *const node, computational_graph_node *const child)
 {
     size_t const n_children = node->n_children;

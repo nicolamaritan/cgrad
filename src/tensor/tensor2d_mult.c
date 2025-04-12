@@ -30,21 +30,8 @@ tensor_error tensor2d_mult_graph(tensor *const A, tensor *const B, tensor *const
         return error;
 
     // Update computational graph
-
-    computational_graph_node *A_node = A->node ? A->node : computational_graph_node_tensor_alloc(A);
-    computational_graph_node *B_node = B->node ? B->node : computational_graph_node_tensor_alloc(B);
-    computational_graph_node *out_node = computational_graph_node_tensor_alloc(out);
-
-    add_parent(A_node, out_node, LHS_TENSOR);
-    add_parent(B_node, out_node, RHS_TENSOR);
-    add_child(out_node, A_node);
-    add_child(out_node, B_node);
-
-    out_node->function[LHS_TENSOR] = (backpropagation_function)&tensor2d_mult_backpropagate_lhs;
-    out_node->function[RHS_TENSOR] = (backpropagation_function)&tensor2d_mult_backpropagate_rhs;
-
-    out_node->tensor_operands[LHS_TENSOR] = A;
-    out_node->tensor_operands[RHS_TENSOR] = B;
+    add_computational_graph_link(A, LHS_TENSOR, out, &tensor2d_mult_backpropagate_lhs);
+    add_computational_graph_link(B, RHS_TENSOR, out, &tensor2d_mult_backpropagate_rhs);
 
     return TENSOR_OK;
 }
