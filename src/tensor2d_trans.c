@@ -28,15 +28,14 @@ tensor_error tensor2d_trans_graph(tensor *const t, tensor *const out)
     computational_graph_node *out_node = computational_graph_node_tensor_alloc(out);
 
     // Unused operand
-    add_parent(t_node, out_node, -1);
+    add_parent(t_node, out_node, ONLY_OPERAND);
     add_child(out_node, t_node);
 
-    backpropagation_function function = (backpropagation_function)&tensor2d_trans_backpropagate;
-    out_node->function = function;
+    // Setup backpropagation function
+    out_node->function[ONLY_OPERAND] = (backpropagation_function)&tensor2d_trans_backpropagate;
 
-    // No data needed for gradient computation
-    out_node->data = NULL;
-    out_node->free_data = NULL;
+    // Setup operands
+    out_node->tensor_operands[ONLY_OPERAND] = t;
 
     return TENSOR_OK;
 }
@@ -59,8 +58,7 @@ void tensor2d_trans_unchecked(const tensor *const t, tensor *const out)
         }
     }
 }
-
-void tensor2d_trans_backpropagate(const backpropagation_function_data* const data, const tensor* const grad_wrt_out, tensor* grad_wrt_operand, size_t operand)
+void tensor2d_trans_backpropagate(const tensor **const operands, const tensor* const grad_wrt_out, tensor* grad_wrt_operand)
 {
     tensor2d_trans(grad_wrt_out, grad_wrt_operand);
 }

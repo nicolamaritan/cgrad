@@ -1,0 +1,1987 @@
+==99668== Memcheck, a memory error detector
+==99668== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==99668== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==99668== Command: ./examples/linear_example.out
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0E128: __printf_fp_l (printf_fp.c:396)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0E142: __printf_fp_l (printf_fp.c:396)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A09272: __mpn_extract_double (dbl2mpn.c:56)
+==99668==    by 0x4A0E6EE: __printf_fp_l (printf_fp.c:396)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0E2C4: __printf_fp_l (printf_fp.c:446)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0E2DB: __printf_fp_l (printf_fp.c:463)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0FD46: __printf_fp_l (printf_fp.c:471)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A07EE8: __mpn_lshift (lshift.S:59)
+==99668==    by 0x4A0FD4A: __printf_fp_l (printf_fp.c:471)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A07EEB: __mpn_lshift (lshift.S:60)
+==99668==    by 0x4A0FD4A: __printf_fp_l (printf_fp.c:471)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0FD76: __printf_fp_l (printf_fp.c:476)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0FD8E: __printf_fp_l (printf_fp.c:477)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0E31D: __printf_fp_l (printf_fp.c:479)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0E3DD: __printf_fp_l (printf_fp.c:488)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x484B2C5: memmove (vg_replace_strmem.c:1382)
+==99668==    by 0x4A0E39F: __printf_fp_l (printf_fp.c:535)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x484B2D2: is_overlap (vg_replace_strmem.c:139)
+==99668==    by 0x484B2D2: is_overlap (vg_replace_strmem.c:126)
+==99668==    by 0x484B2D2: memmove (vg_replace_strmem.c:1382)
+==99668==    by 0x4A0E39F: __printf_fp_l (printf_fp.c:535)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x484B2DF: memmove (vg_replace_strmem.c:1382)
+==99668==    by 0x4A0E39F: __printf_fp_l (printf_fp.c:535)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x484B3B1: memmove (vg_replace_strmem.c:1382)
+==99668==    by 0x4A0E39F: __printf_fp_l (printf_fp.c:535)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0E3AB: __printf_fp_l (printf_fp.c:551)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0E3B1: __printf_fp_l (printf_fp.c:551)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A077E6: __mpn_cmp (cmp.c:37)
+==99668==    by 0x4A0E807: __printf_fp_l (printf_fp.c:551)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A077EA: __mpn_cmp (cmp.c:38)
+==99668==    by 0x4A0E807: __printf_fp_l (printf_fp.c:551)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A077F1: __mpn_cmp (cmp.c:39)
+==99668==    by 0x4A0E807: __printf_fp_l (printf_fp.c:551)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0E80A: __printf_fp_l (printf_fp.c:551)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x484B2C5: memmove (vg_replace_strmem.c:1382)
+==99668==    by 0x4A0E444: __printf_fp_l (printf_fp.c:554)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x484B3AE: memmove (vg_replace_strmem.c:1382)
+==99668==    by 0x4A0E444: __printf_fp_l (printf_fp.c:554)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x484B3B1: memmove (vg_replace_strmem.c:1382)
+==99668==    by 0x4A0E444: __printf_fp_l (printf_fp.c:554)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x484B3BC: memmove (vg_replace_strmem.c:1382)
+==99668==    by 0x4A0E444: __printf_fp_l (printf_fp.c:554)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0E44D: __printf_fp_l (printf_fp.c:555)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A083B4: __mpn_mul_1 (mul_1.S:36)
+==99668==    by 0x4A081F8: __mpn_mul (mul.c:81)
+==99668==    by 0x4A0E407: __printf_fp_l (printf_fp.c:541)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0843F: __mpn_mul_1 (mul_1.S:85)
+==99668==    by 0x4A081F8: __mpn_mul (mul.c:81)
+==99668==    by 0x4A0E407: __printf_fp_l (printf_fp.c:541)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A084B2: __mpn_mul_1 (mul_1.S:117)
+==99668==    by 0x4A081F8: __mpn_mul (mul.c:81)
+==99668==    by 0x4A0E407: __printf_fp_l (printf_fp.c:541)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A08205: __mpn_mul (mul.c:83)
+==99668==    by 0x4A0E407: __printf_fp_l (printf_fp.c:541)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0E49D: __printf_fp_l (printf_fp.c:577)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0E4A2: __printf_fp_l (printf_fp.c:573)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0E4C6: __printf_fp_l (printf_fp.c:573)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0E4F1: __printf_fp_l (printf_fp.c:573)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A10177: __printf_fp_l (printf_fp.c:605)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0FE96: __printf_fp_l (printf_fp.c:608)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A08FD8: __mpn_rshift (rshift.S:62)
+==99668==    by 0x4A0FEAA: __printf_fp_l (printf_fp.c:624)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A08FFD: __mpn_rshift (rshift.S:73)
+==99668==    by 0x4A0FEAA: __printf_fp_l (printf_fp.c:624)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A08F85: __mpn_rshift (rshift.S:31)
+==99668==    by 0x4A0FECE: __printf_fp_l (printf_fp.c:627)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A08FAC: __mpn_rshift (rshift.S:45)
+==99668==    by 0x4A0FECE: __printf_fp_l (printf_fp.c:627)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A08FD6: __mpn_rshift (rshift.S:61)
+==99668==    by 0x4A0FECE: __printf_fp_l (printf_fp.c:627)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A08FD8: __mpn_rshift (rshift.S:62)
+==99668==    by 0x4A0FECE: __printf_fp_l (printf_fp.c:627)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A08FE9: __mpn_rshift (rshift.S:67)
+==99668==    by 0x4A0FECE: __printf_fp_l (printf_fp.c:627)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A08FFD: __mpn_rshift (rshift.S:73)
+==99668==    by 0x4A0FECE: __printf_fp_l (printf_fp.c:627)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0FEE3: __printf_fp_l (printf_fp.c:629)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0FEE9: __printf_fp_l (printf_fp.c:629)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0D7F1: hack_digit (printf_fp.c:183)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A07AB0: __mpn_divrem (divrem.c:62)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A07AB3: __mpn_divrem (divrem.c:63)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A07AC4: __mpn_divrem (divrem.c:65)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A07AD1: __mpn_divrem (divrem.c:72)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A07AE0: __mpn_divrem (divrem.c:73)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A07AEF: __mpn_divrem (divrem.c:73)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A07AF7: __mpn_divrem (divrem.c:72)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A07B25: __mpn_divrem (divrem.c:79)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0D854: hack_digit (printf_fp.c:189)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0D85C: hack_digit (printf_fp.c:190)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0D86C: hack_digit (printf_fp.c:193)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0D880: hack_digit (printf_fp.c:193)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A083B4: __mpn_mul_1 (mul_1.S:36)
+==99668==    by 0x4A0D804: hack_digit (printf_fp.c:204)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A083D8: __mpn_mul_1 (mul_1.S:52)
+==99668==    by 0x4A0D804: hack_digit (printf_fp.c:204)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0D808: hack_digit (printf_fp.c:205)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0D81A: hack_digit (printf_fp.c:206)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A07AB0: __mpn_divrem (divrem.c:62)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0E9B8: __printf_fp_l (printf_fp.c:966)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A07AB3: __mpn_divrem (divrem.c:63)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0E9B8: __printf_fp_l (printf_fp.c:966)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A07AC4: __mpn_divrem (divrem.c:65)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0E9B8: __printf_fp_l (printf_fp.c:966)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A07AE0: __mpn_divrem (divrem.c:73)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0E9B8: __printf_fp_l (printf_fp.c:966)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A07AEF: __mpn_divrem (divrem.c:73)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0E9B8: __printf_fp_l (printf_fp.c:966)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A07B25: __mpn_divrem (divrem.c:79)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0E9B8: __printf_fp_l (printf_fp.c:966)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0D854: hack_digit (printf_fp.c:189)
+==99668==    by 0x4A0E9B8: __printf_fp_l (printf_fp.c:966)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0D85C: hack_digit (printf_fp.c:190)
+==99668==    by 0x4A0E9B8: __printf_fp_l (printf_fp.c:966)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0D86C: hack_digit (printf_fp.c:193)
+==99668==    by 0x4A0E9B8: __printf_fp_l (printf_fp.c:966)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0D880: hack_digit (printf_fp.c:193)
+==99668==    by 0x4A0E9B8: __printf_fp_l (printf_fp.c:966)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A083B4: __mpn_mul_1 (mul_1.S:36)
+==99668==    by 0x4A0D804: hack_digit (printf_fp.c:204)
+==99668==    by 0x4A0E9B8: __printf_fp_l (printf_fp.c:966)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A083D8: __mpn_mul_1 (mul_1.S:52)
+==99668==    by 0x4A0D804: hack_digit (printf_fp.c:204)
+==99668==    by 0x4A0E9B8: __printf_fp_l (printf_fp.c:966)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0D808: hack_digit (printf_fp.c:205)
+==99668==    by 0x4A0E9B8: __printf_fp_l (printf_fp.c:966)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0D81A: hack_digit (printf_fp.c:206)
+==99668==    by 0x4A0E9B8: __printf_fp_l (printf_fp.c:966)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0E9F7: __printf_fp_l (printf_fp.c:978)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A07AB0: __mpn_divrem (divrem.c:62)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0EA15: __printf_fp_l (printf_fp.c:979)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A07AB3: __mpn_divrem (divrem.c:63)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0EA15: __printf_fp_l (printf_fp.c:979)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A07AC4: __mpn_divrem (divrem.c:65)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0EA15: __printf_fp_l (printf_fp.c:979)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A07AE0: __mpn_divrem (divrem.c:73)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0EA15: __printf_fp_l (printf_fp.c:979)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A07AEF: __mpn_divrem (divrem.c:73)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0EA15: __printf_fp_l (printf_fp.c:979)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A07B25: __mpn_divrem (divrem.c:79)
+==99668==    by 0x4A0D844: hack_digit (printf_fp.c:187)
+==99668==    by 0x4A0EA15: __printf_fp_l (printf_fp.c:979)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0D854: hack_digit (printf_fp.c:189)
+==99668==    by 0x4A0EA15: __printf_fp_l (printf_fp.c:979)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0D85C: hack_digit (printf_fp.c:190)
+==99668==    by 0x4A0EA15: __printf_fp_l (printf_fp.c:979)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0D86C: hack_digit (printf_fp.c:193)
+==99668==    by 0x4A0EA15: __printf_fp_l (printf_fp.c:979)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0D880: hack_digit (printf_fp.c:193)
+==99668==    by 0x4A0EA15: __printf_fp_l (printf_fp.c:979)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A083B4: __mpn_mul_1 (mul_1.S:36)
+==99668==    by 0x4A0D804: hack_digit (printf_fp.c:204)
+==99668==    by 0x4A0EA15: __printf_fp_l (printf_fp.c:979)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A083D8: __mpn_mul_1 (mul_1.S:52)
+==99668==    by 0x4A0D804: hack_digit (printf_fp.c:204)
+==99668==    by 0x4A0EA15: __printf_fp_l (printf_fp.c:979)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0D808: hack_digit (printf_fp.c:205)
+==99668==    by 0x4A0EA15: __printf_fp_l (printf_fp.c:979)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0EA35: __printf_fp_l (printf_fp.c:981)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0EA86: round_away (rounding-mode.h:52)
+==99668==    by 0x4A0EA86: __printf_fp_l (printf_fp.c:998)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0ECF4: __printf_fp_l (printf_fp.c:1166)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0F0DE: __printf_fp_l (printf_fp.c:1228)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0F0C3: __printf_fp_l (printf_fp.c:1230)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A18B44: __vfprintf_internal (vfprintf-internal.c:1062)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A18B54: done_add_func (vfprintf-internal.c:127)
+==99668==    by 0x4A18B54: __vfprintf_internal (vfprintf-internal.c:1067)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A18B5C: __vfprintf_internal (vfprintf-internal.c:1067)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== 
+==99668== More than 100 errors detected.  Subsequent errors
+==99668== will still be recorded, but in less detail than before.
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A179F7: done_add_func (vfprintf-internal.c:127)
+==99668==    by 0x4A179F7: outstring_func (vfprintf-internal.c:241)
+==99668==    by 0x4A179F7: __vfprintf_internal (vfprintf-internal.c:1096)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A17A10: done_add_func (vfprintf-internal.c:127)
+==99668==    by 0x4A17A10: outstring_func (vfprintf-internal.c:241)
+==99668==    by 0x4A17A10: __vfprintf_internal (vfprintf-internal.c:1096)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A17A18: __vfprintf_internal (vfprintf-internal.c:1096)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6D0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0E772: __printf_fp_l (printf_fp.c:649)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0E781: __printf_fp_l (printf_fp.c:825)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A07EE8: __mpn_lshift (lshift.S:59)
+==99668==    by 0x4A0E785: __printf_fp_l (printf_fp.c:825)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A07EEB: __mpn_lshift (lshift.S:60)
+==99668==    by 0x4A0E785: __printf_fp_l (printf_fp.c:825)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0E7A2: __printf_fp_l (printf_fp.c:826)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0D8A1: hack_digit (printf_fp.c:177)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A083B4: __mpn_mul_1 (mul_1.S:36)
+==99668==    by 0x4A0D8A8: hack_digit (printf_fp.c:178)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A083D8: __mpn_mul_1 (mul_1.S:52)
+==99668==    by 0x4A0D8A8: hack_digit (printf_fp.c:178)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0D8A1: hack_digit (printf_fp.c:177)
+==99668==    by 0x4A0E9B8: __printf_fp_l (printf_fp.c:966)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0D8A1: hack_digit (printf_fp.c:177)
+==99668==    by 0x4A0EA15: __printf_fp_l (printf_fp.c:979)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0FBF3: round_away (rounding-mode.h:52)
+==99668==    by 0x4A0FBF3: __printf_fp_l (printf_fp.c:998)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0EE52: round_away (rounding-mode.h:49)
+==99668==    by 0x4A0EE52: __printf_fp_l (printf_fp.c:998)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0EE71: __printf_fp_l (printf_fp.c:1008)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0EEC4: __printf_fp_l (printf_fp.c:1015)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0EEE3: __printf_fp_l (printf_fp.c:1028)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0FBC0: __printf_fp_l (printf_fp.c:983)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0FBD8: __printf_fp_l (printf_fp.c:991)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0FBD2: __printf_fp_l (printf_fp.c:991)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A083CA: __mpn_mul_1 (mul_1.S:45)
+==99668==    by 0x4A0D8A8: hack_digit (printf_fp.c:178)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A083CF: __mpn_mul_1 (mul_1.S:47)
+==99668==    by 0x4A0D8A8: hack_digit (printf_fp.c:178)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A083D1: __mpn_mul_1 (mul_1.S:48)
+==99668==    by 0x4A0D8A8: hack_digit (printf_fp.c:178)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A083D6: __mpn_mul_1 (mul_1.S:51)
+==99668==    by 0x4A0D8A8: hack_digit (printf_fp.c:178)
+==99668==    by 0x4A0E913: __printf_fp_l (printf_fp.c:942)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0D81A: hack_digit (printf_fp.c:206)
+==99668==    by 0x4A0EA15: __printf_fp_l (printf_fp.c:979)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0EE7B: __printf_fp_l (printf_fp.c:1008)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C754: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0EE83: __printf_fp_l (printf_fp.c:1008)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C754: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Syscall param write(buf) points to uninitialised byte(s)
+==99668==    at 0x4AB3300: write (write.c:26)
+==99668==    by 0x4A3BFC4: _IO_file_write@@GLIBC_2.2.5 (fileops.c:1180)
+==99668==    by 0x4A3B37F: new_do_write (fileops.c:448)
+==99668==    by 0x4A3CFD8: _IO_do_write@@GLIBC_2.2.5 (fileops.c:425)
+==99668==    by 0x4A3C63D: _IO_new_file_xsputn (fileops.c:1243)
+==99668==    by 0x4A3C63D: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
+==99668==    by 0x4A1750D: outstring_func (vfprintf-internal.c:239)
+==99668==    by 0x4A1750D: __vfprintf_internal (vfprintf-internal.c:767)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x1094ED: build_gradient (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x109737: build_gradients (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x1092D2: backward (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C6F0: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==  Address 0x4b9e6b0 is 240 bytes inside a block of size 4,096 alloc'd
+==99668==    at 0x48417B4: malloc (vg_replace_malloc.c:381)
+==99668==    by 0x4A308CB: _IO_file_doallocate (filedoalloc.c:101)
+==99668==    by 0x4A3E09F: _IO_doallocbuf (genops.c:347)
+==99668==    by 0x4A3E09F: _IO_doallocbuf (genops.c:342)
+==99668==    by 0x4A3D477: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
+==99668==    by 0x4A3C63D: _IO_new_file_xsputn (fileops.c:1243)
+==99668==    by 0x4A3C63D: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
+==99668==    by 0x4A32A47: puts (ioputs.c:40)
+==99668==    by 0x10C577: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+x:
+[[0.000000, 1.000000, 2.000000, 3.000000], [1.000000, 2.000000, 3.000000, 4.000000], [2.000000, 3.000000, 4.000000, 5.000000], [3.000000, 4.000000, 5.000000, 6.000000]]
+y_target:
+[[20.000000], [30.000000], [40.000000], [50.000000]]
+z: [[731.700199]]
+>>>0
+0. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba2240
+0x4ba2759
+0x4ba1c80
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>1
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba1540
+0x4ba1a59
+0x4ba1c80
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>2
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba0a80
+0x4ba0f99
+0x4ba1c80
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>3
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4b9ffc0
+0x4ba04d9
+0x4ba1c80
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>4
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba0520
+0x4ba0a39
+0x4ba1c80
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>5
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba0fe0
+0x4ba14f9
+0x4ba1c80
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>6
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba1ce0
+0x4ba21f9
+0x4ba1c80
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+x, node (nil)
+[[3.989259, 3.126270, -4.818030, 2.087511], [6.164645, 4.831059, -7.445354, 3.225853], [8.340030, 6.535848, -10.072677, 4.364194], [10.515416, 8.240636, -12.700000, 5.502536]]
+weights, node (nil)
+[[-68.002772], [-104.271970], [-140.541167], [-176.810364]]
+biases, node (nil)
+[[-36.269197]]
+h1, node (nil)
+[[-4.987606], [-7.707402], [-10.427197], [-13.146992]]
+z
+[[1.000000]]
+1, 1
+z: [[731.022094]]
+>>>0
+0. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba5910
+0x4ba5e29
+0x4ba5350
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>1
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba4c10
+0x4ba5129
+0x4ba5350
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>2
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba4150
+0x4ba4669
+0x4ba5350
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>3
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba3690
+0x4ba3ba9
+0x4ba5350
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>4
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba3bf0
+0x4ba4109
+0x4ba5350
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>5
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba46b0
+0x4ba4bc9
+0x4ba5350
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>6
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba53b0
+0x4ba58c9
+0x4ba5350
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+x, node (nil)
+[[7.973224, 6.245850, -9.640767, 4.165211], [12.321167, 9.651826, -14.898052, 6.436575], [16.669111, 13.057801, -20.155338, 8.707940], [21.017055, 16.463777, -25.412623, 10.979305]]
+weights, node (nil)
+[[-67.971355], [-104.223687], [-140.476019], [-176.728352]]
+biases, node (nil)
+[[-36.252332]]
+h1, node (nil)
+[[-4.985226], [-7.703797], [-10.422369], [-13.140940]]
+z
+[[1.000000]]
+1, 1
+z: [[730.344618]]
+>>>0
+0. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba8fe0
+0x4ba94f9
+0x4ba8a20
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>1
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba82e0
+0x4ba87f9
+0x4ba8a20
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>2
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba7820
+0x4ba7d39
+0x4ba8a20
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>3
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba6d60
+0x4ba7279
+0x4ba8a20
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>4
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba72c0
+0x4ba77d9
+0x4ba8a20
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>5
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba7d80
+0x4ba8299
+0x4ba8a20
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>6
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4ba8a80
+0x4ba8f99
+0x4ba8a20
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+x, node (nil)
+[[11.951901, 9.358748, -14.468202, 6.233113], [18.469578, 14.462313, -22.358083, 9.632188], [24.987254, 19.565877, -30.247964, 13.031264], [31.504931, 24.669442, -38.137844, 16.430339]]
+weights, node (nil)
+[[-67.939951], [-104.175427], [-140.410902], [-176.646377]]
+biases, node (nil)
+[[-36.235475]]
+h1, node (nil)
+[[-4.982847], [-7.700195], [-10.417543], [-13.134890]]
+z
+[[1.000000]]
+1, 1
+z: [[729.667770]]
+>>>0
+0. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4bac6b0
+0x4bacbc9
+0x4bac0f0
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>1
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4bab9b0
+0x4babec9
+0x4bac0f0
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>2
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4baaef0
+0x4bab409
+0x4bac0f0
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>3
+0. root->t->gr==99668== Use of uninitialised value of size 8
+==99668==    at 0x4A0FDF5: __printf_fp_l (printf_fp.c:983)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+==99668== Conditional jump or move depends on uninitialised value(s)
+==99668==    at 0x4A0FDF9: __printf_fp_l (printf_fp.c:983)
+==99668==    by 0x4A1904C: __printf_fp_spec (vfprintf-internal.c:354)
+==99668==    by 0x4A1904C: __vfprintf_internal (vfprintf-internal.c:1061)
+==99668==    by 0x4A0D65A: printf (printf.c:33)
+==99668==    by 0x10C15A: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C1EB: print_tensor_recursive (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C2B5: print_tensor (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668==    by 0x10C71F: main (in /home/nicolamaritan/Development/c-grad/examples/linear_example.out)
+==99668== 
+ad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4baa430
+0x4baa949
+0x4bac0f0
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>4
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4baa990
+0x4baaea9
+0x4bac0f0
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>5
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4bab450
+0x4bab969
+0x4bac0f0
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>6
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4bac150
+0x4bac669
+0x4bac0f0
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+x, node (nil)
+[[15.925295, 12.464973, -19.300327, 8.291231], [24.609883, 19.262533, -29.825432, 12.812711], [33.294471, 26.060092, -40.350537, 17.334192], [41.979059, 32.857652, -50.875642, 21.855673]]
+weights, node (nil)
+[[-67.908563], [-104.127189], [-140.345815], [-176.564440]]
+biases, node (nil)
+[[-36.218626]]
+h1, node (nil)
+[[-4.980469], [-7.696594], [-10.412719], [-13.128844]]
+z
+[[1.000000]]
+1, 1
+z: [[728.991549]]
+>>>0
+0. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4bafd80
+0x4bb0299
+0x4baf7c0
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>1
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4baf080
+0x4baf599
+0x4baf7c0
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>2
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4bae5c0
+0x4baead9
+0x4baf7c0
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>3
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4badb00
+0x4bae019
+0x4baf7c0
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>4
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4bae060
+0x4bae579
+0x4baf7c0
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>5
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4baeb20
+0x4baf039
+0x4baf7c0
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+>>>6
+0. root->t->grad[[1.000000]]
+1. root->t->grad[[1.000000]]
+0. root->t->grad[[1.000000]]
+2. root->t->grad[[1.000000]]
+3. root->t->grad[[1.000000]]
+4. root->t->grad[[1.000000]]
+5. root->t->grad[[1.000000]]
+0x4baf820
+0x4bafd39
+0x4baf7c0
+sizes: 1, 1, 4
+6. root->t->grad[[1.000000]]
+data_shape: 1, 1, 0
+x, node (nil)
+[[19.893413, 15.564531, -24.137132, 10.339577], [30.742093, 24.052497, -37.300086, 15.978164], [41.590774, 32.540463, -50.463039, 21.616751], [52.439454, 41.028429, -63.625993, 27.255338]]
+weights, node (nil)
+[[-67.877189], [-104.078973], [-140.280758], [-176.482542]]
+biases, node (nil)
+[[-36.201784]]
+h1, node (nil)
+[[-4.978092], [-7.692995], [-10.407897], [-13.122800]]
+z
+[[1.000000]]
+1, 1
+==99668== 
+==99668== HEAP SUMMARY:
+==99668==     in use at exit: 0 bytes in 0 blocks
+==99668==   total heap usage: 271 allocs, 271 frees, 58,904 bytes allocated
+==99668== 
+==99668== All heap blocks were freed -- no leaks are possible
+==99668== 
+==99668== Use --track-origins=yes to see where uninitialised values come from
+==99668== For lists of detected and suppressed errors, rerun with: -s
+==99668== ERROR SUMMARY: 22449 errors from 131 contexts (suppressed: 0 from 0)

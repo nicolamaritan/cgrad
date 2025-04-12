@@ -157,12 +157,23 @@ tensor *tensor2d_alloc_like(tensor *t)
 
 void tensor_free(tensor *t)
 {
+    if (!t) return;
+
     free(t->data);
+    t->data = NULL;
+    
     free(t->shape);
+    t->shape = NULL;
 
     if (t->grad)
     {
         tensor_no_grad_free(t->grad);
+        t->grad = NULL;
+    }
+
+    if (t->node)
+    {
+        t->node = NULL;  // The node will be freed separately
     }
 
     free(t);
@@ -170,8 +181,14 @@ void tensor_free(tensor *t)
 
 void tensor_no_grad_free(tensor *t)
 {
+    if (!t) return;
+
     free(t->data);
+    t->data = NULL;
+
     free(t->shape);
+    t->shape = NULL;
+    
     free(t);
 }
 

@@ -17,6 +17,7 @@ typedef struct
 
 tensor_error tensor2d_add_row_vector_graph(tensor *const A, tensor *const v, tensor* const out);
 tensor_error tensor2d_add_row_vector(const tensor *const A, const tensor *const v, tensor* const out);
-void tensor2d_add_row_vector_backpropagate(const backpropagation_function_data* const data, const tensor* const grad_wrt_out, tensor* grad_wrt_operand, size_t operand);
+void tensor2d_add_row_vector_backpropagate_tensor2d(const tensor **const operands, const tensor* const grad_wrt_out, tensor* grad_wrt_operand);
+void tensor2d_add_row_vector_backpropagate_row_vector(const tensor **const operands, const tensor* const grad_wrt_out, tensor* grad_wrt_operand);
 
 #endif

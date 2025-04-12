@@ -51,10 +51,13 @@ tensor_error tensor2d_add_row_vector_graph(tensor *const A, tensor *const v, ten
     add_child(out_node, A_node);
     add_child(out_node, v_node);
 
-    backpropagation_function function = (backpropagation_function)&tensor2d_add_row_vector_backpropagate;
-    out_node->function = function;
-    out_node->data = NULL;
-    out_node->free_data = NULL;
+    // Setup backpropagation functions
+    out_node->function[TENSOR2D] = (backpropagation_function)&tensor2d_add_row_vector_backpropagate_tensor2d;
+    out_node->function[ROW_VECTOR] = (backpropagation_function)&tensor2d_add_row_vector_backpropagate_row_vector;
+
+    // Setup operands
+    out_node->tensor_operands[TENSOR2D] = A;
+    out_node->tensor_operands[ROW_VECTOR] = v;
 
     return TENSOR_OK;
 }
@@ -77,28 +80,21 @@ void tensor2d_add_row_vector_unchecked(const tensor *const A, const tensor *cons
     }
 }
 
-void tensor2d_add_row_vector_backpropagate(const backpropagation_function_data *const data, const tensor *const grad_wrt_out, tensor *grad_wrt_operand, size_t operand)
+void tensor2d_add_row_vector_backpropagate_tensor2d(const tensor **const tensor_operands, const tensor *const grad_wrt_out, tensor *grad_wrt_operand)
 {
-    switch (operand)
-    {
-    case TENSOR2D:
-        tensor2d_copy(grad_wrt_out, grad_wrt_operand);
-        break;
+    tensor2d_copy(grad_wrt_out, grad_wrt_operand);
+}
 
-    case ROW_VECTOR:
-        size_t G_rows = grad_wrt_out->shape[0];
-        size_t G_cols = grad_wrt_out->shape[1];
+void tensor2d_add_row_vector_backpropagate_row_vector(const tensor **const operands, const tensor *const grad_wrt_out, tensor *grad_wrt_operand)
+{
+    size_t G_rows = grad_wrt_out->shape[0];
+    size_t G_cols = grad_wrt_out->shape[1];
 
+    for (size_t j = 0; j < G_cols; j++)
+        grad_wrt_operand->data[j] = 0;
+
+    // Iterating by row since vectors are stored in row-major
+    for (size_t i = 0; i < G_rows; i++)
         for (size_t j = 0; j < G_cols; j++)
-            grad_wrt_operand->data[j] = 0;
-
-        // Iterating by row since vectors are stored in row-major
-        for (size_t i = 0; i < G_rows; i++)
-            for (size_t j = 0; j < G_cols; j++)
-                grad_wrt_operand->data[j] += grad_wrt_out->data[i * G_cols + j];
-        break;
-    default:
-        exit(1);
-        break;
-    }
+            grad_wrt_operand->data[j] += grad_wrt_out->data[i * G_cols + j];
 }

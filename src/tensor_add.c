@@ -35,20 +35,23 @@ tensor_error tensor_add_graph(tensor *const A, tensor *const B, tensor *const ou
     computational_graph_node *out_node = computational_graph_node_tensor_alloc(out);
 
     // Setup connections
-    add_parent(A_node, out_node, UNUSED_OPERAND_VALUE);
-    add_parent(B_node, out_node, UNUSED_OPERAND_VALUE);
+    add_parent(A_node, out_node, LHS_TENSOR);
+    add_parent(B_node, out_node, RHS_TENSOR);
     add_child(out_node, A_node);
     add_child(out_node, B_node);
 
-    // backpropagation_function function = 
-    out_node->function = (backpropagation_function)&tensor_add_backpropagate;
-    out_node->data = NULL;
-    out_node->free_data = NULL;
+    // Setup backpropagation functions
+    out_node->function[LHS_TENSOR] = (backpropagation_function)&tensor_add_backpropagate;
+    out_node->function[RHS_TENSOR] = (backpropagation_function)&tensor_add_backpropagate;
+
+    // Setup operands
+    out_node->tensor_operands[LHS_TENSOR] = A;
+    out_node->tensor_operands[LHS_TENSOR] = B;
 
     return TENSOR_OK;
 }
 
-void tensor_add_backpropagate(const backpropagation_function_data *const data, const tensor *const grad_wrt_out, tensor *grad_wrt_operand, size_t operand)
+void tensor_add_backpropagate(const tensor **const operands, const tensor *const grad_wrt_out, tensor *grad_wrt_operand)
 {
     /**
      * Given the symmetry of the addition operation, the gradient with respect to both operands is the same.

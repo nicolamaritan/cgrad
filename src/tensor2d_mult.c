@@ -40,22 +40,11 @@ tensor_error tensor2d_mult_graph(tensor *const A, tensor *const B, tensor *const
     add_child(out_node, A_node);
     add_child(out_node, B_node);
 
-    // Setup inputs
-    tensor2d_mult_inputs *inputs = (tensor2d_mult_inputs *)malloc(sizeof(tensor2d_mult_inputs));
-    inputs->lhs_tensor = A;
-    inputs->rhs_tensor = B;
+    out_node->function[LHS_TENSOR] = (backpropagation_function)&tensor2d_mult_backpropagate_lhs;
+    out_node->function[RHS_TENSOR] = (backpropagation_function)&tensor2d_mult_backpropagate_rhs;
 
-    // Setup data
-    backpropagation_function_data *data = (backpropagation_function_data *)malloc(sizeof(backpropagation_function_data));
-    data->layer = NULL;
-    data->inputs = (void*)inputs;
-
-    out_node->data = data;
-
-    backpropagation_function function = (backpropagation_function)&tensor2d_mult_backpropagate;
-    out_node->function = function;
-
-    out_node->free_data = (backpropagation_function_data_cleanup)&free_tensor2d_mult_backpropagation_function_data;
+    out_node->tensor_operands[LHS_TENSOR] = A;
+    out_node->tensor_operands[RHS_TENSOR] = B;
 
     return TENSOR_OK;
 }
@@ -80,35 +69,20 @@ void tensor2d_mult_unchecked(const tensor *const A, const tensor *const B, tenso
     );
 }
 
-void tensor2d_mult_backpropagate(const backpropagation_function_data *const data, const tensor *const grad_wrt_out, tensor *grad_wrt_operand, size_t operand)
-{
-    tensor2d_mult_inputs *input = (tensor2d_mult_inputs *)data->inputs;
-
-    switch (operand)
-    {
-    case LHS_TENSOR:
-        tensor *rhs = input->rhs_tensor;
-        tensor *rhs_trans= tensor2d_no_grad_alloc(rhs->shape[1], rhs->shape[0]);
-        tensor2d_trans(rhs, rhs_trans);
-        tensor2d_mult(grad_wrt_out, rhs_trans, grad_wrt_operand);
-        tensor_no_grad_free(rhs_trans);
-        break;
-
-    case RHS_TENSOR:
-        tensor* lhs = input->lhs_tensor;
-        tensor *lhs_trans = tensor2d_no_grad_alloc(lhs->shape[1], lhs->shape[0]);
-        tensor2d_trans(lhs, lhs_trans);
-        tensor2d_mult(lhs_trans, grad_wrt_out, grad_wrt_operand);
-        tensor_no_grad_free(lhs_trans);
-        break;
-
-    default:
-        break;
-    }
+void tensor2d_mult_backpropagate_lhs(const tensor **const operands, const tensor *const grad_wrt_out, tensor *grad_wrt_operand)
+{ 
+    const tensor *rhs = operands[RHS_TENSOR];
+    tensor *rhs_trans= tensor2d_no_grad_alloc(rhs->shape[1], rhs->shape[0]);
+    tensor2d_trans(rhs, rhs_trans);
+    tensor2d_mult(grad_wrt_out, rhs_trans, grad_wrt_operand);
+    tensor_no_grad_free(rhs_trans);
 }
 
-void free_tensor2d_mult_backpropagation_function_data(backpropagation_function_data *data)
-{
-    free(data->inputs);
-    free(data);
+void tensor2d_mult_backpropagate_rhs(const tensor **const operands, const tensor *const grad_wrt_out, tensor *grad_wrt_operand)
+{ 
+    const tensor* lhs = operands[LHS_TENSOR];
+    tensor *lhs_trans = tensor2d_no_grad_alloc(lhs->shape[1], lhs->shape[0]);
+    tensor2d_trans(lhs, lhs_trans);
+    tensor2d_mult(lhs_trans, grad_wrt_out, grad_wrt_operand);
+    tensor_no_grad_free(lhs_trans);
 }

@@ -41,9 +41,6 @@ tensor_error mse_loss_graph(tensor *const y_pred, tensor *const y_target, tensor
     y_target_node->t = (tensor *)y_target;
 
     computational_graph_node *z_node = computational_graph_node_tensor_alloc(z);
-    // tensor* one = tensor2d_no_grad_alloc(1, 1);
-    // one->data[0] = 1;
-    // z->grad = one;
 
     // Setup connections
     add_parent(y_pred_node, z_node, MSE_PREDICTED);
@@ -51,47 +48,35 @@ tensor_error mse_loss_graph(tensor *const y_pred, tensor *const y_target, tensor
     add_child(z_node, y_pred_node);
     add_child(z_node, y_target_node);
 
-    backpropagation_function_data *data = malloc(sizeof(backpropagation_function_data));
+    // Setup backpropation functions 
+    z_node->function[MSE_PREDICTED] = (backpropagation_function)&mse_loss_backpropagate_predicted;
+    z_node->function[MSE_TARGET] = (backpropagation_function)&mse_loss_backpropagate_target;
 
-    // Setup inputs, in this case composed by predicted and target inside mse_inputs
-    mse_inputs *inputs = (mse_inputs *)malloc(sizeof(mse_inputs)); // Maybe struct dependent free after backprop? LOL so much memory leaks TODO
-    inputs->predicted = (tensor *)y_pred;
-    inputs->target = (tensor *)y_target;
-    data->inputs = (void *)inputs;
-    z_node->data = data;
-
-    backpropagation_function function = (backpropagation_function)&mse_loss_backpropagate;
-    z_node->function = function;
-
-    z_node->free_data = (backpropagation_function_data_cleanup)&free_mse_backpropagation_function_data;
+    // Setup operands
+    z_node->tensor_operands[MSE_PREDICTED] = y_pred;
+    z_node->tensor_operands[MSE_TARGET] = y_target;
 
     return TENSOR_OK;
 }
 
-void mse_loss_backpropagate(const backpropagation_function_data* const data, const tensor* const grad_wrt_out, tensor* grad_wrt_operand, size_t operand)
+void mse_loss_backpropagate_predicted(const tensor **const operands, const tensor* const grad_wrt_out, tensor* grad_wrt_operand)
 {
-    mse_inputs *input = (mse_inputs *)data->inputs;
-
-    double batch_size = input->target->shape[0];
-    // tensor *grad_wrt_operand = tensor2d_no_grad_alloc(batch_size, 1);
+    const tensor *predicted = operands[MSE_PREDICTED];
+    const tensor *target= operands[MSE_TARGET];
+    double batch_size = target->shape[0];
     for (size_t i = 0; i < batch_size; i++)
     {
-        grad_wrt_operand->data[i] = (input->predicted->data[i] - input->target->data[i]) / batch_size;
-    }
-
-    if (operand == MSE_TARGET)
-    {
-        // Gradient is the same but mult by -1
-        for (size_t i = 0; i < grad_wrt_operand->shape[0]; i++)
-        {
-            grad_wrt_operand->data[i] *= -1;
-        }
+        grad_wrt_operand->data[i] = (predicted->data[i] - target->data[i]) / batch_size;
     }
 }
 
-void free_mse_backpropagation_function_data(backpropagation_function_data *data)
+void mse_loss_backpropagate_target(const tensor **const operands, const tensor* const grad_wrt_out, tensor* grad_wrt_operand)
 {
-    // data->inputs points to a mse_inputs allocation, so we free it but not the prediction and target tensors
-    free(data->inputs);
-    free(data);
+    mse_loss_backpropagate_predicted(operands, grad_wrt_out, grad_wrt_operand);
+
+    // Gradient is the same but mult by -1
+    for (size_t i = 0; i < grad_wrt_operand->shape[0]; i++)
+    {
+        grad_wrt_operand->data[i] *= -1;
+    }
 }

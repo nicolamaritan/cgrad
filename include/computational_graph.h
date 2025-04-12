@@ -18,9 +18,14 @@ typedef struct computational_graph_node
     computational_graph_node *parents[MAX_PARENTS];
     size_t parents_operands[MAX_PARENTS];
     computational_graph_node *children[MAX_CHILDREN];
-    backpropagation_function_data *data;
-    backpropagation_function function;
-    backpropagation_function_data_cleanup free_data;
+
+    /**
+     * Redundant info: tensors pointed by the computational graph nodes
+     * of the children. This is used to avoid recomputation
+     * of the operands in build_gradient() in backpropagation.h.
+     */
+    tensor *tensor_operands[MAX_CHILDREN];
+    backpropagation_function function[MAX_CHILDREN];
     bool is_involved_in_backprop;
     bool is_grad_computed;
 } computational_graph_node;

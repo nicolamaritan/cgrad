@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void relu_backpropagate(const backpropagation_function_data* const data, const tensor* const grad_wrt_out, tensor *grad_wrt_operand, size_t operand)
+void relu_backpropagate(const tensor **const operands, const tensor* const grad_wrt_out, tensor *grad_wrt_operand)
 {
-    tensor* x = (tensor*)data->inputs;
+    const tensor *const x = operands[ONLY_OPERAND];
     
     // Avoid multiple indirections for performance
     double* x_data = x->data;
@@ -33,17 +33,14 @@ tensor_error relu_forward_graph(tensor* const x, tensor* const out)
     computational_graph_node* x_node = x->node ? x->node : computational_graph_node_tensor_alloc(x);
     computational_graph_node* out_node = computational_graph_node_tensor_alloc(out);
 
-    add_parent(x_node, out_node, INPUT);
+    add_parent(x_node, out_node, ONLY_OPERAND);
     add_child(out_node, x_node);
 
-    backpropagation_function_data* data = malloc(sizeof(backpropagation_function_data));
-    data->layer = NULL;
-    data->inputs = (void*)x;
-    out_node->data = data;
+    // Setup backpropation functions 
+    out_node->function[ONLY_OPERAND] = (backpropagation_function)&relu_backpropagate;
 
-    out_node->function = (backpropagation_function)&relu_backpropagate;
-
-    out_node->free_data = (backpropagation_function_data_cleanup)&free_relu_backpropagation_function_data;
+    // Setup operands
+    out_node->tensor_operands[ONLY_OPERAND] = x;
 
     return TENSOR_OK;
 }
@@ -70,9 +67,4 @@ tensor_error relu_forward(const tensor* const x, tensor* const out)
     }
 
     return TENSOR_OK;
-}
-
-void free_relu_backpropagation_function_data(backpropagation_function_data* data)
-{
-    free(data);
 }

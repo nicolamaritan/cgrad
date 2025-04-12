@@ -9,16 +9,9 @@ typedef enum mse_loss_operand {
     MSE_TARGET = 1
 } mse_loss_operand;
 
-typedef struct
-{
-    tensor* predicted;
-    tensor* target;
-} mse_inputs;
-
-
 tensor_error mse_loss(const tensor* const y_pred, const tensor* const y_target, tensor* const z);
 tensor_error mse_loss_graph(tensor* const y_pred, tensor* const y_target, tensor* const out);
-void mse_loss_backpropagate(const backpropagation_function_data* const data, const tensor* const grad_wrt_out, tensor* grad_wrt_operand, size_t operand);
-void free_mse_backpropagation_function_data(backpropagation_function_data* data);
+void mse_loss_backpropagate_predicted(const tensor **const operands, const tensor* const grad_wrt_out, tensor* grad_wrt_operand);
+void mse_loss_backpropagate_target(const tensor **const operands, const tensor* const grad_wrt_out, tensor* grad_wrt_operand);
 
 #endif
