@@ -41,7 +41,7 @@ void free_computational_graph_node(computational_graph_node *const node)
 cgrad_error add_child(computational_graph_node *const node, computational_graph_node *const child)
 {
     size_t const n_children = node->n_children;
-    if (n_children >= MAX_CHILDREN)
+    if (n_children >= AUTOGRAD_MAX_CHILDREN)
     {
         return AUTOGRAD_MAX_CHILDREN_EXCEEDED;
     }
@@ -55,7 +55,7 @@ cgrad_error add_child(computational_graph_node *const node, computational_graph_
 cgrad_error add_parent(computational_graph_node *const node, computational_graph_node *const parent, const size_t operand)
 {
     size_t const n_parents = node->n_parents;
-    if (n_parents >= MAX_PARENTS)
+    if (n_parents >= AUTOGRAD_MAX_PARENTS)
     {
         return AUTOGRAD_MAX_PARENTS_EXCEEDED;
     }

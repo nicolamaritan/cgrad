@@ -1,0 +1,12 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+// Model
+#define MODEL_MAX_PARAMS 1024
+
+// Autograd
+#define AUTOGRAD_MAX_PARENTS 32
+#define AUTOGRAD_MAX_CHILDREN 32
+#define AUTOGRAD_MAX_TARGETS 1024
+
+#endif

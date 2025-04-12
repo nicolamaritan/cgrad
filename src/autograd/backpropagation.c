@@ -1,14 +1,13 @@
 #include "autograd/backpropagation.h"
 #include "autograd/computational_graph.h"
+#include "config.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-#define MAX_TARGETS 1024
-
 typedef struct 
 {
-    computational_graph_node* targets[MAX_TARGETS];
+    computational_graph_node* targets[AUTOGRAD_MAX_TARGETS];
     size_t size;
 } backpropagation_targets;
 
@@ -98,7 +97,7 @@ static void build_gradients(backpropagation_targets* const targets)
 int add_target(backpropagation_targets* const targets, computational_graph_node* const node)
 {
     size_t const size = targets->size;
-    if (size >= MAX_TARGETS)
+    if (size >= AUTOGRAD_MAX_TARGETS)
     {
         return 1;
     }

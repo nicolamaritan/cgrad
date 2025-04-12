@@ -3,7 +3,7 @@
 cgrad_error add_param(model_params* const params, tensor* const t)
 {
     size_t const size = params->size;
-    if (size >= MAX_PARAMS)
+    if (size >= MODEL_MAX_PARAMS)
     {
         return MODEL_MAX_PARAMS_EXCEEDED;
     }
