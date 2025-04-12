@@ -1,13 +1,12 @@
-#include "linear.h"
-#include "mse.h"
-#include "computational_graph.h"
-#include "backpropagation.h"
-#include "model_params.h"
-#include "tensor.h"
-#include "tensor2d_mult.h"
-#include "tensor2d_add_row_vector.h"
-#include "sgd.h"
-#include "random.h"
+#include "layers/linear.h"
+#include "loss/mse.h"
+#include "autograd/backpropagation.h"
+#include "model/model_params.h"
+#include "tensor/tensor.h"
+#include "tensor/tensor2d_mult.h"
+#include "tensor/tensor2d_add_row_vector.h"
+#include "optimizers/sgd.h"
+#include "utils/random.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -103,11 +102,7 @@ int main()
         tensor_free(z);
         z = NULL;
 
-        // assert(!x->node && !linear1->weights->node && !linear1->biases->node && !y_target->node && !z->node && !mult->node);
     }
-
-    // print_tensor(linear1->weights);
-    // print_tensor(linear1->biases);
 
     // Cleanup
     tensor_free(x);

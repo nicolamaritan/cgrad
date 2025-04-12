@@ -1,0 +1,263 @@
+#ifndef TENSOR_H
+#define TENSOR_H
+
+#include <stddef.h>
+#include <stdbool.h>
+
+typedef struct computational_graph_node computational_graph_node;
+typedef struct tensor tensor;
+
+/**
+ * @struct tensor
+ * @brief Represents a tensor with optional gradient tracking.
+ *
+ * This structure holds the data and shape of the tensor, as well as a pointer to a
+ * computational graph node for gradient tracking.
+ */
+typedef struct tensor
+{
+    double *data;        /**< Pointer to the data stored in the tensor. */
+    size_t *shape;       /**< Pointer to the shape of the tensor. */
+    size_t data_size;    /**< Total number of elements in the tensor. */
+    size_t shape_size;   /**< Number of dimensions in the tensor. */
+    computational_graph_node *node; /**< Pointer to the computational graph node for gradient tracking. */
+    tensor *grad;        /**< Pointer to the gradient tensor. */
+} tensor;
+
+/**
+ * @enum tensor_error
+ * @brief Enumeration of possible error codes for tensor operations.
+ */
+typedef enum
+{
+    TENSOR_OK = 0,               /**< Operation was successful. */
+    TENSOR_NULL,                 /**< Tensor pointer is null. */
+    TENSOR_SHAPE_NULL,           /**< Tensor shape pointer is null. */
+    TENSOR_WRONG_SHAPE,          /**< Tensor has an incorrect shape. */
+    TENSOR_DATA_NULL,            /**< Tensor data pointer is null. */
+    TENSOR_INDEX_OUT_OF_BOUNDS,  /**< Index is out of bounds for the tensor. */
+    TENSOR_SHAPE_MISMATCH,       /**< Shapes of tensors do not match. */
+    TENSOR_DATA_SIZE_MISMATCH    /**< Data sizes of tensors do not match. */
+} tensor_error;
+
+// Tensor allocation
+
+/**
+ * @brief Allocates a new tensor with the specified shape and gradient tracking.
+ *
+ * @param shape Pointer to the array containing the shape of the tensor.
+ * @param shape_size Number of dimensions in the tensor.
+ * @return Pointer to the allocated tensor, or NULL if allocation failed.
+ */
+tensor *tensor_alloc(size_t *shape, size_t shape_size);
+
+/**
+ * @brief Allocates a new tensor with the specified shape without gradient tracking.
+ *
+ * @param shape Pointer to the array containing the shape of the tensor.
+ * @param shape_size Number of dimensions in the tensor.
+ * @return Pointer to the allocated tensor, or NULL if allocation failed.
+ */
+tensor* tensor_no_grad_alloc(size_t *shape, size_t shape_size);
+
+/**
+ * @brief Allocates a new tensor with the specified shape, initialized to zero, without gradient tracking.
+ *
+ * @param shape Pointer to the array containing the shape of the tensor.
+ * @param shape_size Number of dimensions in the tensor.
+ * @return Pointer to the allocated tensor, or NULL if allocation failed.
+ */
+tensor* tensor_no_grad_zero_alloc(size_t *shape, size_t shape_size);
+
+/**
+ * @brief Allocates a new 2D tensor with the specified number of rows and columns and gradient tracking.
+ *
+ * @param rows Number of rows in the tensor.
+ * @param cols Number of columns in the tensor.
+ * @return Pointer to the allocated tensor, or NULL if allocation failed.
+ */
+tensor *tensor2d_alloc(size_t rows, size_t cols);
+
+/**
+ * @brief Allocates a new 2D tensor with the specified number of rows and columns without gradient tracking.
+ *
+ * @param rows Number of rows in the tensor.
+ * @param cols Number of columns in the tensor.
+ * @return Pointer to the allocated tensor, or NULL if allocation failed.
+ */
+tensor *tensor2d_no_grad_alloc(size_t rows, size_t cols);
+
+/**
+ * @brief Allocates a new 2D tensor with the specified number of rows and columns, initialized to zero, without gradient tracking.
+ *
+ * @param rows Number of rows in the tensor.
+ * @param cols Number of columns in the tensor.
+ * @return Pointer to the allocated tensor, or NULL if allocation failed.
+ */
+tensor *tensor2d_no_grad_zero_alloc(size_t rows, size_t cols);
+
+/**
+ * @brief Allocates a new 2D tensor with the same shape as the given tensor.
+ *
+ * @param t Pointer to the tensor whose shape will be copied.
+ * @return Pointer to the allocated tensor, or NULL if allocation failed.
+ */
+tensor *tensor2d_alloc_like(tensor *t);
+
+/**
+ * @brief Frees the memory allocated for the tensor, including its data and shape.
+ *
+ * @param t Pointer to the tensor to be freed.
+ */
+void tensor_free(tensor *t);
+
+/**
+ * @brief Frees the memory allocated for the tensor without gradient tracking.
+ *
+ * @param t Pointer to the tensor to be freed.
+ */
+void tensor_no_grad_free(tensor *t);
+
+// Non-differentiable tensor operations
+
+/**
+ * @brief Sets the value of a specific element in a 2D tensor without bounds checking.
+ *
+ * @param t Pointer to the tensor.
+ * @param row Row index of the element.
+ * @param col Column index of the element.
+ * @param value Value to be set.
+ */
+static inline void tensor2d_set_unchecked(tensor *t, size_t row, size_t col, double value);
+
+/**
+ * @brief Sets the value of a specific element in a 2D tensor with bounds checking.
+ *
+ * @param t Pointer to the tensor.
+ * @param row Row index of the element.
+ * @param col Column index of the element.
+ * @param value Value to be set.
+ * @return TENSOR_OK if successful, otherwise an appropriate error code.
+ */
+static inline tensor_error tensor2d_set(tensor *t, size_t row, size_t col, double value);
+
+/**
+ * @brief Adds the elements of tensor B to tensor A in place with bounds checking.
+ *
+ * @param A Pointer to the tensor to which elements will be added.
+ * @param B Pointer to the tensor whose elements will be added.
+ * @return TENSOR_OK if successful, otherwise an appropriate error code.
+ */
+tensor_error tensor_add_inplace(tensor *A, const tensor *const B);
+
+/**
+ * @brief Adds the elements of tensor B to tensor A in place without bounds checking.
+ *
+ * @param A Pointer to the tensor to which elements will be added.
+ * @param B Pointer to the tensor whose elements will be added.
+ */
+void tensor_add_inplace_unchecked(tensor *A, const tensor *const B);
+
+/**
+ * @brief Creates a clone of the given tensor.
+ *
+ * @param src Pointer to the tensor to be cloned.
+ * @return Pointer to the cloned tensor, or NULL if cloning failed.
+ */
+tensor *tensor_clone(const tensor *const src);
+
+/**
+ * @brief Copies the contents of a 2D tensor from source to destination with bounds checking.
+ *
+ * @param src Pointer to the source tensor.
+ * @param dest Pointer to the destination tensor.
+ * @return TENSOR_OK if successful, otherwise an appropriate error code.
+ */
+tensor_error tensor2d_copy(const tensor *const src, tensor *const dest);
+
+/**
+ * @brief Copies the contents of a tensor from source to destination with bounds checking.
+ *
+ * @param src Pointer to the source tensor.
+ * @param dest Pointer to the destination tensor.
+ * @return TENSOR_OK if successful, otherwise an appropriate error code.
+ */
+tensor_error tensor_copy(const tensor *const src, tensor *const dest);
+
+/**
+ * @brief Fills the tensor with the specified value.
+ *
+ * @param t Pointer to the tensor.
+ * @param value Value to fill the tensor with.
+ */
+void tensor_fill(tensor *const t, double value);
+
+// Helper functions
+/**
+ * @brief Checks if two tensors have the same shape.
+ *
+ * @param A Pointer to the first tensor.
+ * @param B Pointer to the second tensor.
+ * @return True if the tensors have the same shape, otherwise false.
+ */
+bool tensor_same_shape(const tensor *const A, const tensor *const B);
+
+// Debug
+/**
+ * @brief Prints the contents of the tensor.
+ *
+ * @param t Pointer to the tensor to be printed.
+ */
+void print_tensor(const tensor *const t);
+
+// Inline definitions
+/**
+ * @brief Sets the value of a specific element in a 2D tensor without bounds checking.
+ *
+ * This function directly sets the value of the element at the specified row and column
+ * in the 2D tensor. It does not perform any bounds checking, so it is the caller's
+ * responsibility to ensure that the indices are within the valid range.
+ *
+ * @param t Pointer to the tensor.
+ * @param row Row index of the element.
+ * @param col Column index of the element.
+ * @param value Value to be set.
+ */
+static inline void tensor2d_set_unchecked(tensor *t, size_t row, size_t col, double value)
+{
+    t->data[row * t->shape[1] + col] = value;
+}
+
+/**
+ * @brief Sets the value of a specific element in a 2D tensor with bounds checking.
+ *
+ * This function sets the value of the element at the specified row and column
+ * in the 2D tensor. It performs bounds checking to ensure that the indices are within
+ * the valid range and that the tensor and its components are properly initialized.
+ *
+ * @param t Pointer to the tensor.
+ * @param row Row index of the element.
+ * @param col Column index of the element.
+ * @param value Value to be set.
+ * @return TENSOR_OK if successful, otherwise an appropriate error code:
+ *         - TENSOR_NULL if the tensor pointer is null.
+ *         - TENSOR_SHAPE_NULL if the tensor shape pointer is null.
+ *         - TENSOR_DATA_NULL if the tensor data pointer is null.
+ *         - TENSOR_INDEX_OUT_OF_BOUNDS if the row or column index is out of bounds.
+ */
+static inline tensor_error tensor2d_set(tensor *t, size_t row, size_t col, double value)
+{
+    if (t == NULL)
+        return TENSOR_NULL;
+    if (t->shape == NULL)
+        return TENSOR_SHAPE_NULL;
+    if (t->data == NULL)
+        return TENSOR_DATA_NULL;
+    if (row >= t->shape[0] || col >= t->shape[1])
+        return TENSOR_INDEX_OUT_OF_BOUNDS;
+
+    t->data[row * t->shape[1] + col] = value;
+    return TENSOR_OK;
+}
+
+#endif
