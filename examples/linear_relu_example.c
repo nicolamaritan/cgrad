@@ -77,8 +77,8 @@ int main()
         // printf("\n\n");
 
         tensor *h2 = tensor2d_alloc(batch_size, out_dim);
-        tensor_error err = relu_forward_graph(h1, h2);
-        if (err != TENSOR_OK)
+        cgrad_error err = relu_forward_graph(h1, h2);
+        if (err != NO_ERROR)
         {
             fprintf(stderr, "Error: %d.\n", err);
             exit(1);

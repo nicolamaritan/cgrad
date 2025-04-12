@@ -61,11 +61,11 @@ int main()
     for (size_t i = 0; i < epochs; i++)
     {
         tensor *weights_transposed = tensor2d_alloc(in_dim, out_dim);
-        if (tensor2d_trans_graph(weights, weights_transposed) != TENSOR_OK)
+        if (tensor2d_trans_graph(weights, weights_transposed) != NO_ERROR)
             exit(1);
 
         tensor *mult = tensor2d_alloc(batch_size, out_dim);
-        if (tensor2d_mult_graph(x, weights_transposed, mult) != TENSOR_OK)
+        if (tensor2d_mult_graph(x, weights_transposed, mult) != NO_ERROR)
             exit(1);
 
         tensor *z = tensor2d_alloc(1, 1);

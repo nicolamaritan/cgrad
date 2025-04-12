@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-tensor_error mse_loss(const tensor *const y_pred, const tensor *const y_target, tensor *const z)
+cgrad_error mse_loss(const tensor *const y_pred, const tensor *const y_target, tensor *const z)
 {
     if (!y_pred || !y_target || !z)
         return TENSOR_NULL;
@@ -26,13 +26,13 @@ tensor_error mse_loss(const tensor *const y_pred, const tensor *const y_target, 
     }
     z->data[0] /= batch_size;
 
-    return TENSOR_OK;
+    return NO_ERROR;
 }
 
-tensor_error mse_loss_graph(tensor *const y_pred, tensor *const y_target, tensor *const z)
+cgrad_error mse_loss_graph(tensor *const y_pred, tensor *const y_target, tensor *const z)
 {
-    tensor_error err = mse_loss(y_pred, y_target, z);
-    if (err != TENSOR_OK)
+    cgrad_error err = mse_loss(y_pred, y_target, z);
+    if (err != NO_ERROR)
         return err;
 
     computational_graph_node *y_pred_node = y_pred->node ? y_pred->node : computational_graph_node_tensor_alloc(y_pred);
@@ -56,7 +56,7 @@ tensor_error mse_loss_graph(tensor *const y_pred, tensor *const y_target, tensor
     z_node->tensor_operands[MSE_PREDICTED] = y_pred;
     z_node->tensor_operands[MSE_TARGET] = y_target;
 
-    return TENSOR_OK;
+    return NO_ERROR;
 }
 
 void mse_loss_backpropagate_predicted(const tensor **const operands, const tensor* const grad_wrt_out, tensor* grad_wrt_operand)

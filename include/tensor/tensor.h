@@ -1,6 +1,7 @@
 #ifndef TENSOR_H
 #define TENSOR_H
 
+#include "utils/error.h"
 #include <stddef.h>
 #include <stdbool.h>
 
@@ -24,21 +25,6 @@ typedef struct tensor
     tensor *grad;        /**< Pointer to the gradient tensor. */
 } tensor;
 
-/**
- * @enum tensor_error
- * @brief Enumeration of possible error codes for tensor operations.
- */
-typedef enum
-{
-    TENSOR_OK = 0,               /**< Operation was successful. */
-    TENSOR_NULL,                 /**< Tensor pointer is null. */
-    TENSOR_SHAPE_NULL,           /**< Tensor shape pointer is null. */
-    TENSOR_WRONG_SHAPE,          /**< Tensor has an incorrect shape. */
-    TENSOR_DATA_NULL,            /**< Tensor data pointer is null. */
-    TENSOR_INDEX_OUT_OF_BOUNDS,  /**< Index is out of bounds for the tensor. */
-    TENSOR_SHAPE_MISMATCH,       /**< Shapes of tensors do not match. */
-    TENSOR_DATA_SIZE_MISMATCH    /**< Data sizes of tensors do not match. */
-} tensor_error;
 
 // Tensor allocation
 
@@ -137,18 +123,18 @@ static inline void tensor2d_set_unchecked(tensor *t, size_t row, size_t col, dou
  * @param row Row index of the element.
  * @param col Column index of the element.
  * @param value Value to be set.
- * @return TENSOR_OK if successful, otherwise an appropriate error code.
+ * @return NO_ERROR if successful, otherwise an appropriate error code.
  */
-static inline tensor_error tensor2d_set(tensor *t, size_t row, size_t col, double value);
+static inline cgrad_error tensor2d_set(tensor *t, size_t row, size_t col, double value);
 
 /**
  * @brief Adds the elements of tensor B to tensor A in place with bounds checking.
  *
  * @param A Pointer to the tensor to which elements will be added.
  * @param B Pointer to the tensor whose elements will be added.
- * @return TENSOR_OK if successful, otherwise an appropriate error code.
+ * @return NO_ERROR if successful, otherwise an appropriate error code.
  */
-tensor_error tensor_add_inplace(tensor *A, const tensor *const B);
+cgrad_error tensor_add_inplace(tensor *A, const tensor *const B);
 
 /**
  * @brief Adds the elements of tensor B to tensor A in place without bounds checking.
@@ -171,18 +157,18 @@ tensor *tensor_clone(const tensor *const src);
  *
  * @param src Pointer to the source tensor.
  * @param dest Pointer to the destination tensor.
- * @return TENSOR_OK if successful, otherwise an appropriate error code.
+ * @return NO_ERROR if successful, otherwise an appropriate error code.
  */
-tensor_error tensor2d_copy(const tensor *const src, tensor *const dest);
+cgrad_error tensor2d_copy(const tensor *const src, tensor *const dest);
 
 /**
  * @brief Copies the contents of a tensor from source to destination with bounds checking.
  *
  * @param src Pointer to the source tensor.
  * @param dest Pointer to the destination tensor.
- * @return TENSOR_OK if successful, otherwise an appropriate error code.
+ * @return NO_ERROR if successful, otherwise an appropriate error code.
  */
-tensor_error tensor_copy(const tensor *const src, tensor *const dest);
+cgrad_error tensor_copy(const tensor *const src, tensor *const dest);
 
 /**
  * @brief Fills the tensor with the specified value.
@@ -239,13 +225,13 @@ static inline void tensor2d_set_unchecked(tensor *t, size_t row, size_t col, dou
  * @param row Row index of the element.
  * @param col Column index of the element.
  * @param value Value to be set.
- * @return TENSOR_OK if successful, otherwise an appropriate error code:
+ * @return NO_ERROR if successful, otherwise an appropriate error code:
  *         - TENSOR_NULL if the tensor pointer is null.
  *         - TENSOR_SHAPE_NULL if the tensor shape pointer is null.
  *         - TENSOR_DATA_NULL if the tensor data pointer is null.
  *         - TENSOR_INDEX_OUT_OF_BOUNDS if the row or column index is out of bounds.
  */
-static inline tensor_error tensor2d_set(tensor *t, size_t row, size_t col, double value)
+static inline cgrad_error tensor2d_set(tensor *t, size_t row, size_t col, double value)
 {
     if (t == NULL)
         return TENSOR_NULL;
@@ -257,7 +243,7 @@ static inline tensor_error tensor2d_set(tensor *t, size_t row, size_t col, doubl
         return TENSOR_INDEX_OUT_OF_BOUNDS;
 
     t->data[row * t->shape[1] + col] = value;
-    return TENSOR_OK;
+    return NO_ERROR;
 }
 
 #endif

@@ -7,7 +7,7 @@ void tensor_add_unchecked(const tensor *const A, const tensor *const B, tensor *
         out->data[i] = A->data[i] + B->data[i];
 }
 
-tensor_error tensor_add(const tensor *const A, const tensor *const B, tensor *const out)
+cgrad_error tensor_add(const tensor *const A, const tensor *const B, tensor *const out)
 {
     if (!A || !B || !out)
         return TENSOR_NULL;
@@ -21,13 +21,13 @@ tensor_error tensor_add(const tensor *const A, const tensor *const B, tensor *co
         return TENSOR_SHAPE_MISMATCH;
 
     tensor_add_unchecked(A, B, out);
-    return TENSOR_OK;
+    return NO_ERROR;
 }
 
-tensor_error tensor_add_graph(tensor *const A, tensor *const B, tensor *const out)
+cgrad_error tensor_add_graph(tensor *const A, tensor *const B, tensor *const out)
 {
-    tensor_error err = tensor_add(A, B, out);
-    if (err != TENSOR_OK)
+    cgrad_error err = tensor_add(A, B, out);
+    if (err != NO_ERROR)
         return err;
 
     computational_graph_node *A_node = A->node ? A->node : computational_graph_node_tensor_alloc(A);
@@ -48,7 +48,7 @@ tensor_error tensor_add_graph(tensor *const A, tensor *const B, tensor *const ou
     out_node->tensor_operands[LHS_TENSOR] = A;
     out_node->tensor_operands[LHS_TENSOR] = B;
 
-    return TENSOR_OK;
+    return NO_ERROR;
 }
 
 void tensor_add_backpropagate(const tensor **const operands, const tensor *const grad_wrt_out, tensor *grad_wrt_operand)

@@ -1,7 +1,7 @@
 #include "tensor/tensor2d_trans.h"
 #include "autograd/computational_graph.h"
 
-tensor_error tensor2d_trans(const tensor *const t, tensor *const out)
+cgrad_error tensor2d_trans(const tensor *const t, tensor *const out)
 {
     if (!t || !out)
         return TENSOR_NULL;
@@ -13,14 +13,14 @@ tensor_error tensor2d_trans(const tensor *const t, tensor *const out)
         return TENSOR_SHAPE_MISMATCH;
 
     tensor2d_trans_unchecked(t, out);
-    return TENSOR_OK;
+    return NO_ERROR;
 }
 
-tensor_error tensor2d_trans_graph(tensor *const t, tensor *const out)
+cgrad_error tensor2d_trans_graph(tensor *const t, tensor *const out)
 {
-    tensor_error error = tensor2d_trans(t, out);
+    cgrad_error error = tensor2d_trans(t, out);
 
-    if (error != TENSOR_OK)
+    if (error != NO_ERROR)
         return error;
 
     // Update computational graph
@@ -37,7 +37,7 @@ tensor_error tensor2d_trans_graph(tensor *const t, tensor *const out)
     // Setup operands
     out_node->tensor_operands[TENSOR2D_TRANS_ONLY_OPERAND] = t;
 
-    return TENSOR_OK;
+    return NO_ERROR;
 }
 
 void tensor2d_trans_unchecked(const tensor *const t, tensor *const out)

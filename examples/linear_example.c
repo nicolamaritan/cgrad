@@ -80,11 +80,11 @@ int main()
         // tensor2d_add_row_vector_graph(mult, linear1->biases, h1);
         tensor *mult = tensor2d_alloc(batch_size, out_dim);
         tensor *h1 = tensor2d_alloc(batch_size, out_dim);
-        if (linear_forward_graph(x, linear1, mult, h1) != TENSOR_OK)
+        if (linear_forward_graph(x, linear1, mult, h1) != NO_ERROR)
             exit(1);
 
         tensor *z = tensor2d_alloc(1, 1);
-        if (mse_loss_graph(h1, y_target, z) != TENSOR_OK)
+        if (mse_loss_graph(h1, y_target, z) != NO_ERROR)
             exit(1);
 
         printf("z: ");

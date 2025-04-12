@@ -192,7 +192,7 @@ void tensor_no_grad_free(tensor *t)
     free(t);
 }
 
-tensor_error tensor2d_copy(const tensor *const src, tensor *const dest)
+cgrad_error tensor2d_copy(const tensor *const src, tensor *const dest)
 {
     if (!src || !dest)
         return TENSOR_NULL;
@@ -204,10 +204,10 @@ tensor_error tensor2d_copy(const tensor *const src, tensor *const dest)
         return TENSOR_SHAPE_MISMATCH;
         
     memcpy(dest->data, src->data, src->shape[0] * src->shape[1] * sizeof(double));
-    return TENSOR_OK;
+    return NO_ERROR;
 }
 
-tensor_error tensor_copy(const tensor *const src, tensor *const dest)
+cgrad_error tensor_copy(const tensor *const src, tensor *const dest)
 {
     if (!src || !dest)
         return TENSOR_NULL;
@@ -226,7 +226,7 @@ tensor_error tensor_copy(const tensor *const src, tensor *const dest)
 
     memcpy(dest->data, src->data, sizeof(double) * src->data_size);
 
-    return TENSOR_OK;
+    return NO_ERROR;
 }
 
 
@@ -256,7 +256,7 @@ void tensor_fill(tensor *const t, double value)
     }
 }
 
-tensor_error tensor_add_inplace(tensor *A, const tensor *const B)
+cgrad_error tensor_add_inplace(tensor *A, const tensor *const B)
 {
     if (!A || !B)
         return TENSOR_NULL;
@@ -270,7 +270,7 @@ tensor_error tensor_add_inplace(tensor *A, const tensor *const B)
         return false;
 
     tensor_add_inplace_unchecked(A, B);
-    return TENSOR_OK;
+    return NO_ERROR;
 }
 
 void tensor_add_inplace_unchecked(tensor *A, const tensor *const B)

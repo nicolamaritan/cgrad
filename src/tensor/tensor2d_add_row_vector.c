@@ -4,7 +4,7 @@
 
 void tensor2d_add_row_vector_unchecked(const tensor *const A, const tensor *const v, tensor *out);
 
-tensor_error tensor2d_add_row_vector(const tensor *const A, const tensor *const v, tensor *const out)
+cgrad_error tensor2d_add_row_vector(const tensor *const A, const tensor *const v, tensor *const out)
 {
     if (!A || !v)
         return TENSOR_NULL;
@@ -21,10 +21,10 @@ tensor_error tensor2d_add_row_vector(const tensor *const A, const tensor *const 
 
     tensor2d_add_row_vector_unchecked(A, v, out);
 
-    return TENSOR_OK;
+    return NO_ERROR;
 }
 
-tensor_error tensor2d_add_row_vector_graph(tensor *const A, tensor *const v, tensor *const out)
+cgrad_error tensor2d_add_row_vector_graph(tensor *const A, tensor *const v, tensor *const out)
 {
     if (!A || !v)
         return TENSOR_NULL;
@@ -59,7 +59,7 @@ tensor_error tensor2d_add_row_vector_graph(tensor *const A, tensor *const v, ten
     out_node->tensor_operands[TENSOR2D] = A;
     out_node->tensor_operands[ROW_VECTOR] = v;
 
-    return TENSOR_OK;
+    return NO_ERROR;
 }
 
 void tensor2d_add_row_vector_unchecked(const tensor *const A, const tensor *const v, tensor *out)

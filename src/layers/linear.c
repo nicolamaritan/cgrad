@@ -35,22 +35,22 @@ linear_layer *linear_create(size_t in_dim, size_t out_dim)
     return layer;
 }
 
-tensor_error linear_forward_graph(tensor *const x, linear_layer *const layer, tensor *const mult, tensor *const out)
+cgrad_error linear_forward_graph(tensor *const x, linear_layer *const layer, tensor *const mult, tensor *const out)
 {
     // XW computation 
-    tensor_error error = tensor2d_mult_graph(x, layer->weights, mult);
-    if (error != TENSOR_OK)
+    cgrad_error error = tensor2d_mult_graph(x, layer->weights, mult);
+    if (error != NO_ERROR)
         return error;
 
     // XW + b computation
     return tensor2d_add_row_vector_graph(mult, layer->biases, out);
 }
 
-tensor_error linear_forward(const tensor *const x, const linear_layer *const layer, tensor *const mult, tensor *const out)
+cgrad_error linear_forward(const tensor *const x, const linear_layer *const layer, tensor *const mult, tensor *const out)
 {
     // XW computation 
-    tensor_error error = tensor2d_mult(x, layer->weights, mult);
-    if (error != TENSOR_OK)
+    cgrad_error error = tensor2d_mult(x, layer->weights, mult);
+    if (error != NO_ERROR)
         return error;
 
     // XW + b computation

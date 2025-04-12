@@ -24,10 +24,10 @@ void relu_backpropagate(const tensor **const operands, const tensor* const grad_
     }
 }
 
-tensor_error relu_forward_graph(tensor* const x, tensor* const out)
+cgrad_error relu_forward_graph(tensor* const x, tensor* const out)
 {
-    tensor_error error = relu_forward(x, out);
-    if (error != TENSOR_OK)
+    cgrad_error error = relu_forward(x, out);
+    if (error != NO_ERROR)
         return error;
 
     computational_graph_node* x_node = x->node ? x->node : computational_graph_node_tensor_alloc(x);
@@ -42,10 +42,10 @@ tensor_error relu_forward_graph(tensor* const x, tensor* const out)
     // Setup operands
     out_node->tensor_operands[RELU_ONLY_OPERAND] = x;
 
-    return TENSOR_OK;
+    return NO_ERROR;
 }
 
-tensor_error relu_forward(const tensor* const x, tensor* const out)
+cgrad_error relu_forward(const tensor* const x, tensor* const out)
 {
     if (!x || !out)
         return TENSOR_NULL;
@@ -66,5 +66,5 @@ tensor_error relu_forward(const tensor* const x, tensor* const out)
         out_data[i] = x_data[i] > 0 ? x_data[i] : 0;
     }
 
-    return TENSOR_OK;
+    return NO_ERROR;
 }

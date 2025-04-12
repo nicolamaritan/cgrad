@@ -76,7 +76,7 @@ static tensor* build_gradient(computational_graph_node* const node)
         parent_node->function[operand](operands, D, parent_i_gradient);
 
         int terror = tensor_add_inplace(node->t->grad, parent_i_gradient);
-        if (terror != TENSOR_OK)
+        if (terror != NO_ERROR)
             exit(1); 
 
         tensor_free(parent_i_gradient);

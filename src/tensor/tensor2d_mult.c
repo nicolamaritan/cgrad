@@ -7,7 +7,7 @@
 
 void tensor2d_mult_unchecked(const tensor *const A, const tensor *const B, tensor *const out);
 
-tensor_error tensor2d_mult(const tensor *const A, const tensor *const B, tensor *const out)
+cgrad_error tensor2d_mult(const tensor *const A, const tensor *const B, tensor *const out)
 {
     if (!A || !B || !out)
         return TENSOR_NULL;
@@ -19,21 +19,21 @@ tensor_error tensor2d_mult(const tensor *const A, const tensor *const B, tensor 
         return TENSOR_SHAPE_MISMATCH; // Output shape mismatch
 
     tensor2d_mult_unchecked(A, B, out);
-    return TENSOR_OK;
+    return NO_ERROR;
 }
 
-tensor_error tensor2d_mult_graph(tensor *const A, tensor *const B, tensor *const out)
+cgrad_error tensor2d_mult_graph(tensor *const A, tensor *const B, tensor *const out)
 {
-    tensor_error error = tensor2d_mult(A, B, out);
+    cgrad_error error = tensor2d_mult(A, B, out);
 
-    if (error != TENSOR_OK)
+    if (error != NO_ERROR)
         return error;
 
     // Update computational graph
     add_computational_graph_link(A, LHS_TENSOR, out, &tensor2d_mult_backpropagate_lhs);
     add_computational_graph_link(B, RHS_TENSOR, out, &tensor2d_mult_backpropagate_rhs);
 
-    return TENSOR_OK;
+    return NO_ERROR;
 }
 
 void tensor2d_mult_unchecked(const tensor *const A, const tensor *const B, tensor *const out)
