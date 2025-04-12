@@ -14,7 +14,7 @@ typedef struct
 static void identify_backpropagation_nodes(computational_graph_node* const node, backpropagation_targets* targets);
 static tensor* build_gradient(computational_graph_node* const node);
 static void build_gradients(backpropagation_targets* const targets);
-int add_target(backpropagation_targets* const targets, computational_graph_node* const node);
+cgrad_error add_target(backpropagation_targets* const targets, computational_graph_node* const node);
 void set_gradient_wrt_itself(tensor* const t);
 
 void backward(tensor* t, bool retain_graph)
@@ -94,18 +94,18 @@ static void build_gradients(backpropagation_targets* const targets)
     }
 }
 
-int add_target(backpropagation_targets* const targets, computational_graph_node* const node)
+cgrad_error add_target(backpropagation_targets* const targets, computational_graph_node* const node)
 {
     size_t const size = targets->size;
     if (size >= AUTOGRAD_MAX_TARGETS)
     {
-        return 1;
+        return AUTOGRAD_MAX_TARGETS_EXCEEDED;
     }
 
     targets->targets[size] = node;
     targets->size++;
 
-    return 0;
+    return NO_ERROR;
 }
 
 void set_gradient_wrt_itself(tensor* const t)

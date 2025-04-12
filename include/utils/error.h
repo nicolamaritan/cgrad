@@ -24,6 +24,7 @@ typedef enum
     // Autograd errors
     AUTOGRAD_MAX_PARENTS_EXCEEDED,
     AUTOGRAD_MAX_CHILDREN_EXCEEDED,
+    AUTOGRAD_MAX_TARGETS_EXCEEDED,
 } cgrad_error;
 
 #endif
