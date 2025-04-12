@@ -110,11 +110,5 @@ cgrad_error add_target(backpropagation_targets* const targets, computational_gra
 
 void set_gradient_wrt_itself(tensor* const t)
 {
-    if (t->data_size == 1)
-    {
-        tensor2d_set_unchecked(t->grad, 0, 0, 1);
-        return;
-    }
-    perror("Error: Not implemented yet");
-    exit(1);
+    tensor2d_set_unchecked(t->grad, 0, 0, 1);
 }
