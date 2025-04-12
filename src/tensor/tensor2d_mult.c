@@ -24,16 +24,23 @@ cgrad_error tensor2d_mult(const tensor *const A, const tensor *const B, tensor *
 
 cgrad_error tensor2d_mult_graph(tensor *const A, tensor *const B, tensor *const out)
 {
-    cgrad_error error = tensor2d_mult(A, B, out);
+    cgrad_error err = tensor2d_mult(A, B, out);
 
-    if (error != NO_ERROR)
-        return error;
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
 
     // Update computational graph
-    add_computational_graph_link(A, LHS_TENSOR, out, &tensor2d_mult_backpropagate_lhs);
-    add_computational_graph_link(B, RHS_TENSOR, out, &tensor2d_mult_backpropagate_rhs);
+    err = add_computational_graph_link(A, LHS_TENSOR, out, &tensor2d_mult_backpropagate_lhs);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+    
+    err = add_computational_graph_link(B, RHS_TENSOR, out, &tensor2d_mult_backpropagate_rhs);
 
-    return NO_ERROR;
+    return err;
 }
 
 void tensor2d_mult_unchecked(const tensor *const A, const tensor *const B, tensor *const out)

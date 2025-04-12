@@ -30,19 +30,8 @@ cgrad_error relu_forward_graph(tensor* const x, tensor* const out)
     if (error != NO_ERROR)
         return error;
 
-    computational_graph_node* x_node = x->node ? x->node : computational_graph_node_tensor_alloc(x);
-    computational_graph_node* out_node = computational_graph_node_tensor_alloc(out);
-
-    add_parent(x_node, out_node, RELU_ONLY_OPERAND);
-    add_child(out_node, x_node);
-
-    // Setup backpropation functions 
-    out_node->function[RELU_ONLY_OPERAND] = (backpropagation_function)&relu_backpropagate;
-
-    // Setup operands
-    out_node->tensor_operands[RELU_ONLY_OPERAND] = x;
-
-    return NO_ERROR;
+    error = add_computational_graph_link(x, RELU_ONLY_OPERAND, out, &relu_backpropagate);
+    return error;
 }
 
 cgrad_error relu_forward(const tensor* const x, tensor* const out)

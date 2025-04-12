@@ -18,26 +18,13 @@ cgrad_error tensor2d_trans(const tensor *const t, tensor *const out)
 
 cgrad_error tensor2d_trans_graph(tensor *const t, tensor *const out)
 {
-    cgrad_error error = tensor2d_trans(t, out);
+    cgrad_error err = tensor2d_trans(t, out);
 
-    if (error != NO_ERROR)
-        return error;
+    if (err != NO_ERROR)
+        return err;
 
-    // Update computational graph
-    computational_graph_node *t_node = t->node ? t->node : computational_graph_node_tensor_alloc(t);
-    computational_graph_node *out_node = computational_graph_node_tensor_alloc(out);
-
-    // Unused operand
-    add_parent(t_node, out_node, TENSOR2D_TRANS_ONLY_OPERAND);
-    add_child(out_node, t_node);
-
-    // Setup backpropagation function
-    out_node->function[TENSOR2D_TRANS_ONLY_OPERAND] = (backpropagation_function)&tensor2d_trans_backpropagate;
-
-    // Setup operands
-    out_node->tensor_operands[TENSOR2D_TRANS_ONLY_OPERAND] = t;
-
-    return NO_ERROR;
+    err = add_computational_graph_link(t, TENSOR2D_TRANS_ONLY_OPERAND, out, &tensor2d_trans_backpropagate);
+    return err;
 }
 
 void tensor2d_trans_unchecked(const tensor *const t, tensor *const out)

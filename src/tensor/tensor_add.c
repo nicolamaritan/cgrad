@@ -28,27 +28,20 @@ cgrad_error tensor_add_graph(tensor *const A, tensor *const B, tensor *const out
 {
     cgrad_error err = tensor_add(A, B, out);
     if (err != NO_ERROR)
+    {
         return err;
+    }
 
-    computational_graph_node *A_node = A->node ? A->node : computational_graph_node_tensor_alloc(A);
-    computational_graph_node *B_node = B->node ? B->node : computational_graph_node_tensor_alloc(B);
-    computational_graph_node *out_node = computational_graph_node_tensor_alloc(out);
+    // Update computational graph
+    err = add_computational_graph_link(A, LHS_TENSOR, out, &tensor_add_backpropagate);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
 
-    // Setup connections
-    add_parent(A_node, out_node, LHS_TENSOR);
-    add_parent(B_node, out_node, RHS_TENSOR);
-    add_child(out_node, A_node);
-    add_child(out_node, B_node);
+    err = add_computational_graph_link(B, RHS_TENSOR, out, &tensor_add_backpropagate);
 
-    // Setup backpropagation functions
-    out_node->function[LHS_TENSOR] = (backpropagation_function)&tensor_add_backpropagate;
-    out_node->function[RHS_TENSOR] = (backpropagation_function)&tensor_add_backpropagate;
-
-    // Setup operands
-    out_node->tensor_operands[LHS_TENSOR] = A;
-    out_node->tensor_operands[LHS_TENSOR] = B;
-
-    return NO_ERROR;
+    return err;
 }
 
 void tensor_add_backpropagate(const tensor **const operands, const tensor *const grad_wrt_out, tensor *grad_wrt_operand)

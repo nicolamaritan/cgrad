@@ -41,25 +41,16 @@ cgrad_error tensor2d_add_row_vector_graph(tensor *const A, tensor *const v, tens
 
     tensor2d_add_row_vector_unchecked(A, v, out);
 
-    computational_graph_node *A_node = A->node ? A->node : computational_graph_node_tensor_alloc(A);
-    computational_graph_node *v_node = v->node ? v->node : computational_graph_node_tensor_alloc(v);
-    computational_graph_node *out_node = computational_graph_node_tensor_alloc(out);
+    // Update computational graph
+    cgrad_error err = add_computational_graph_link(A, TENSOR2D, out, &tensor2d_add_row_vector_backpropagate_tensor2d);
+    if (err != NO_ERROR) 
+    {
+        return err;
+    }
 
-    // Setup connections
-    add_parent(A_node, out_node, TENSOR2D);
-    add_parent(v_node, out_node, ROW_VECTOR);
-    add_child(out_node, A_node);
-    add_child(out_node, v_node);
+    err = add_computational_graph_link(v, ROW_VECTOR, out, &tensor2d_add_row_vector_backpropagate_row_vector);
 
-    // Setup backpropagation functions
-    out_node->function[TENSOR2D] = (backpropagation_function)&tensor2d_add_row_vector_backpropagate_tensor2d;
-    out_node->function[ROW_VECTOR] = (backpropagation_function)&tensor2d_add_row_vector_backpropagate_row_vector;
-
-    // Setup operands
-    out_node->tensor_operands[TENSOR2D] = A;
-    out_node->tensor_operands[ROW_VECTOR] = v;
-
-    return NO_ERROR;
+    return err;
 }
 
 void tensor2d_add_row_vector_unchecked(const tensor *const A, const tensor *const v, tensor *out)
