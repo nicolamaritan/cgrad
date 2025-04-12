@@ -2,6 +2,7 @@
 #define COMPUTATIONAL_GRAPH_H
 
 #include "autograd/backpropagation_function.h"
+#include "utils/error.h"
 #include <stdbool.h>
 
 #define MAX_PARENTS 32
@@ -32,10 +33,10 @@ typedef struct computational_graph_node
 
 computational_graph_node *computational_graph_node_alloc();
 computational_graph_node *computational_graph_node_tensor_alloc(tensor *const t);
-void add_computational_graph_link(tensor* operand, size_t operand_id, tensor* result, backpropagation_function backprop_function);
 void free_computational_graph_node(computational_graph_node *const node);
-int add_child(computational_graph_node *const node, computational_graph_node *const child);
-int add_parent(computational_graph_node *const node, computational_graph_node *const parent, const size_t operand);
+cgrad_error add_computational_graph_link(tensor* operand, size_t operand_id, tensor* result, backpropagation_function backprop_function);
+cgrad_error add_child(computational_graph_node *const node, computational_graph_node *const child);
+cgrad_error add_parent(computational_graph_node *const node, computational_graph_node *const parent, const size_t operand);
 void print_computational_graph_node(const computational_graph_node *node);
 
 #endif

@@ -35,53 +35,63 @@ void free_computational_graph_node(computational_graph_node *const node)
     if (node->t->node)
         node->t->node = NULL;
 
-    // free(node->data);
     free(node);
 }
 
-void add_computational_graph_link(tensor* operand, size_t operand_id, tensor* result, backpropagation_function backprop_function)
-{
-    computational_graph_node *operand_node = operand->node ? operand->node : computational_graph_node_tensor_alloc(operand);
-    computational_graph_node *result_node = result->node ? result->node : computational_graph_node_tensor_alloc(result);
-
-    // Setup connection
-    add_parent(operand_node, result_node, operand_id);
-    add_child(result_node, operand_node);
-
-    // Setup backpropagation function
-    result_node->function[operand_id] = backprop_function; 
-
-    // Setup operand in the tensor operands pointer
-    result_node->tensor_operands[operand_id] = operand;
-}
-
-int add_child(computational_graph_node *const node, computational_graph_node *const child)
+cgrad_error add_child(computational_graph_node *const node, computational_graph_node *const child)
 {
     size_t const n_children = node->n_children;
     if (n_children >= MAX_CHILDREN)
     {
-        return 1;
+        return AUTOGRAD_MAX_CHILDREN_EXCEEDED;
     }
 
     node->children[n_children] = child;
     node->n_children++;
 
-    return 0;
+    return NO_ERROR;
 }
 
-int add_parent(computational_graph_node *const node, computational_graph_node *const parent, const size_t operand)
+cgrad_error add_parent(computational_graph_node *const node, computational_graph_node *const parent, const size_t operand)
 {
     size_t const n_parents = node->n_parents;
     if (n_parents >= MAX_PARENTS)
     {
-        return 1;
+        return AUTOGRAD_MAX_PARENTS_EXCEEDED;
     }
 
     node->parents[n_parents] = parent;
     node->parents_operands[n_parents] = operand;
     node->n_parents++;
 
-    return 0;
+    return NO_ERROR;
+}
+
+cgrad_error add_computational_graph_link(tensor* operand, size_t operand_id, tensor* result, backpropagation_function backprop_function)
+{
+    computational_graph_node *operand_node = operand->node ? operand->node : computational_graph_node_tensor_alloc(operand);
+    computational_graph_node *result_node = result->node ? result->node : computational_graph_node_tensor_alloc(result);
+
+    // Setup connection
+    cgrad_error error = add_parent(operand_node, result_node, operand_id);
+    if (error != NO_ERROR)
+    {
+        return error;
+    }
+
+    error = add_child(result_node, operand_node);
+    if (error != NO_ERROR)
+    {
+        return error;
+    }
+
+    // Setup backpropagation function
+    result_node->function[operand_id] = backprop_function; 
+
+    // Setup operand in the tensor operands pointer
+    result_node->tensor_operands[operand_id] = operand;
+
+    return NO_ERROR;
 }
 
 void print_computational_graph_node(const computational_graph_node *node)

@@ -12,7 +12,7 @@ typedef struct
     size_t size;
 } model_params;
 
-int add_param(model_params* const params, tensor* const t);
+cgrad_error add_param(model_params* const params, tensor* const t);
 static inline void zero_grad(model_params* const params);
 
 static inline void zero_grad(model_params* const params)
