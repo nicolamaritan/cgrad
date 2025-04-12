@@ -1,11 +1,13 @@
-#include "linear.h"
-#include "relu.h"
-#include "mse.h"
-#include "computational_graph.h"
-#include "backpropagation.h"
-#include "tensor.h"
-#include "sgd.h"
-#include "random.h"
+#include "layers/linear.h"
+#include "layers/relu.h"
+#include "loss/mse.h"
+#include "autograd/backpropagation.h"
+#include "model/model_params.h"
+#include "tensor/tensor.h"
+#include "tensor/tensor2d_mult.h"
+#include "tensor/tensor2d_add_row_vector.h"
+#include "optimizers/sgd.h"
+#include "utils/random.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -58,21 +60,30 @@ int main()
     linear_layer *linear1 = linear_create(in_dim, out_dim);
     linear_xavier_init(linear1);
 
+    // TODO work on a better interface
+    model_params params;
+    params.size = 0;
+    add_param(&params, linear1->weights);
+    add_param(&params, linear1->biases);
+
     size_t epochs = 1000;
     for (size_t i = 0; i < epochs; i++)
     {
-
-        target_computational_graph_nodes targets;
-        targets.size = 0;
-
         tensor *h1 = tensor2d_alloc(batch_size, out_dim);
-        linear_forward_graph(x, linear1, h1, &targets);
+        tensor *mult= tensor2d_alloc(batch_size, out_dim);
+        linear_forward_graph(x, linear1, mult, h1);
         // printf("h1: ");
         // print_tensor(h1);
         // printf("\n\n");
 
         tensor *h2 = tensor2d_alloc(batch_size, out_dim);
-        relu_forward_graph(h1, h2);
+        cgrad_error err = relu_forward_graph(h1, h2);
+        if (err != NO_ERROR)
+        {
+            fprintf(stderr, "Error: %d.\n", err);
+            exit(1);
+        }
+        
         // printf("h2: ");
         // print_tensor(h2);
         // printf("\n\n");
@@ -84,11 +95,22 @@ int main()
         print_tensor(z);
         printf("\n\n");
 
-        backpropagate(&targets);
+        zero_grad(&params);        
+        backward(z, false);
 
-        sgd_step(0.00001, &targets);
+        if (i + 1 == epochs)
+        {
+            printf("Gradients:\n");
+            print_tensor(mult->grad);
+            printf("\n");
+            print_tensor(h1->grad);
+            printf("\n");
+            print_tensor(h2->grad);
+            printf("\n");
+            print_tensor(z->grad);
+        }
 
-        zero_grad(z);
+        sgd_step(0.00001, &params);
 
         free(linear1->weights->node);
         linear1->weights->node = NULL;
@@ -110,4 +132,6 @@ int main()
     tensor_free(x);
     tensor_free(y_target);
     return 0;
+    
+   return 0;
 }
