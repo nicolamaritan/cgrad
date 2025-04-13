@@ -57,6 +57,10 @@ int main()
     params.size = 0;
     add_model_param(&params, weights);
 
+    sgd_state opt_state;
+    if (init_sgd_state(&opt_state, &params) != NO_ERROR)
+        exit(1);
+
     size_t epochs = 10000;
     for (size_t i = 0; i < epochs; i++)
     {
@@ -77,7 +81,7 @@ int main()
         zero_grad(&params);
         backward(z, false);
 
-        sgd_step(0.00001, &params);
+        sgd_step(0.00001, 0.9, false, &opt_state, &params);
 
         tensor_free(mult);
         tensor_free(z);

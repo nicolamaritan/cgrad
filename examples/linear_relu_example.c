@@ -66,6 +66,10 @@ int main()
     add_model_param(&params, linear1->weights);
     add_model_param(&params, linear1->biases);
 
+    sgd_state opt_state;
+    if (init_sgd_state(&opt_state, &params) != NO_ERROR)
+        exit(1);
+
     size_t epochs = 1000;
     for (size_t i = 0; i < epochs; i++)
     {
@@ -110,7 +114,7 @@ int main()
             print_tensor(z->grad);
         }
 
-        sgd_step(0.00001, &params);
+        sgd_step(0.00001, 0.9, false, &opt_state, &params);
 
         free(linear1->weights->node);
         linear1->weights->node = NULL;
