@@ -17,4 +17,5 @@ src/%/%.o: src/%/%.c
 	$(CC) -c $< -o $@ $(CFLAGS)
 
 clean:
-	rm -f src/*.o examples/linear_example examples/linear_relu_example
+	rm -f examples/linear_example examples/linear_relu_example
+	find . -name "*.o" -type f -delete
