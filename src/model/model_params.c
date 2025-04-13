@@ -1,6 +1,12 @@
 #include "model/model_params.h"
 
-cgrad_error add_param(model_params* const params, tensor* const t)
+void init_model_params(model_params *const params)
+{
+    params->size = 0;
+    memset(params->params, 0, params->size * sizeof(tensor *));
+}
+
+cgrad_error add_model_param(model_params *const params, tensor *const t)
 {
     size_t const size = params->size;
     if (size >= MODEL_MAX_PARAMS)

@@ -55,7 +55,7 @@ int main()
 
     model_params params;
     params.size = 0;
-    add_param(&params, weights);
+    add_model_param(&params, weights);
 
     size_t epochs = 10000;
     for (size_t i = 0; i < epochs; i++)

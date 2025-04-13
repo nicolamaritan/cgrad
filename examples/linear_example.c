@@ -62,13 +62,10 @@ int main()
     linear_layer *linear1 = linear_create(in_dim, out_dim);
     linear_xavier_init(linear1);
 
-    // print_tensor(linear1->weights);
-
-    // TODO work on a better interface
     model_params params;
-    params.size = 0;
-    add_param(&params, linear1->weights);
-    add_param(&params, linear1->biases);
+    init_model_params(&params);
+    add_model_param(&params, linear1->weights);
+    add_model_param(&params, linear1->biases);
 
     // size_t epochs = 10000;
     size_t epochs = 10000;

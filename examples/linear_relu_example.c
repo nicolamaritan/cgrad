@@ -63,8 +63,8 @@ int main()
     // TODO work on a better interface
     model_params params;
     params.size = 0;
-    add_param(&params, linear1->weights);
-    add_param(&params, linear1->biases);
+    add_model_param(&params, linear1->weights);
+    add_model_param(&params, linear1->biases);
 
     size_t epochs = 1000;
     for (size_t i = 0; i < epochs; i++)
