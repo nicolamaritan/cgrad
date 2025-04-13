@@ -1,21 +1,33 @@
 CC = gcc
 CFLAGS = -Wall -Iinclude
+DEBUG_CFLAGS = -Wall -Iinclude -g
 LDFLAGS = -lblas -lm
 
 SRC = $(wildcard src/*/*.c)
 OBJ = $(SRC:.c=.o)
+DEBUG_OBJ = $(SRC:.c=.debug.o)
 
 EXAMPLES = $(wildcard examples/*.c)
 EXECS = $(EXAMPLES:.c=.out)  # Converts .c to executable names without extension + .out
+DEBUG_EXECS = $(EXAMPLES:.c=.debug.out)
 
 all: $(OBJ) $(EXECS)
 
-examples/%: examples/%.c $(OBJ)
+examples/%.out: examples/%.c $(OBJ)
 	$(CC) $(OBJ) $< -o $@ $(CFLAGS) $(LDFLAGS)
 
-src/%/%.o: src/%/%.c
+src/%.o: src/%.c
 	$(CC) -c $< -o $@ $(CFLAGS)
+
+debug: $(DEBUG_OBJ) $(DEBUG_EXECS)
+
+examples/%.debug.out: examples/%.c $(DEBUG_OBJ)
+	$(CC) $(DEBUG_OBJ) $< -o $@ $(DEBUG_CFLAGS) $(LDFLAGS)
+
+src/%.debug.o: src/%.c
+	$(CC) -c $< -o $@ $(DEBUG_CFLAGS)
 
 clean:
 	rm -f examples/linear_example examples/linear_relu_example
 	find . -name "*.o" -type f -delete
+	find . -name "*.out" -type f -delete
