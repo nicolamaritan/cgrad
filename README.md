@@ -1,6 +1,5 @@
 # C-Grad
-
-Lightweight C neural network library.
+Neural network library written in C.
 
 ## Dependencies
 - libblas-dev
