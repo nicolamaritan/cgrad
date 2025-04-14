@@ -21,8 +21,8 @@ int main()
     init_random();
 
     const size_t batch_size = 128;
-    const size_t input_dim = 4;
-    const size_t hidden_dim = 8;
+    const size_t input_dim = 64;
+    const size_t hidden_dim = 128;
     const size_t out_dim = 1;
 
     tensor *x = tensor2d_alloc(batch_size, input_dim);
@@ -47,7 +47,7 @@ int main()
     init_model_params(&params);
     add_model_param(&params, linear1->weights);
     add_model_param(&params, linear1->biases);
-    add_model_param(&params, linear2->biases);
+    add_model_param(&params, linear2->weights);
     add_model_param(&params, linear2->biases);
 
     // Setup optimizer
@@ -99,6 +99,7 @@ int main()
     tensor_free(x);
     tensor_free(y_target);
     linear_free(linear1);
+    linear_free(linear2);
     return 0;
 }
 
@@ -114,15 +115,22 @@ double compute_example_y_target(double *x_row, double *weights, double bias, siz
 void build_example_dataset(tensor *x, tensor *y_target)
 {
     // Random weights and bias for generating y
-    double lb = -5;
-    double ub = 5;
-    double weights[4] = {sample_uniform(lb, ub), sample_uniform(lb, ub), sample_uniform(lb, ub), sample_uniform(lb, ub)};
+    double lb = -20;
+    double ub = 20;
+    double weights[x->shape[1]];
+    for (size_t j = 0; j < x->shape[1]; j++)
+    {
+        weights[j] = sample_uniform(lb, ub);
+    }
+
     double bias = sample_uniform(lb, ub);
     
     // Populate x with random values and compute y
-    for (size_t i = 0; i < x->shape[0]; i++) {
-        double x_row[4];
-        for (size_t j = 0; j < 4; j++) {
+    for (size_t i = 0; i < x->shape[0]; i++) 
+    {
+        double x_row[x->shape[1]];
+        for (size_t j = 0; j < x->shape[1]; j++) 
+        {
             double value = sample_uniform(lb, ub);
             x_row[j] = value;
             tensor2d_set_unchecked(x, i, j, value);
