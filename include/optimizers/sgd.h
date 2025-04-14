@@ -12,5 +12,6 @@ typedef struct sgd_state
 
 void sgd_step(double lr, double momentum, bool nesterov, sgd_state* state, model_params* params);
 cgrad_error init_sgd_state(sgd_state *state, const model_params *const params);
+void free_sgd_state_tensors(sgd_state *state);
 
 #endif

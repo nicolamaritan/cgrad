@@ -70,6 +70,14 @@ cgrad_error init_sgd_state(sgd_state *state, const model_params *const params)
     return NO_ERROR;
 }
 
+void free_sgd_state_tensors(sgd_state *state)
+{
+    for (size_t i = 0; i < state->size; i++)
+    {
+        tensor_free(state->prev_b_t[i]);
+    }
+}
+
 cgrad_error add_prev_b_t(sgd_state *const state, tensor *const prev_grad)
 {
     size_t const size = state->size;

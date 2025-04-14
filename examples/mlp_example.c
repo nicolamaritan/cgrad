@@ -96,6 +96,7 @@ int main()
     }
 
     // Cleanup
+    free_sgd_state_tensors(&opt_state);
     tensor_free(x);
     tensor_free(y_target);
     linear_free(linear1);
