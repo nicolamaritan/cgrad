@@ -28,6 +28,5 @@ src/%.debug.o: src/%.c
 	$(CC) -c $< -o $@ $(DEBUG_CFLAGS)
 
 clean:
-	rm -f examples/linear_example examples/linear_relu_example
 	find . -name "*.o" -type f -delete
 	find . -name "*.out" -type f -delete
