@@ -1,10 +1,9 @@
 #include "layers/linear.h"
+#include "layers/relu.h"
 #include "loss/mse.h"
 #include "autograd/backpropagation.h"
 #include "model/model_params.h"
 #include "tensor/tensor.h"
-#include "tensor/tensor2d_mult.h"
-#include "tensor/tensor2d_add_row_vector.h"
 #include "optimizers/sgd.h"
 #include "utils/random.h"
 #include <stdio.h>
@@ -12,11 +11,10 @@
 #include <assert.h>
 #include <math.h>
 
-// Example 2-layer-friendly function: y = tanh(w·x + b)
-double compute_y(double *x_row, double *weights, double bias, size_t dim);
-
 // Example dataset build
-void build_dataset(tensor *x, tensor *y_target);
+void build_example_dataset(tensor *x, tensor *y_target);
+// Example 2-layer-friendly function: y = tanh(w·x + b)
+double compute_example_y_target(double *x_row, double *weights, double bias, size_t dim);
 
 int main()
 {
@@ -35,7 +33,7 @@ int main()
         return 1; 
     }
 
-    build_dataset(x, y_target);
+    build_example_dataset(x, y_target);
 
     // Allocate model
     linear_layer *linear1 = linear_create(input_dim, hidden_dim);
@@ -69,13 +67,16 @@ int main()
         if (linear_forward_graph(x, linear1, mult1, h1) != NO_ERROR)
             exit(1);
 
-        tensor *mult2 = tensor2d_alloc(batch_size, out_dim);
-        tensor *h2 = tensor2d_alloc(batch_size, out_dim);
-        if (linear_forward_graph(h1, linear2, mult2, h2) != NO_ERROR)
+        tensor *h2 = tensor2d_alloc(batch_size, hidden_dim);
+        relu_forward_graph(h1, h2); 
+
+        tensor *mult3 = tensor2d_alloc(batch_size, out_dim);
+        tensor *h3 = tensor2d_alloc(batch_size, out_dim);
+        if (linear_forward_graph(h2, linear2, mult3, h3) != NO_ERROR)
             exit(1);
 
         tensor *z = tensor2d_alloc(1, 1);
-        if (mse_loss_graph(h2, y_target, z) != NO_ERROR)
+        if (mse_loss_graph(h3, y_target, z) != NO_ERROR)
             exit(1);
 
         printf("epoch %ld, loss: %f\n", i, z->data[0]);
@@ -89,7 +90,8 @@ int main()
         tensor_free(h1);
         tensor_free(mult1);
         tensor_free(h2);
-        tensor_free(mult2);
+        tensor_free(h3);
+        tensor_free(mult3);
         tensor_free(z);
     }
 
@@ -100,7 +102,7 @@ int main()
     return 0;
 }
 
-double compute_y(double *x_row, double *weights, double bias, size_t dim) 
+double compute_example_y_target(double *x_row, double *weights, double bias, size_t dim) 
 {
     double dot = 0.0;
     for (size_t j = 0; j < dim; j++) {
@@ -109,7 +111,7 @@ double compute_y(double *x_row, double *weights, double bias, size_t dim)
     return tanh(dot + bias);
 }
 
-void build_dataset(tensor *x, tensor *y_target)
+void build_example_dataset(tensor *x, tensor *y_target)
 {
     // Random weights and bias for generating y
     double lb = -5;
@@ -126,7 +128,7 @@ void build_dataset(tensor *x, tensor *y_target)
             tensor2d_set_unchecked(x, i, j, value);
         }
     
-        double y_value = compute_y(x_row, weights, bias, x->shape[1]);
+        double y_value = compute_example_y_target(x_row, weights, bias, x->shape[1]);
         tensor2d_set_unchecked(y_target, i, 0, y_value);
     }
 }
