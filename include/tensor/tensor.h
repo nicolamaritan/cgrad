@@ -198,6 +198,20 @@ void print_tensor(const tensor *const t);
 
 // Inline definitions
 /**
+ * @brief TODO add documentation
+ */
+static inline cgrad_error tensor_check_null(const tensor *const t)
+{
+    if (t == NULL)
+        return TENSOR_NULL;
+    if (t->shape == NULL)
+        return TENSOR_SHAPE_NULL;
+    if (t->data == NULL)
+        return TENSOR_DATA_NULL;
+    return NO_ERROR;
+}
+
+/**
  * @brief Sets the value of a specific element in a 2D tensor without bounds checking.
  *
  * This function directly sets the value of the element at the specified row and column
@@ -239,10 +253,30 @@ static inline cgrad_error tensor2d_set(tensor *t, size_t row, size_t col, double
         return TENSOR_SHAPE_NULL;
     if (t->data == NULL)
         return TENSOR_DATA_NULL;
+    if (t->shape_size != 2)
+        return TENSOR_WRONG_SHAPE;
     if (row >= t->shape[0] || col >= t->shape[1])
         return TENSOR_INDEX_OUT_OF_BOUNDS;
 
     t->data[row * t->shape[1] + col] = value;
+    return NO_ERROR;
+}
+
+/**
+ * @brief TODO add documentation
+ */
+static inline cgrad_error tensor2d_get(const tensor *const t, size_t row, size_t col, double* value)
+{
+    cgrad_error error = tensor_check_null(t);
+    if (error != NO_ERROR)
+        return error;
+    if (t->shape_size != 2)
+        return TENSOR_WRONG_SHAPE;
+    if (row >= t->shape[0] || col >= t->shape[1])
+        return TENSOR_INDEX_OUT_OF_BOUNDS;
+    
+
+    *value = t->data[row * t->shape[1] + col];
     return NO_ERROR;
 }
 
