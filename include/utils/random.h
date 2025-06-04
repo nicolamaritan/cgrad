@@ -7,6 +7,7 @@
 static inline void init_random();
 static inline void init_random_seed(unsigned int seed);
 static inline double sample_uniform(double lower, double upper);
+static inline int sample_uniform_int(int lower, int upper);
 
 static inline double sample_uniform(double lower, double upper)
 {
@@ -22,6 +23,11 @@ static inline void init_random()
 static inline void init_random_seed(unsigned int seed)
 {
     srandom(seed);
+}
+
+static inline int sample_uniform_int(int lower, int upper)
+{
+    return lower + (random() % (upper - lower + 1));
 }
 
 #endif
