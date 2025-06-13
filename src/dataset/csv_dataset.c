@@ -3,9 +3,14 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 cgrad_error csv_dataset_get_rows(const char *csv_path, size_t *out_rows);
 cgrad_error csv_dataset_get_cols(const char *csv_path, size_t *out_cols);
+cgrad_error csv_dataset_standard_scale_feature(csv_dataset *dataset, const size_t col, const double mean, const double std_dev);
+cgrad_error csv_dataset_standard_compute_mean(csv_dataset *dataset, const size_t col, double *mean);
+cgrad_error csv_dataset_standard_compute_std_dev(csv_dataset *dataset, const size_t col, const double mean, double *std_dev);
+
 
 csv_dataset *csv_dataset_alloc(const char *csv_path)
 {
@@ -23,7 +28,7 @@ csv_dataset *csv_dataset_alloc(const char *csv_path)
         return NULL;
     }
 
-    csv_dataset* dataset = malloc(sizeof(dataset));
+    csv_dataset* dataset = malloc(sizeof(csv_dataset));
     if (!dataset)
     {
         return NULL;
@@ -46,7 +51,6 @@ csv_dataset *csv_dataset_alloc(const char *csv_path)
     size_t row = 0;
     while (fgets(buffer, DATASET_CSV_MAX_LINE_CHAR_LENGTH, file))
     {
-        printf("row %d\n", row);
         size_t col = 0;
         char *field = strtok(buffer, ",");
         while (field)
@@ -75,13 +79,44 @@ csv_dataset *csv_dataset_alloc(const char *csv_path)
     return dataset;
 }
 
-cgrad_error csv_dataset_sample_batch_from_permutation(const csv_dataset *const dataset, tensor *const t, const size_t batch_size, const index_permutation *const permutation)
+cgrad_error csv_dataset_sample_batch_from_permutation(const csv_dataset *const dataset, tensor *const inputs, tensor *const targets, const size_t batch_size, const index_permutation *const permutation)
 {
     // TODO error check
     // Since t is a 2D tensor, we can just memcpy the data
     
-    double *csv_data_to_copy = dataset->csv_data + permutation->current;
-    memcpy(t->data, csv_data_to_copy, batch_size);
+    size_t cols = dataset->cols;
+
+    for (size_t i = permutation->current; i < permutation->size && i - permutation->current < batch_size; i++)
+    {
+        size_t batch_idx = i - permutation->current;
+        size_t row_idx = permutation->index[i];
+
+        double *csv_row = dataset->csv_data + row_idx * cols;
+        double label = csv_row[0];
+        double *features = csv_row + 1;
+
+        // Copy features to inputs
+        memcpy(inputs->data + batch_idx * (cols - 1), features, (cols - 1) * sizeof(double));
+    }
+
+    return NO_ERROR;
+}
+
+cgrad_error csv_dataset_standard_scale(csv_dataset *dataset)
+{
+    // TODO check null
+
+    for (size_t j = 0; j < dataset->cols; j++)
+    {
+        double mean = 0;
+        double std_dev = 0;
+
+        csv_dataset_standard_compute_mean(dataset, j, &mean);
+        csv_dataset_standard_compute_std_dev(dataset, j, mean, &std_dev);
+        csv_dataset_standard_scale_feature(dataset, j, mean, std_dev);
+    }
+
+    return NO_ERROR;
 }
 
 cgrad_error csv_dataset_get_rows(const char *csv_path, size_t *out_rows)
@@ -107,7 +142,7 @@ cgrad_error csv_dataset_get_rows(const char *csv_path, size_t *out_rows)
     }
 
     // Skip first row if at least one row is found
-    if (out_rows >= 1)
+    if (*out_rows >= 1)
     {
         (*out_rows)--;
     }
@@ -138,5 +173,50 @@ cgrad_error csv_dataset_get_cols(const char *csv_path, size_t *out_cols)
     }
 
     fclose(file);
+    return NO_ERROR;
+}
+
+cgrad_error csv_dataset_standard_scale_feature(csv_dataset *dataset, const size_t col, const double mean, const double std_dev)
+{
+    const double EPS = 10e-8; // Avoid division by zero
+    for (size_t i = 0; i < dataset->rows; i++)
+    {
+        size_t offset = i * dataset->cols + col;
+        dataset->csv_data[offset] -= mean;
+        dataset->csv_data[offset] /= (std_dev + EPS);
+    }
+
+    return NO_ERROR;
+}
+
+cgrad_error csv_dataset_standard_compute_mean(csv_dataset *dataset, const size_t col, double *mean)
+{
+    *mean = 0;
+
+    for (size_t i = 0; i < dataset->rows; i++)
+    {
+        size_t offset = i * dataset->cols + col;
+        (*mean) += dataset->csv_data[offset];
+    }
+
+    (*mean) /= dataset->rows;
+
+    return NO_ERROR;
+}
+
+cgrad_error csv_dataset_standard_compute_std_dev(csv_dataset *dataset, const size_t col, const double mean, double *std_dev)
+{
+    *std_dev = 0;
+
+    for (size_t i = 0; i < dataset->rows; i++)
+    {
+        size_t offset = i * dataset->cols + col;
+        double difference = dataset->csv_data[offset] - mean;
+        (*std_dev) += difference * difference;
+    }
+
+    (*std_dev) /= dataset->rows;
+    (*std_dev) = sqrt((*std_dev));
+
     return NO_ERROR;
 }

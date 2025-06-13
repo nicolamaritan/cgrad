@@ -7,6 +7,7 @@
 #include "optimizers/sgd.h"
 #include "utils/random.h"
 #include "dataset/csv_dataset.h"
+#include "dataset/index_permutation.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -16,19 +17,15 @@ int main()
 {
     init_random();
 
-    const size_t batch_size = 32;
+    const size_t batch_size = 4;
     const size_t input_dim = 784;
     const size_t hidden_dim = 512;
     const size_t num_classes = 10;
 
     csv_dataset *train_set = csv_dataset_alloc("./examples/mnist_train.csv");
-
-    for (size_t i = 0; i < train_set->cols; i++)
-    {
-        printf("%f,", train_set->csv_data[i]);
-    }
-
-    return 0;
+    csv_dataset_standard_scale(train_set);
+    index_permutation *permutation = index_permutation_alloc(train_set->rows);
+    index_permutation_init(permutation);
 
     tensor *x = tensor2d_alloc(batch_size, input_dim);
     tensor *y_target = tensor2d_alloc(batch_size, 1);
@@ -38,6 +35,16 @@ int main()
         return 1; 
     }
 
+    csv_dataset_sample_batch_from_permutation(
+        train_set,
+        x,
+        NULL,
+        batch_size,
+        permutation
+    );
+
+    print_tensor(x);
+    return 0;
 
     // Allocate model
     linear_layer *linear1 = linear_create(input_dim, hidden_dim);
