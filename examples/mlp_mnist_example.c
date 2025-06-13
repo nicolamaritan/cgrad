@@ -13,38 +13,20 @@
 #include <assert.h>
 #include <math.h>
 
+#define OUTPUT_ITERATION_FREQ 25
+
 int main()
 {
-    init_random();
+    const int SEED = 42;
+    init_random_seed(SEED);
 
-    const size_t batch_size = 4;
+    const size_t batch_size = 64;
     const size_t input_dim = 784;
     const size_t hidden_dim = 512;
     const size_t num_classes = 10;
 
     csv_dataset *train_set = csv_dataset_alloc("./examples/mnist_train.csv");
     csv_dataset_standard_scale(train_set);
-    index_permutation *permutation = index_permutation_alloc(train_set->rows);
-    index_permutation_init(permutation);
-
-    tensor *x = tensor2d_alloc(batch_size, input_dim);
-    tensor *y_target = tensor2d_alloc(batch_size, 1);
-    if (!x || !y_target) {
-        tensor_free(x); 
-        tensor_free(y_target);
-        return 1; 
-    }
-
-    csv_dataset_sample_batch_from_permutation(
-        train_set,
-        x,
-        NULL,
-        batch_size,
-        permutation
-    );
-
-    print_tensor(x);
-    return 0;
 
     // Allocate model
     linear_layer *linear1 = linear_create(input_dim, hidden_dim);
@@ -69,48 +51,82 @@ int main()
     double lr = 3e-4;
     double momentum = 0.9;
 
-    size_t epochs = 100;
+    size_t epochs = 2;
     for (size_t i = 0; i < epochs; i++)
     {
-        // ------------- Forward -------------
-        tensor *mult1 = tensor2d_alloc(batch_size, hidden_dim);
-        tensor *h1 = tensor2d_alloc(batch_size, hidden_dim);
-        if (linear_forward_graph(x, linear1, mult1, h1) != NO_ERROR)
-            exit(1);
+        index_permutation *permutation = index_permutation_alloc(train_set->rows);
+        index_permutation_init(permutation);
+        
+        size_t iteration = 0;
+        while (!index_permutation_is_terminated(permutation))
+        {
+            tensor *x = tensor2d_alloc(batch_size, input_dim);
+            tensor *y = tensor2d_alloc(batch_size, 1);
+            if (!x || !y) {
+                tensor_free(x); 
+                tensor_free(y);
+                return 1; 
+            }
 
-        tensor *h2 = tensor2d_alloc(batch_size, hidden_dim);
-        relu_forward_graph(h1, h2); 
+            // Sample batch
+            csv_dataset_sample_batch_from_permutation(
+                train_set,
+                x,
+                y,
+                batch_size,
+                permutation
+            );
 
-        tensor *mult3 = tensor2d_alloc(batch_size, num_classes);
-        tensor *h3 = tensor2d_alloc(batch_size, num_classes);
-        if (linear_forward_graph(h2, linear2, mult3, h3) != NO_ERROR)
-            exit(1);
+            // ------------- Forward -------------
 
-        tensor *z = tensor2d_alloc(1, 1);
-        if (cross_entropy_loss_graph(h3, y_target, z) != NO_ERROR)
-            exit(1);
+            // Linear 1
+            tensor *mult1 = tensor2d_alloc(batch_size, hidden_dim);
+            tensor *h1 = tensor2d_alloc(batch_size, hidden_dim);
+            if (linear_forward_graph(x, linear1, mult1, h1) != NO_ERROR)
+                exit(1);
 
-        printf("epoch %ld, loss: %f\n", i, z->data[0]);
+            // ReLU 1
+            tensor *h2 = tensor2d_alloc(batch_size, hidden_dim);
+            relu_forward_graph(h1, h2); 
 
-        // ------------- Backward -------------
-        zero_grad(&params);        
-        backward(z, false);
+            // Linear 2
+            tensor *mult3 = tensor2d_alloc(batch_size, num_classes);
+            tensor *h3 = tensor2d_alloc(batch_size, num_classes);
+            if (linear_forward_graph(h2, linear2, mult3, h3) != NO_ERROR)
+                exit(1);
 
-        sgd_step(lr, momentum, false, &opt_state, &params);
+            tensor *z = tensor2d_alloc(1, 1);
+            if (cross_entropy_loss_graph(h3, y, z) != NO_ERROR)
+                exit(1);
 
-        // Clear iteration allocations
-        tensor_free(h1);
-        tensor_free(mult1);
-        tensor_free(h2);
-        tensor_free(h3);
-        tensor_free(mult3);
-        tensor_free(z);
+            if (iteration % OUTPUT_ITERATION_FREQ == 0)
+            {
+                printf("epoch %ld, loss: %f\n", i, z->data[0]);
+            }
+
+            // ------------- Backward -------------
+            zero_grad(&params);        
+            backward(z, false);
+
+            sgd_step(lr, momentum, false, &opt_state, &params);
+
+            // Clear iteration allocations
+            tensor_free(x);
+            tensor_free(y);
+            tensor_free(h1);
+            tensor_free(mult1);
+            tensor_free(h2);
+            tensor_free(h3);
+            tensor_free(mult3);
+            tensor_free(z);
+
+            index_permutation_update(permutation, batch_size);
+            iteration ++;
+        }
     }
 
     // Cleanup
     free_sgd_state_tensors(&opt_state);
-    tensor_free(x);
-    tensor_free(y_target);
     linear_free(linear1);
     linear_free(linear2);
     return 0;

@@ -82,7 +82,6 @@ csv_dataset *csv_dataset_alloc(const char *csv_path)
 cgrad_error csv_dataset_sample_batch_from_permutation(const csv_dataset *const dataset, tensor *const inputs, tensor *const targets, const size_t batch_size, const index_permutation *const permutation)
 {
     // TODO error check
-    // Since t is a 2D tensor, we can just memcpy the data
     
     size_t cols = dataset->cols;
 
@@ -97,6 +96,8 @@ cgrad_error csv_dataset_sample_batch_from_permutation(const csv_dataset *const d
 
         // Copy features to inputs
         memcpy(inputs->data + batch_idx * (cols - 1), features, (cols - 1) * sizeof(double));
+
+        targets->data[batch_idx] = label;
     }
 
     return NO_ERROR;
@@ -106,7 +107,8 @@ cgrad_error csv_dataset_standard_scale(csv_dataset *dataset)
 {
     // TODO check null
 
-    for (size_t j = 0; j < dataset->cols; j++)
+    // Skip first column, i.e. label. 
+    for (size_t j = 1; j < dataset->cols; j++)
     {
         double mean = 0;
         double std_dev = 0;
