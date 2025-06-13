@@ -10,6 +10,8 @@ index_permutation *index_permutation_alloc(const size_t size)
     permutation->size = size;
     permutation->index = index;
     permutation->current = 0;
+
+    return permutation;
 }
 
 cgrad_error index_permutation_init(index_permutation* const index_permutation)

@@ -25,6 +25,7 @@ int main()
     const size_t hidden_dim = 512;
     const size_t num_classes = 10;
 
+    // Can be downloaded from https://www.kaggle.com/datasets/oddrationale/mnist-in-csv
     csv_dataset *train_set = csv_dataset_alloc("./examples/mnist_train.csv");
     csv_dataset_standard_scale(train_set);
 
@@ -52,7 +53,7 @@ int main()
     double momentum = 0.9;
 
     size_t epochs = 2;
-    for (size_t i = 0; i < epochs; i++)
+    for (size_t epoch = 0; epoch < epochs; epoch++)
     {
         index_permutation *permutation = index_permutation_alloc(train_set->rows);
         index_permutation_init(permutation);
@@ -101,7 +102,7 @@ int main()
 
             if (iteration % OUTPUT_ITERATION_FREQ == 0)
             {
-                printf("epoch %ld, loss: %f\n", i, z->data[0]);
+                printf("epoch %02ld, iteration %04ld - loss: %f\n", epoch, iteration, z->data[0]);
             }
 
             // ------------- Backward -------------
@@ -121,7 +122,7 @@ int main()
             tensor_free(z);
 
             index_permutation_update(permutation, batch_size);
-            iteration ++;
+            iteration++;
         }
     }
 

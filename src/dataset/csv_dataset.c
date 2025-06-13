@@ -17,8 +17,16 @@ csv_dataset *csv_dataset_alloc(const char *csv_path)
     size_t out_rows = 0;
     size_t out_cols = 0;
     cgrad_error error;
+
+    // Get rows
     error = csv_dataset_get_rows(csv_path, &out_rows);
+    if (error != NO_ERROR)
+        return NULL;
+
+    // Get cols
     error = csv_dataset_get_cols(csv_path, &out_cols);
+    if (error != NO_ERROR)
+        return NULL;
 
     printf("rows %ld\ncols %ld\n", out_rows, out_cols);
 
@@ -42,7 +50,6 @@ csv_dataset *csv_dataset_alloc(const char *csv_path)
     dataset->cols = out_cols;
     dataset->rows = out_rows;
     
-    size_t current_index = 0;
     char buffer[DATASET_CSV_MAX_LINE_CHAR_LENGTH];
 
     // Skip first row
