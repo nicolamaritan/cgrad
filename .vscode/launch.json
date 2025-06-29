@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) Linear Example",
+            "name": "(gdb) MLP Regression Example",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/examples/linear_example.debug.out",
+            "program": "${workspaceFolder}/examples/mlp_regression_example.debug.out",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
@@ -30,35 +30,10 @@
         },
 
         {
-            "name": "(gdb) MLP Example",
+            "name": "(gdb) MLP MNIST Classification Example",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/examples/mlp_example.debug.out",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${fileDirname}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                },
-                {
-                    "description": "Set Disassembly Flavor to Intel",
-                    "text": "-gdb-set disassembly-flavor intel",
-                    "ignoreFailures": true
-                }
-            ]
-        },
-
-        {
-            "name": "(gdb) MLP Classification Example",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/examples/mlp_classification_example.debug.out",
+            "program": "${workspaceFolder}/examples/mlp_mnist_classification_example.debug.out",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
@@ -78,6 +53,7 @@
                 }
             ]
         }
+
 
     ]
 }

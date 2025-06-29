@@ -25,6 +25,24 @@ typedef enum
     AUTOGRAD_MAX_PARENTS_EXCEEDED,
     AUTOGRAD_MAX_CHILDREN_EXCEEDED,
     AUTOGRAD_MAX_TARGETS_EXCEEDED,
+
+    // Dataset
+    DATASET_NULL,
+    DATASET_FILE_ERROR,
+    CSV_DATASET_FORMAT_ERROR,
+    CSV_DATASET_DATA_NULL,
+
+    // Permutation
+    PERMUTATION_NULL,
+
+    // Index Batch
+    INDEX_BATCH_NULL,
+
+    // General
+    INPUT_PTR_NULL,
+    OUTPUT_PTR_NULL,
+    INVALID_BATCH_SIZE,
+
 } cgrad_error;
 
 #endif
