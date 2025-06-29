@@ -27,7 +27,8 @@ int main()
 
     // Can be downloaded from https://www.kaggle.com/datasets/oddrationale/mnist-in-csv
     csv_dataset *train_set = csv_dataset_alloc("./examples/mnist_train.csv");
-    csv_dataset_standard_scale(train_set);
+    if (csv_dataset_standard_scale(train_set) != NO_ERROR)
+        exit(1);
 
     // Allocate model
     linear_layer *linear1 = linear_create(input_dim, hidden_dim);
@@ -63,20 +64,17 @@ int main()
         {
             tensor *x = tensor2d_alloc(batch_size, input_dim);
             tensor *y = tensor2d_alloc(batch_size, 1);
-            if (!x || !y) {
-                tensor_free(x); 
-                tensor_free(y);
-                return 1; 
-            }
+            if (!x || !y)
+                exit(1); 
+
+            // Sample batch indeces
+            index_batch *ix_batch = index_batch_alloc(batch_size);
+            if (index_permutation_sample_index_batch(permutation, ix_batch, batch_size) != NO_ERROR)
+                exit(1);
 
             // Sample batch
-            csv_dataset_sample_batch_from_permutation(
-                train_set,
-                x,
-                y,
-                batch_size,
-                permutation
-            );
+            if (csv_dataset_sample_batch(train_set, x, y, ix_batch) != NO_ERROR)
+                exit(1);
 
             // ------------- Forward -------------
 
@@ -88,7 +86,8 @@ int main()
 
             // ReLU 1
             tensor *h2 = tensor2d_alloc(batch_size, hidden_dim);
-            relu_forward_graph(h1, h2); 
+            if (relu_forward_graph(h1, h2) != NO_ERROR)
+                exit(1);
 
             // Linear 2
             tensor *mult3 = tensor2d_alloc(batch_size, num_classes);
@@ -110,7 +109,7 @@ int main()
             backward(z, false);
 
             sgd_step(lr, momentum, false, &opt_state, &params);
-
+            
             // Clear iteration allocations
             tensor_free(x);
             tensor_free(y);
@@ -120,6 +119,7 @@ int main()
             tensor_free(h3);
             tensor_free(mult3);
             tensor_free(z);
+            index_batch_free(ix_batch);
 
             index_permutation_update(permutation, batch_size);
             iteration++;

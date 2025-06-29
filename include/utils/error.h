@@ -35,9 +35,13 @@ typedef enum
     // Permutation
     PERMUTATION_NULL,
 
+    // Index Batch
+    INDEX_BATCH_NULL,
+
     // General
     INPUT_PTR_NULL,
     OUTPUT_PTR_NULL,
+    INVALID_BATCH_SIZE,
 
 } cgrad_error;
 

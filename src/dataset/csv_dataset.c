@@ -58,7 +58,7 @@ csv_dataset *csv_dataset_alloc(const char *csv_path)
     return dataset;
 }
 
-cgrad_error csv_dataset_sample_batch_from_permutation(const csv_dataset *const dataset, tensor *const inputs, tensor *const targets, const size_t batch_size, const index_permutation *const permutation)
+cgrad_error csv_dataset_sample_batch(const csv_dataset *const dataset, tensor *const inputs, tensor *const targets, const index_batch *const ix_batch)
 {
     cgrad_error error;
     if ((error = tensor_check_null(inputs)) != NO_ERROR)
@@ -69,30 +69,31 @@ cgrad_error csv_dataset_sample_batch_from_permutation(const csv_dataset *const d
     {
         return error;
     }
-    if (!(error = csv_dataset_check_null(dataset) != NO_ERROR))
+    if ((error = csv_dataset_check_null(dataset) != NO_ERROR))
     {
         return error;
     }
-    if (!permutation)
+    if (!ix_batch)
     {
+        // TODO define error
         return PERMUTATION_NULL;
     }
     
     size_t cols = dataset->cols;
 
-    for (size_t i = permutation->current; i < permutation->size && i - permutation->current < batch_size; i++)
+    // printf("ix_batch->size: %ld\n", ix_batch->size);
+    for (size_t i = 0; i < ix_batch->size; i++)
     {
-        size_t batch_idx = i - permutation->current;
-        size_t row_idx = permutation->index[i];
+        size_t row_idx = ix_batch->index[i];
 
         double *csv_row = dataset->data + row_idx * cols;
         double label = csv_row[0];
         double *features = csv_row + 1;
 
         // Copy features to inputs
-        memcpy(inputs->data + batch_idx * (cols - 1), features, (cols - 1) * sizeof(double));
+        memcpy(inputs->data + i * (cols - 1), features, (cols - 1) * sizeof(double));
 
-        targets->data[batch_idx] = label;
+        targets->data[i] = label;
     }
 
     return NO_ERROR;
@@ -101,7 +102,7 @@ cgrad_error csv_dataset_sample_batch_from_permutation(const csv_dataset *const d
 cgrad_error csv_dataset_standard_scale(csv_dataset *dataset)
 {
     cgrad_error error;
-    if (!(error = csv_dataset_check_null(dataset) != NO_ERROR))
+    if ((error = csv_dataset_check_null(dataset) != NO_ERROR))
     {
         return error;
     }
@@ -109,11 +110,8 @@ cgrad_error csv_dataset_standard_scale(csv_dataset *dataset)
     // Skip first column, i.e. label. 
     for (size_t j = 1; j < dataset->cols; j++)
     {
-        double mean = 0;
-        double std_dev = 0;
-
-        csv_dataset_standard_compute_mean(dataset, j);
-        csv_dataset_standard_compute_std_dev(dataset, j, mean);
+        double mean = csv_dataset_standard_compute_mean(dataset, j);
+        double std_dev = csv_dataset_standard_compute_std_dev(dataset, j, mean);
         csv_dataset_standard_scale_feature(dataset, j, mean, std_dev);
     }
 
