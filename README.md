@@ -22,11 +22,11 @@ make debug
 
 ## Example 
 
-An example MLP is provided to demonstrate the use of the library. To run the MLP example:
+Some examples are provided inside the `examples` directory to demonstrate the use of the library. For instance, to train an MLP on the MNIST dataset:
 
 1. Build the project using `make` (or `make debug` for debugging).
 2. Execute the MLP example executable:
 
 ```bash
-./examples/mlp_example.out
+./examples/mlp_mnist_classification_example.out
 ```
