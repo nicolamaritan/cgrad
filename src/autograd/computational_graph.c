@@ -3,9 +3,14 @@
 #include <stdio.h>
 #include <string.h>
 
-computational_graph_node *computational_graph_node_alloc()
+struct computational_graph_node *computational_graph_node_alloc()
 {
-    computational_graph_node *node = (computational_graph_node *)malloc(sizeof(computational_graph_node));
+    struct computational_graph_node *node = (struct computational_graph_node *)malloc(sizeof(struct computational_graph_node));
+    if (!node)
+    {
+        return NULL;
+    }
+
     node->n_children = 0;
     node->n_parents = 0;
     node->t = NULL;
@@ -22,23 +27,30 @@ computational_graph_node *computational_graph_node_alloc()
     return node;
 }
 
-computational_graph_node *computational_graph_node_tensor_alloc(tensor *const t)
+struct computational_graph_node *computational_graph_node_tensor_alloc(struct tensor *const t)
 {
-    computational_graph_node *node = computational_graph_node_alloc();
+    struct computational_graph_node *node = computational_graph_node_alloc();
+    if (!node)
+    {
+        return NULL;
+    }
+
     t->node = node;
     node->t = t;
     return node;
 }
 
-void free_computational_graph_node(computational_graph_node *const node)
+void free_computational_graph_node(struct computational_graph_node *const node)
 {
     if (node->t->node)
+    {
         node->t->node = NULL;
+    }
 
     free(node);
 }
 
-cgrad_error add_child(computational_graph_node *const node, computational_graph_node *const child)
+cgrad_error add_child(struct computational_graph_node *const node, struct computational_graph_node *const child)
 {
     size_t const n_children = node->n_children;
     if (n_children >= AUTOGRAD_MAX_CHILDREN)
@@ -52,7 +64,7 @@ cgrad_error add_child(computational_graph_node *const node, computational_graph_
     return NO_ERROR;
 }
 
-cgrad_error add_parent(computational_graph_node *const node, computational_graph_node *const parent, const size_t operand)
+cgrad_error add_parent(struct computational_graph_node *const node, struct computational_graph_node *const parent, const size_t operand)
 {
     size_t const n_parents = node->n_parents;
     if (n_parents >= AUTOGRAD_MAX_PARENTS)
@@ -67,21 +79,35 @@ cgrad_error add_parent(computational_graph_node *const node, computational_graph
     return NO_ERROR;
 }
 
-cgrad_error add_computational_graph_link(tensor* operand, size_t operand_id, tensor* result, backpropagation_function backprop_function)
+cgrad_error add_computational_graph_link(struct tensor* operand, size_t operand_id, struct tensor* result, backpropagation_function backprop_function)
 {
-    computational_graph_node *operand_node = operand->node ? operand->node : computational_graph_node_tensor_alloc(operand);
-    computational_graph_node *result_node = result->node ? result->node : computational_graph_node_tensor_alloc(result);
+    struct computational_graph_node *operand_node = operand->node ? operand->node : computational_graph_node_tensor_alloc(operand);
+    if (!operand_node)
+    {
+        return AUTOGRAD_COMPUTATIONAL_GRAPH_NODE_ALLOCATION_ERROR;
+    }
+
+    struct computational_graph_node *result_node = result->node ? result->node : computational_graph_node_tensor_alloc(result);
+    if (!result_node)
+    {
+        free_computational_graph_node(operand_node);
+        return AUTOGRAD_COMPUTATIONAL_GRAPH_NODE_ALLOCATION_ERROR;
+    }
 
     // Setup connection
     cgrad_error error = add_parent(operand_node, result_node, operand_id);
     if (error != NO_ERROR)
     {
+        free_computational_graph_node(operand_node);
+        free_computational_graph_node(result_node);
         return error;
     }
 
     error = add_child(result_node, operand_node);
     if (error != NO_ERROR)
     {
+        free_computational_graph_node(operand_node);
+        free_computational_graph_node(result_node);
         return error;
     }
 
@@ -94,7 +120,7 @@ cgrad_error add_computational_graph_link(tensor* operand, size_t operand_id, ten
     return NO_ERROR;
 }
 
-void print_computational_graph_node(const computational_graph_node *node)
+void print_computational_graph_node(const struct computational_graph_node *node)
 {
     if (!node)
     {

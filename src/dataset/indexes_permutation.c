@@ -9,9 +9,9 @@
  * @param i Index of the first element.
  * @param j Index of the second element.
  */
-static inline void indexes_permutation_swap(indexes_permutation *const ixs_permutation, const size_t i, const size_t j);
+static inline void indexes_permutation_swap(struct indexes_permutation *const ixs_permutation, const size_t i, const size_t j);
 
-static inline void indexes_permutation_swap(indexes_permutation *const ixs_permutation, const size_t i, const size_t j)
+static inline void indexes_permutation_swap(struct indexes_permutation *const ixs_permutation, const size_t i, const size_t j)
 {
     size_t temp = ixs_permutation->indexes[j];
     ixs_permutation->indexes[j] = ixs_permutation->indexes[i];
@@ -24,9 +24,9 @@ static inline void indexes_permutation_swap(indexes_permutation *const ixs_permu
  * @param size Number of indexes to permute.
  * @return Pointer to the allocated structure, or NULL if allocation failed.
  */
-indexes_permutation *indexes_permutation_alloc(const size_t size)
+struct indexes_permutation *indexes_permutation_alloc(const size_t size)
 {
-    indexes_permutation *ixs_permutation = (indexes_permutation*)malloc(sizeof(indexes_permutation));
+    struct indexes_permutation *ixs_permutation = malloc(sizeof(struct indexes_permutation));
     if (!ixs_permutation)
     {
         return NULL;
@@ -52,7 +52,7 @@ indexes_permutation *indexes_permutation_alloc(const size_t size)
  * @param ixs_permutation Pointer to the permutation structure.
  * @return NO_ERROR on success, or an error code on failure.
  */
-cgrad_error indexes_permutation_init(indexes_permutation* const ixs_permutation)
+cgrad_error indexes_permutation_init(struct indexes_permutation* const ixs_permutation)
 {
     // Fisher-Yates shuffles
     for (size_t i = 0; i < ixs_permutation->size; i++)
@@ -79,7 +79,7 @@ cgrad_error indexes_permutation_init(indexes_permutation* const ixs_permutation)
  * @param batch_size Number of indexes to sample.
  * @return NO_ERROR on success, or an error code on failure.
  */
-cgrad_error indexes_permutation_sample_index_batch(const indexes_permutation *const ixs_permutation, indexes_batch *const ixs_batch, const size_t batch_size)
+cgrad_error indexes_permutation_sample_index_batch(const struct indexes_permutation *const ixs_permutation, struct indexes_batch *const ixs_batch, const size_t batch_size)
 {
     if (!ixs_permutation)
     {

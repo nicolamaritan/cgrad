@@ -10,21 +10,24 @@
 
 const char* LINEAR_LAYER_MEMORY_ALLOCATION_ERROR = "Error: Linear layer memory allocation failed.";
 
-linear_layer *linear_create(size_t in_dim, size_t out_dim)
+struct linear_layer *linear_create(size_t in_dim, size_t out_dim)
 {
-    linear_layer *layer = (linear_layer *)malloc(sizeof(linear_layer));
-    tensor *weights = tensor2d_alloc(in_dim, out_dim);
-    tensor *biases = tensor2d_alloc(out_dim, 1);
-
+    struct linear_layer *layer = (struct linear_layer *)malloc(sizeof(struct linear_layer));
     if (!layer)
     {
-        fprintf(stderr, LINEAR_LAYER_MEMORY_ALLOCATION_ERROR);
         return NULL;
     }
 
-    if (!weights || !biases)
+    struct tensor *weights = tensor2d_alloc(in_dim, out_dim);
+    if (!weights)
     {
-        // stderr already written by tensor allocation functions 
+        free(layer);
+        return NULL;
+    }
+
+    struct tensor *biases = tensor2d_alloc(out_dim, 1);
+    if (!biases)
+    {
         return NULL;
     }
 
@@ -35,7 +38,7 @@ linear_layer *linear_create(size_t in_dim, size_t out_dim)
     return layer;
 }
 
-cgrad_error linear_forward_graph(tensor *const x, linear_layer *const layer, tensor *const mult, tensor *const out)
+cgrad_error linear_forward_graph(struct tensor *const x, struct linear_layer *const layer, struct tensor *const mult, struct tensor *const out)
 {
     // XW computation 
     cgrad_error error = tensor2d_mult_graph(x, layer->weights, mult);
@@ -46,7 +49,7 @@ cgrad_error linear_forward_graph(tensor *const x, linear_layer *const layer, ten
     return tensor2d_add_row_vector_graph(mult, layer->biases, out);
 }
 
-cgrad_error linear_forward(const tensor *const x, const linear_layer *const layer, tensor *const mult, tensor *const out)
+cgrad_error linear_forward(const struct tensor *const x, const struct linear_layer *const layer, struct tensor *const mult, struct tensor *const out)
 {
     // XW computation 
     cgrad_error error = tensor2d_mult(x, layer->weights, mult);
@@ -57,7 +60,7 @@ cgrad_error linear_forward(const tensor *const x, const linear_layer *const laye
     return tensor2d_add_row_vector(mult, layer->biases, out);
 }
 
-void linear_xavier_init(linear_layer *layer)
+void linear_xavier_init(struct linear_layer *layer)
 {
     double *data = layer->weights->data;
     size_t in_dim = layer->in_dim;
@@ -72,7 +75,7 @@ void linear_xavier_init(linear_layer *layer)
     }
 }
 
-void linear_free(linear_layer *layer)
+void linear_free(struct linear_layer *layer)
 {
     tensor_free(layer->weights);
     tensor_free(layer->biases);

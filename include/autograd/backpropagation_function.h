@@ -3,6 +3,6 @@
 
 #include "tensor/tensor.h"
 
-typedef void (*backpropagation_function)(const tensor** const operands, const tensor* const grad_wrt_out, tensor* grad_wrt_operand);
+typedef void (*backpropagation_function)(const struct tensor** const operands, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand);
 
 #endif
