@@ -4,14 +4,14 @@
 #include "autograd/backpropagation.h"
 #include "model/model_params.h"
 
-typedef struct sgd_state
+struct sgd_state
 {
     size_t size;
     struct tensor *prev_b_t[MODEL_MAX_PARAMS];
-} sgd_state;
+};
 
-void sgd_step(double lr, double momentum, bool nesterov, sgd_state* state, model_params* params);
-cgrad_error init_sgd_state(sgd_state *state, const model_params *const params);
-void free_sgd_state_tensors(sgd_state *state);
+void sgd_step(double lr, double momentum, bool nesterov, struct sgd_state* state, struct model_params* params);
+cgrad_error init_sgd_state(struct sgd_state *state, const struct model_params *const params);
+void free_sgd_state_tensors(struct sgd_state *state);
 
 #endif

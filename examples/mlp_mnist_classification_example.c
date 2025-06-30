@@ -38,7 +38,7 @@ int main()
     linear_xavier_init(linear2);
 
     // Setup model params
-    model_params params;
+    struct model_params params;
     init_model_params(&params);
     add_model_param(&params, linear1->weights);
     add_model_param(&params, linear1->biases);
@@ -46,7 +46,7 @@ int main()
     add_model_param(&params, linear2->biases);
 
     // Setup optimizer
-    sgd_state opt_state;
+    struct sgd_state opt_state;
     if (init_sgd_state(&opt_state, &params) != NO_ERROR)
         exit(1);
 
