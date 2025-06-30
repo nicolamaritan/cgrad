@@ -26,7 +26,7 @@ int main()
     const size_t num_classes = 10;
 
     // Can be downloaded from https://www.kaggle.com/datasets/oddrationale/mnist-in-csv
-    csv_dataset *train_set = csv_dataset_alloc("./examples/mnist_train.csv");
+    struct csv_dataset *train_set = csv_dataset_alloc("./examples/mnist_train.csv");
     if (csv_dataset_standard_scale(train_set) != NO_ERROR)
         exit(1);
 
@@ -54,12 +54,12 @@ int main()
     double momentum = 0.9;
 
     // Setup indexes batch container. In this case, the container's capacity is the batch size.
-    indexes_batch *ixs_batch = indexes_batch_alloc(batch_size);
+    struct indexes_batch *ixs_batch = indexes_batch_alloc(batch_size);
 
     size_t epochs = 2;
     for (size_t epoch = 0; epoch < epochs; epoch++)
     {
-        indexes_permutation *permutation = indexes_permutation_alloc(train_set->rows);
+        struct indexes_permutation *permutation = indexes_permutation_alloc(train_set->rows);
         indexes_permutation_init(permutation);
         
         size_t iteration = 0;

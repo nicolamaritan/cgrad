@@ -9,15 +9,15 @@
  * @param capacity Maximum number of indexes that can be stored.
  * @return Pointer to the allocated indexes_batch, or NULL if allocation failed.
  */
-indexes_batch *indexes_batch_alloc(const size_t capacity)
+struct indexes_batch *indexes_batch_alloc(const size_t capacity)
 {
-    indexes_batch *ixs_batch = (indexes_batch*)malloc(sizeof(indexes_batch));
+    struct indexes_batch *ixs_batch = malloc(sizeof(struct indexes_batch));
     if (!ixs_batch)
     {
         return NULL;
     }
 
-    ixs_batch->indexes = (size_t*)calloc(capacity, sizeof(size_t));
+    ixs_batch->indexes = calloc(capacity, sizeof(size_t));
     if (!ixs_batch->indexes)
     {
         free(ixs_batch);
@@ -40,7 +40,7 @@ indexes_batch *indexes_batch_alloc(const size_t capacity)
  *
  * @param ixs_batch Pointer to the indexes_batch to free.
  */
-void indexes_batch_free(indexes_batch *ixs_batch)
+void indexes_batch_free(struct indexes_batch *ixs_batch)
 {
     free(ixs_batch->indexes);
     free(ixs_batch);
