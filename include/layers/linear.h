@@ -8,15 +8,15 @@
 
 struct linear_layer
 {
-    tensor *weights;
-    tensor *biases;
+    struct tensor *weights;
+    struct tensor *biases;
     size_t in_dim;
     size_t out_dim;
 };
 
 struct linear_layer *linear_create(size_t in_dim, size_t out_dim);
-cgrad_error linear_forward_graph(tensor *const x, struct linear_layer *const layer, tensor *const mult, tensor *const out);
-cgrad_error linear_forward(const tensor *const x, const struct linear_layer *const layer, tensor *const mult, tensor *const out);
+cgrad_error linear_forward_graph(struct tensor *const x, struct linear_layer *const layer, struct tensor *const mult, struct tensor *const out);
+cgrad_error linear_forward(const struct tensor *const x, const struct linear_layer *const layer, struct tensor *const mult, struct tensor *const out);
 void linear_xavier_init(struct linear_layer *layer);
 void linear_free(struct linear_layer *layer);
 

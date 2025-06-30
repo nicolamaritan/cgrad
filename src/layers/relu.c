@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void relu_backpropagate(const tensor **const operands, const tensor* const grad_wrt_out, tensor *grad_wrt_operand)
+void relu_backpropagate(const struct tensor **const operands, const struct tensor* const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
-    const tensor *const x = operands[RELU_ONLY_OPERAND];
+    const struct tensor *const x = operands[RELU_ONLY_OPERAND];
     
     // Avoid multiple indirections for performance
     double* x_data = x->data;
@@ -24,26 +24,36 @@ void relu_backpropagate(const tensor **const operands, const tensor* const grad_
     }
 }
 
-cgrad_error relu_forward_graph(tensor* const x, tensor* const out)
+cgrad_error relu_forward_graph(struct tensor* const x, struct tensor* const out)
 {
     cgrad_error error = relu_forward(x, out);
     if (error != NO_ERROR)
+    {
         return error;
+    }
 
     error = add_computational_graph_link(x, RELU_ONLY_OPERAND, out, &relu_backpropagate);
     return error;
 }
 
-cgrad_error relu_forward(const tensor* const x, tensor* const out)
+cgrad_error relu_forward(const struct tensor* const x, struct tensor* const out)
 {
     if (!x || !out)
+    {
         return TENSOR_NULL;
+    }
     if (!x->data || !out->data)
+    {
         return TENSOR_DATA_NULL;
+    }
     if (!x->shape || !out->shape)
+    {
         return TENSOR_SHAPE_NULL;
+    }
     if (!tensor_same_shape(x, out))
+    {
         return TENSOR_SHAPE_MISMATCH;
+    }
 
     // Avoid multiple indirections for performance
     double* x_data = x->data;

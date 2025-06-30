@@ -1,33 +1,43 @@
 #include "tensor/tensor2d_trans.h"
 #include "autograd/computational_graph.h"
 
-cgrad_error tensor2d_trans(const tensor *const t, tensor *const out)
+cgrad_error tensor2d_trans(const struct tensor *const t, struct tensor *const out)
 {
     if (!t || !out)
+    {
         return TENSOR_NULL;
+    }
     if (!t->shape || !out->shape)
+    {
         return TENSOR_SHAPE_NULL;
+    }
     if (!t->data || !out->data)
+    {
         return TENSOR_DATA_NULL;
+    }
     if (t->shape[0] != out->shape[1] || t->shape[1] != out->shape[0])
+    {
         return TENSOR_SHAPE_MISMATCH;
+    }
 
     tensor2d_trans_unchecked(t, out);
     return NO_ERROR;
 }
 
-cgrad_error tensor2d_trans_graph(tensor *const t, tensor *const out)
+cgrad_error tensor2d_trans_graph(struct tensor *const t, struct tensor *const out)
 {
     cgrad_error err = tensor2d_trans(t, out);
 
     if (err != NO_ERROR)
+    {
         return err;
+    }
 
     err = add_computational_graph_link(t, TENSOR2D_TRANS_ONLY_OPERAND, out, &tensor2d_trans_backpropagate);
     return err;
 }
 
-void tensor2d_trans_unchecked(const tensor *const t, tensor *const out)
+void tensor2d_trans_unchecked(const struct tensor *const t, struct tensor *const out)
 {
     // Extract the shape of t 
     size_t rows = t->shape[0];
@@ -45,7 +55,7 @@ void tensor2d_trans_unchecked(const tensor *const t, tensor *const out)
         }
     }
 }
-void tensor2d_trans_backpropagate(const tensor **const operands, const tensor* const grad_wrt_out, tensor* grad_wrt_operand)
+void tensor2d_trans_backpropagate(const struct tensor **const operands, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
 {
     tensor2d_trans(grad_wrt_out, grad_wrt_operand);
 }

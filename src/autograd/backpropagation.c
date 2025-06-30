@@ -12,12 +12,12 @@ typedef struct
 } backpropagation_targets;
 
 static void identify_backpropagation_nodes(struct computational_graph_node* const node, backpropagation_targets* targets);
-static tensor* build_gradient(struct computational_graph_node* const node);
+static struct tensor* build_gradient(struct computational_graph_node* const node);
 static void build_gradients(backpropagation_targets* const targets);
 cgrad_error add_target(backpropagation_targets* const targets, struct computational_graph_node* const node);
-void set_gradient_wrt_itself(tensor* const t);
+void set_gradient_wrt_itself(struct tensor* const t);
 
-void backward(tensor* t, bool retain_graph)
+void backward(struct tensor* t, bool retain_graph)
 {
     backpropagation_targets targets;
     targets.size = 0;
@@ -46,7 +46,7 @@ static void identify_backpropagation_nodes(struct computational_graph_node* cons
         identify_backpropagation_nodes(node->children[i], targets);
 }
 
-static tensor* build_gradient(struct computational_graph_node* const node)
+static struct tensor* build_gradient(struct computational_graph_node* const node)
 {
     if (node->is_grad_computed)
     {
@@ -60,17 +60,17 @@ static tensor* build_gradient(struct computational_graph_node* const node)
             continue;
         }
 
-        tensor* D = build_gradient(node->parents[i]);
+        struct tensor* D = build_gradient(node->parents[i]);
 
         struct computational_graph_node *parent_node = node->parents[i];
-        const tensor **const operands = (const tensor** const)parent_node->tensor_operands;
+        const struct tensor **const operands = (const struct tensor** const)parent_node->tensor_operands;
 
         // Get which is the operand of the current node in the operation
         // that created the i-th parent. This info is stored in the current node
         size_t operand = node->parents_operands[i];
         
         // Compute gradient and add to current grad
-        tensor* parent_i_gradient = tensor_no_grad_alloc(node->t->shape, node->t->shape_size);
+        struct tensor* parent_i_gradient = tensor_no_grad_alloc(node->t->shape, node->t->shape_size);
         
         parent_node->function[operand](operands, D, parent_i_gradient);
 
@@ -108,7 +108,7 @@ cgrad_error add_target(backpropagation_targets* const targets, struct computatio
     return NO_ERROR;
 }
 
-void set_gradient_wrt_itself(tensor* const t)
+void set_gradient_wrt_itself(struct tensor* const t)
 {
     tensor2d_set_unchecked(t->grad, 0, 0, 1);
 }

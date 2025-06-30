@@ -18,14 +18,14 @@ struct linear_layer *linear_create(size_t in_dim, size_t out_dim)
         return NULL;
     }
 
-    tensor *weights = tensor2d_alloc(in_dim, out_dim);
+    struct tensor *weights = tensor2d_alloc(in_dim, out_dim);
     if (!weights)
     {
         free(layer);
         return NULL;
     }
 
-    tensor *biases = tensor2d_alloc(out_dim, 1);
+    struct tensor *biases = tensor2d_alloc(out_dim, 1);
     if (!biases)
     {
         return NULL;
@@ -38,7 +38,7 @@ struct linear_layer *linear_create(size_t in_dim, size_t out_dim)
     return layer;
 }
 
-cgrad_error linear_forward_graph(tensor *const x, struct linear_layer *const layer, tensor *const mult, tensor *const out)
+cgrad_error linear_forward_graph(struct tensor *const x, struct linear_layer *const layer, struct tensor *const mult, struct tensor *const out)
 {
     // XW computation 
     cgrad_error error = tensor2d_mult_graph(x, layer->weights, mult);
@@ -49,7 +49,7 @@ cgrad_error linear_forward_graph(tensor *const x, struct linear_layer *const lay
     return tensor2d_add_row_vector_graph(mult, layer->biases, out);
 }
 
-cgrad_error linear_forward(const tensor *const x, const struct linear_layer *const layer, tensor *const mult, tensor *const out)
+cgrad_error linear_forward(const struct tensor *const x, const struct linear_layer *const layer, struct tensor *const mult, struct tensor *const out)
 {
     // XW computation 
     cgrad_error error = tensor2d_mult(x, layer->weights, mult);

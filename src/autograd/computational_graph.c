@@ -27,7 +27,7 @@ struct computational_graph_node *computational_graph_node_alloc()
     return node;
 }
 
-struct computational_graph_node *computational_graph_node_tensor_alloc(tensor *const t)
+struct computational_graph_node *computational_graph_node_tensor_alloc(struct tensor *const t)
 {
     struct computational_graph_node *node = computational_graph_node_alloc();
     if (!node)
@@ -79,7 +79,7 @@ cgrad_error add_parent(struct computational_graph_node *const node, struct compu
     return NO_ERROR;
 }
 
-cgrad_error add_computational_graph_link(tensor* operand, size_t operand_id, tensor* result, backpropagation_function backprop_function)
+cgrad_error add_computational_graph_link(struct tensor* operand, size_t operand_id, struct tensor* result, backpropagation_function backprop_function)
 {
     struct computational_graph_node *operand_node = operand->node ? operand->node : computational_graph_node_tensor_alloc(operand);
     if (!operand_node)

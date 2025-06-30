@@ -74,8 +74,8 @@ int main()
             size_t remaining = index_permutation_get_remaining(permutation); 
             size_t iter_batch_size = remaining < batch_size ? remaining : batch_size;
 
-            tensor *x = tensor2d_alloc(iter_batch_size, input_dim);
-            tensor *y = tensor2d_alloc(iter_batch_size, 1);
+            struct tensor *x = tensor2d_alloc(iter_batch_size, input_dim);
+            struct tensor *y = tensor2d_alloc(iter_batch_size, 1);
             if (!x || !y)
                 exit(1); 
 
@@ -90,23 +90,23 @@ int main()
             // ------------- Forward -------------
 
             // Linear 1
-            tensor *mult1 = tensor2d_alloc(iter_batch_size, hidden_dim);
-            tensor *h1 = tensor2d_alloc(iter_batch_size, hidden_dim);
+            struct tensor *mult1 = tensor2d_alloc(iter_batch_size, hidden_dim);
+            struct tensor *h1 = tensor2d_alloc(iter_batch_size, hidden_dim);
             if (linear_forward_graph(x, linear1, mult1, h1) != NO_ERROR)
                 exit(1);
 
             // ReLU 1
-            tensor *h2 = tensor2d_alloc(iter_batch_size, hidden_dim);
+            struct tensor *h2 = tensor2d_alloc(iter_batch_size, hidden_dim);
             if (relu_forward_graph(h1, h2) != NO_ERROR)
                 exit(1);
 
             // Linear 2
-            tensor *mult3 = tensor2d_alloc(iter_batch_size, num_classes);
-            tensor *h3 = tensor2d_alloc(iter_batch_size, num_classes);
+            struct tensor *mult3 = tensor2d_alloc(iter_batch_size, num_classes);
+            struct tensor *h3 = tensor2d_alloc(iter_batch_size, num_classes);
             if (linear_forward_graph(h2, linear2, mult3, h3) != NO_ERROR)
                 exit(1);
 
-            tensor *z = tensor2d_alloc(1, 1);
+            struct tensor *z = tensor2d_alloc(1, 1);
             if (cross_entropy_loss_graph(h3, y, z) != NO_ERROR)
                 exit(1);
 

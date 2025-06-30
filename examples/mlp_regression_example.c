@@ -12,7 +12,7 @@
 #include <math.h>
 
 // Example dataset build
-void build_example_dataset(tensor *x, tensor *y_target);
+void build_example_dataset(struct tensor *x, struct tensor *y_target);
 // Example 2-layer-friendly function: y = tanh(w·x + b)
 double compute_example_y_target(double *x_row, double *weights, double bias, size_t dim);
 
@@ -25,8 +25,8 @@ int main()
     const size_t hidden_dim = 128;
     const size_t out_dim = 1;
 
-    tensor *x = tensor2d_alloc(batch_size, input_dim);
-    tensor *y_target = tensor2d_alloc(batch_size, 1);
+    struct tensor *x = tensor2d_alloc(batch_size, input_dim);
+    struct tensor *y_target = tensor2d_alloc(batch_size, 1);
     if (!x || !y_target) {
         tensor_free(x); 
         tensor_free(y_target);
@@ -62,20 +62,20 @@ int main()
     for (size_t i = 0; i < epochs; i++)
     {
         // ------------- Forward -------------
-        tensor *mult1 = tensor2d_alloc(batch_size, hidden_dim);
-        tensor *h1 = tensor2d_alloc(batch_size, hidden_dim);
+        struct tensor *mult1 = tensor2d_alloc(batch_size, hidden_dim);
+        struct tensor *h1 = tensor2d_alloc(batch_size, hidden_dim);
         if (linear_forward_graph(x, linear1, mult1, h1) != NO_ERROR)
             exit(1);
 
-        tensor *h2 = tensor2d_alloc(batch_size, hidden_dim);
+        struct tensor *h2 = tensor2d_alloc(batch_size, hidden_dim);
         relu_forward_graph(h1, h2); 
 
-        tensor *mult3 = tensor2d_alloc(batch_size, out_dim);
-        tensor *h3 = tensor2d_alloc(batch_size, out_dim);
+        struct tensor *mult3 = tensor2d_alloc(batch_size, out_dim);
+        struct tensor *h3 = tensor2d_alloc(batch_size, out_dim);
         if (linear_forward_graph(h2, linear2, mult3, h3) != NO_ERROR)
             exit(1);
 
-        tensor *z = tensor2d_alloc(1, 1);
+        struct tensor *z = tensor2d_alloc(1, 1);
         if (mse_loss_graph(h3, y_target, z) != NO_ERROR)
             exit(1);
 
@@ -113,7 +113,7 @@ double compute_example_y_target(double *x_row, double *weights, double bias, siz
     return tanh(dot + bias);
 }
 
-void build_example_dataset(tensor *x, tensor *y_target)
+void build_example_dataset(struct tensor *x, struct tensor *y_target)
 {
     // Random weights and bias for generating y
     double lb = -20;

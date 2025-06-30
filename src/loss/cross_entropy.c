@@ -3,16 +3,22 @@
 #include <stdio.h>
 #include <math.h>
 
-double compute_softmax_normalization(const tensor* const logits, const size_t row);
+double compute_softmax_normalization(const struct tensor* const logits, const size_t row);
 
-cgrad_error cross_entropy_loss(const tensor* const logits, const tensor* const targets, tensor* const loss)
+cgrad_error cross_entropy_loss(const struct tensor* const logits, const struct tensor* const targets, struct tensor* const loss)
 {
     if (!logits|| !targets|| !loss)
+    {
         return TENSOR_NULL;
+    }
     if (!logits->data || !targets->data || !loss->data)
+    {
         return TENSOR_DATA_NULL;
+    }
     if (!logits->shape || !targets->shape || !loss->shape)
+    {
         return TENSOR_SHAPE_NULL;
+    }
     // TODO add check on tensor shape
 
     double batch_size = logits->shape[0];
@@ -41,18 +47,18 @@ cgrad_error cross_entropy_loss(const tensor* const logits, const tensor* const t
     return NO_ERROR;
 }
 
-cgrad_error cross_entropy_loss_graph(tensor* const logits, tensor* const targets, tensor* const loss)
+cgrad_error cross_entropy_loss_graph(struct tensor* const logits, struct tensor* const targets, struct tensor* const loss)
 {
     cgrad_error err = cross_entropy_loss(logits, targets, loss);
     if (err != NO_ERROR)
         return err;
 
-    computational_graph_node *logits_node = logits->node ? logits->node : computational_graph_node_tensor_alloc(logits);
-    computational_graph_node *targets_node = targets->node ? targets->node : computational_graph_node_tensor_alloc(targets);
+    struct computational_graph_node *logits_node = logits->node ? logits->node : computational_graph_node_tensor_alloc(logits);
+    struct computational_graph_node *targets_node = targets->node ? targets->node : computational_graph_node_tensor_alloc(targets);
 
-    targets_node->t = (tensor *)targets;
+    targets_node->t = (struct tensor *)targets;
 
-    computational_graph_node *loss_node = computational_graph_node_tensor_alloc(loss);
+    struct computational_graph_node *loss_node = computational_graph_node_tensor_alloc(loss);
 
     // Setup connections
     // In CrossEntropy, targets are not differentiable, so only the logits node is added. Still, the target tensor is added as operand for backward.
@@ -69,10 +75,10 @@ cgrad_error cross_entropy_loss_graph(tensor* const logits, tensor* const targets
     return NO_ERROR;
 }
 
-void cross_entropy_loss_backpropagate_predicted(const tensor **const operands, const tensor* const grad_wrt_out, tensor* grad_wrt_operand)
+void cross_entropy_loss_backpropagate_predicted(const struct tensor **const operands, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
 {
-    const tensor *logits = operands[CROSS_ENTROPY_PREDICTED];
-    const tensor *targets= operands[CROSS_ENTROPY_TARGET];
+    const struct tensor *logits = operands[CROSS_ENTROPY_PREDICTED];
+    const struct tensor *targets= operands[CROSS_ENTROPY_TARGET];
     double batch_size = logits->shape[0];
     size_t num_classes = logits->shape[1];
 
@@ -98,7 +104,7 @@ void cross_entropy_loss_backpropagate_predicted(const tensor **const operands, c
     }
 }
 
-double compute_softmax_normalization(const tensor* const logits, const size_t row)
+double compute_softmax_normalization(const struct tensor* const logits, const size_t row)
 {
     double softmax_normalization = 0;
     size_t logits_size = logits->shape[1];

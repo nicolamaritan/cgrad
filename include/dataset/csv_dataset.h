@@ -36,7 +36,7 @@ csv_dataset *csv_dataset_alloc(const char *csv_path);
  * @param ix_batch Pointer to the indexes_batch specifying which rows to sample.
  * @return NO_ERROR on success, or an error code on failure.
  */
-cgrad_error csv_dataset_sample_batch(const csv_dataset *const dataset, tensor *const inputs, tensor *const targets, const indexes_batch *const ix_batch);
+cgrad_error csv_dataset_sample_batch(const csv_dataset *const dataset, struct tensor *const inputs, struct tensor *const targets, const indexes_batch *const ix_batch);
 
 /**
  * @brief Applies standard scaling (zero mean, unit variance) to the dataset features.

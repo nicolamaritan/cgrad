@@ -1,16 +1,16 @@
 #include "optimizers/sgd.h"
 
-cgrad_error add_prev_b_t(sgd_state *const state, tensor *const prev_grad);
+cgrad_error add_prev_b_t(sgd_state *const state, struct tensor *const prev_grad);
 
 void sgd_step(double lr, double momentum, bool nesterov, sgd_state* state, model_params* params)
 {
     for (size_t i = 0; i < params->size; i++)
     {
-        tensor* param = params->params[i];
+        struct tensor* param = params->params[i];
         
-        tensor* g_t = tensor_clone(param->grad);
-        tensor* prev_b_t = state->prev_b_t[i];
-        tensor* b_t = tensor_clone(prev_b_t);
+        struct tensor* g_t = tensor_clone(param->grad);
+        struct tensor* prev_b_t = state->prev_b_t[i];
+        struct tensor* b_t = tensor_clone(prev_b_t);
         size_t grad_size = g_t->data_size;
 
         if (momentum != 0)
@@ -57,8 +57,8 @@ cgrad_error init_sgd_state(sgd_state *state, const model_params *const params)
     state->size = 0;
     for (size_t i = 0; i < params->size; i++)
     {
-        tensor* param = params->params[i];
-        tensor* param_prev_grad = tensor_no_grad_zero_alloc(param->shape, param->shape_size);
+        struct tensor* param = params->params[i];
+        struct tensor* param_prev_grad = tensor_no_grad_zero_alloc(param->shape, param->shape_size);
 
         cgrad_error err = add_prev_b_t(state, param_prev_grad);
         if (err != NO_ERROR)
@@ -78,7 +78,7 @@ void free_sgd_state_tensors(sgd_state *state)
     }
 }
 
-cgrad_error add_prev_b_t(sgd_state *const state, tensor *const prev_grad)
+cgrad_error add_prev_b_t(sgd_state *const state, struct tensor *const prev_grad)
 {
     size_t const size = state->size;
     if (size >= MODEL_MAX_PARAMS)
