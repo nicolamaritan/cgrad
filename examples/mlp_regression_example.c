@@ -18,7 +18,8 @@ double compute_example_y_target(double *x_row, double *weights, double bias, siz
 
 int main()
 {
-    init_random();
+    const int SEED = 42;
+    init_random_seed(SEED);
 
     const size_t batch_size = 128;
     const size_t input_dim = 64;
@@ -27,10 +28,11 @@ int main()
 
     struct tensor *x = tensor2d_alloc(batch_size, input_dim);
     struct tensor *y_target = tensor2d_alloc(batch_size, 1);
-    if (!x || !y_target) {
-        tensor_free(x); 
+    if (!x || !y_target)
+    {
+        tensor_free(x);
         tensor_free(y_target);
-        return 1; 
+        return EXIT_FAILURE;
     }
 
     build_example_dataset(x, y_target);
@@ -53,7 +55,9 @@ int main()
     // Setup optimizer
     struct sgd_state opt_state;
     if (init_sgd_state(&opt_state, &params) != NO_ERROR)
-        exit(1);
+    {
+        return EXIT_FAILURE;
+    }
 
     double lr = 3e-4;
     double momentum = 0.9;
@@ -65,24 +69,30 @@ int main()
         struct tensor *mult1 = tensor2d_alloc(batch_size, hidden_dim);
         struct tensor *h1 = tensor2d_alloc(batch_size, hidden_dim);
         if (linear_forward_graph(x, linear1, mult1, h1) != NO_ERROR)
-            exit(1);
+        {
+            return EXIT_FAILURE;
+        }
 
         struct tensor *h2 = tensor2d_alloc(batch_size, hidden_dim);
-        relu_forward_graph(h1, h2); 
+        relu_forward_graph(h1, h2);
 
         struct tensor *mult3 = tensor2d_alloc(batch_size, out_dim);
         struct tensor *h3 = tensor2d_alloc(batch_size, out_dim);
         if (linear_forward_graph(h2, linear2, mult3, h3) != NO_ERROR)
-            exit(1);
+        {
+            return EXIT_FAILURE;
+        }
 
         struct tensor *z = tensor2d_alloc(1, 1);
         if (mse_loss_graph(h3, y_target, z) != NO_ERROR)
-            exit(1);
+        {
+            return EXIT_FAILURE;
+        }
 
         printf("epoch %ld, loss: %f\n", i, z->data[0]);
 
         // ------------- Backward -------------
-        zero_grad(&params);        
+        zero_grad(&params);
         backward(z, false);
         sgd_step(lr, momentum, false, &opt_state, &params);
 
@@ -101,13 +111,14 @@ int main()
     tensor_free(y_target);
     linear_free(linear1);
     linear_free(linear2);
-    return 0;
+    return EXIT_SUCCESS;
 }
 
-double compute_example_y_target(double *x_row, double *weights, double bias, size_t dim) 
+double compute_example_y_target(double *x_row, double *weights, double bias, size_t dim)
 {
     double dot = 0.0;
-    for (size_t j = 0; j < dim; j++) {
+    for (size_t j = 0; j < dim; j++)
+    {
         dot += x_row[j] * weights[j];
     }
     return tanh(dot + bias);
@@ -125,18 +136,18 @@ void build_example_dataset(struct tensor *x, struct tensor *y_target)
     }
 
     double bias = sample_uniform(lb, ub);
-    
+
     // Populate x with random values and compute y
-    for (size_t i = 0; i < x->shape[0]; i++) 
+    for (size_t i = 0; i < x->shape[0]; i++)
     {
         double x_row[x->shape[1]];
-        for (size_t j = 0; j < x->shape[1]; j++) 
+        for (size_t j = 0; j < x->shape[1]; j++)
         {
             double value = sample_uniform(lb, ub);
             x_row[j] = value;
             tensor2d_set_unchecked(x, i, j, value);
         }
-    
+
         double y_value = compute_example_y_target(x_row, weights, bias, x->shape[1]);
         tensor2d_set_unchecked(y_target, i, 0, y_value);
     }

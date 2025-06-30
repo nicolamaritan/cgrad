@@ -15,8 +15,14 @@
 
 #define OUTPUT_ITERATION_FREQ 25
 
-int main()
+int main(int argc, char **argv)
 {
+    if (argc != 2)
+    {
+        fprintf(stderr, "Wrong number of parameters. Usage:\n %s <mnist_train_dataset_path>\n", argv[0]);
+        return EXIT_FAILURE;
+    }
+
     const int SEED = 42;
     init_random_seed(SEED);
 
@@ -26,15 +32,31 @@ int main()
     const size_t num_classes = 10;
 
     // Can be downloaded from https://www.kaggle.com/datasets/oddrationale/mnist-in-csv
-    struct csv_dataset *train_set = csv_dataset_alloc("./examples/mnist_train.csv");
+    struct csv_dataset *train_set = csv_dataset_alloc(argv[1]);
+    if (!train_set)
+    {
+        fprintf(stderr, "Error while trying to open %s.\n", argv[1]);
+        return EXIT_FAILURE;
+    }
+
     if (csv_dataset_standard_scale(train_set) != NO_ERROR)
-        exit(1);
+    {
+        return EXIT_FAILURE;
+    }
 
     // Allocate model
     struct linear_layer *linear1 = linear_create(input_dim, hidden_dim);
+    if (!linear1)
+    {
+        return EXIT_FAILURE;
+    }
     linear_xavier_init(linear1);
 
     struct linear_layer *linear2 = linear_create(hidden_dim, num_classes);
+    if (!linear2)
+    {
+        return EXIT_FAILURE;
+    }
     linear_xavier_init(linear2);
 
     // Setup model params
@@ -48,7 +70,9 @@ int main()
     // Setup optimizer
     struct sgd_state opt_state;
     if (init_sgd_state(&opt_state, &params) != NO_ERROR)
-        exit(1);
+    {
+        return EXIT_FAILURE;
+    }
 
     double lr = 3e-4;
     double momentum = 0.9;
@@ -61,7 +85,7 @@ int main()
     {
         struct indexes_permutation *permutation = indexes_permutation_alloc(train_set->rows);
         indexes_permutation_init(permutation);
-        
+
         size_t iteration = 0;
         while (!index_permutation_is_terminated(permutation))
         {
@@ -71,21 +95,27 @@ int main()
              * train set. It handles the case in which we may request to sample 64 samples
              * but only, for instance, 30 remains.
              */
-            size_t remaining = index_permutation_get_remaining(permutation); 
+            size_t remaining = index_permutation_get_remaining(permutation);
             size_t iter_batch_size = remaining < batch_size ? remaining : batch_size;
 
             struct tensor *x = tensor2d_alloc(iter_batch_size, input_dim);
             struct tensor *y = tensor2d_alloc(iter_batch_size, 1);
             if (!x || !y)
-                exit(1); 
+            {
+                return EXIT_FAILURE;
+            }
 
             // Sample batch indeces
             if (indexes_permutation_sample_index_batch(permutation, ixs_batch, iter_batch_size) != NO_ERROR)
-                exit(1);
+            {
+                return EXIT_FAILURE;
+            }
 
             // Sample batch
             if (csv_dataset_sample_batch(train_set, x, y, ixs_batch) != NO_ERROR)
-                exit(1);
+            {
+                return EXIT_FAILURE;
+            }
 
             // ------------- Forward -------------
 
@@ -93,22 +123,30 @@ int main()
             struct tensor *mult1 = tensor2d_alloc(iter_batch_size, hidden_dim);
             struct tensor *h1 = tensor2d_alloc(iter_batch_size, hidden_dim);
             if (linear_forward_graph(x, linear1, mult1, h1) != NO_ERROR)
-                exit(1);
+            {
+                return EXIT_FAILURE;
+            }
 
             // ReLU 1
             struct tensor *h2 = tensor2d_alloc(iter_batch_size, hidden_dim);
             if (relu_forward_graph(h1, h2) != NO_ERROR)
-                exit(1);
+            {
+                return EXIT_FAILURE;
+            }
 
             // Linear 2
             struct tensor *mult3 = tensor2d_alloc(iter_batch_size, num_classes);
             struct tensor *h3 = tensor2d_alloc(iter_batch_size, num_classes);
             if (linear_forward_graph(h2, linear2, mult3, h3) != NO_ERROR)
-                exit(1);
+            {
+                return EXIT_FAILURE;
+            }
 
             struct tensor *z = tensor2d_alloc(1, 1);
             if (cross_entropy_loss_graph(h3, y, z) != NO_ERROR)
-                exit(1);
+            {
+                return EXIT_FAILURE;
+            }
 
             if (iteration % OUTPUT_ITERATION_FREQ == 0)
             {
@@ -116,11 +154,11 @@ int main()
             }
 
             // ------------- Backward -------------
-            zero_grad(&params);        
+            zero_grad(&params);
             backward(z, false);
 
             sgd_step(lr, momentum, false, &opt_state, &params);
-            
+
             // Clear iteration allocations
             tensor_free(x);
             tensor_free(y);
@@ -141,5 +179,5 @@ int main()
     linear_free(linear1);
     linear_free(linear2);
     indexes_batch_free(ixs_batch);
-    return 0;
+    return EXIT_SUCCESS;
 }
