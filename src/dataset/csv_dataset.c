@@ -58,7 +58,7 @@ csv_dataset *csv_dataset_alloc(const char *csv_path)
     return dataset;
 }
 
-cgrad_error csv_dataset_sample_batch(const csv_dataset *const dataset, tensor *const inputs, tensor *const targets, const index_batch *const ix_batch)
+cgrad_error csv_dataset_sample_batch(const csv_dataset *const dataset, tensor *const inputs, tensor *const targets, const indexes_batch *const ix_batch)
 {
     cgrad_error error;
     if ((error = tensor_check_null(inputs)) != NO_ERROR)
@@ -84,7 +84,7 @@ cgrad_error csv_dataset_sample_batch(const csv_dataset *const dataset, tensor *c
     // printf("ix_batch->size: %ld\n", ix_batch->size);
     for (size_t i = 0; i < ix_batch->size; i++)
     {
-        size_t row_idx = ix_batch->index[i];
+        size_t row_idx = ix_batch->indexes[i];
 
         double *csv_row = dataset->data + row_idx * cols;
         double label = csv_row[0];

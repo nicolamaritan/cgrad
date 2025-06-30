@@ -53,6 +53,9 @@ int main()
     double lr = 3e-4;
     double momentum = 0.9;
 
+    // Setup indexes batch container. In this case, the container's capacity is the batch size.
+    indexes_batch *ixs_batch = indexes_batch_alloc(batch_size);
+
     size_t epochs = 2;
     for (size_t epoch = 0; epoch < epochs; epoch++)
     {
@@ -62,36 +65,44 @@ int main()
         size_t iteration = 0;
         while (!index_permutation_is_terminated(permutation))
         {
-            tensor *x = tensor2d_alloc(batch_size, input_dim);
-            tensor *y = tensor2d_alloc(batch_size, 1);
+            /***
+             * Compute the effective iteration batch size.
+             * At each iteration, it represents the effective number of samples sampled from the
+             * train set. It handles the case in which we may request to sample 64 samples
+             * but only, for instance, 30 remains.
+             */
+            size_t remaining = index_permutation_get_remaining(permutation); 
+            size_t iter_batch_size = remaining < batch_size ? remaining : batch_size;
+
+            tensor *x = tensor2d_alloc(iter_batch_size, input_dim);
+            tensor *y = tensor2d_alloc(iter_batch_size, 1);
             if (!x || !y)
                 exit(1); 
 
             // Sample batch indeces
-            index_batch *ix_batch = index_batch_alloc(batch_size);
-            if (index_permutation_sample_index_batch(permutation, ix_batch, batch_size) != NO_ERROR)
+            if (index_permutation_sample_index_batch(permutation, ixs_batch, iter_batch_size) != NO_ERROR)
                 exit(1);
 
             // Sample batch
-            if (csv_dataset_sample_batch(train_set, x, y, ix_batch) != NO_ERROR)
+            if (csv_dataset_sample_batch(train_set, x, y, ixs_batch) != NO_ERROR)
                 exit(1);
 
             // ------------- Forward -------------
 
             // Linear 1
-            tensor *mult1 = tensor2d_alloc(batch_size, hidden_dim);
-            tensor *h1 = tensor2d_alloc(batch_size, hidden_dim);
+            tensor *mult1 = tensor2d_alloc(iter_batch_size, hidden_dim);
+            tensor *h1 = tensor2d_alloc(iter_batch_size, hidden_dim);
             if (linear_forward_graph(x, linear1, mult1, h1) != NO_ERROR)
                 exit(1);
 
             // ReLU 1
-            tensor *h2 = tensor2d_alloc(batch_size, hidden_dim);
+            tensor *h2 = tensor2d_alloc(iter_batch_size, hidden_dim);
             if (relu_forward_graph(h1, h2) != NO_ERROR)
                 exit(1);
 
             // Linear 2
-            tensor *mult3 = tensor2d_alloc(batch_size, num_classes);
-            tensor *h3 = tensor2d_alloc(batch_size, num_classes);
+            tensor *mult3 = tensor2d_alloc(iter_batch_size, num_classes);
+            tensor *h3 = tensor2d_alloc(iter_batch_size, num_classes);
             if (linear_forward_graph(h2, linear2, mult3, h3) != NO_ERROR)
                 exit(1);
 
@@ -119,9 +130,8 @@ int main()
             tensor_free(h3);
             tensor_free(mult3);
             tensor_free(z);
-            index_batch_free(ix_batch);
 
-            index_permutation_update(permutation, batch_size);
+            index_permutation_update(permutation, iter_batch_size);
             iteration++;
         }
     }
@@ -130,5 +140,6 @@ int main()
     free_sgd_state_tensors(&opt_state);
     linear_free(linear1);
     linear_free(linear2);
+    indexes_batch_free(ixs_batch);
     return 0;
 }

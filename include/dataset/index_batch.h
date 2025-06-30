@@ -1,17 +1,18 @@
-#ifndef INDEX_BATCH_H
-#define INDEX_BATCH_H
+#ifndef INDEXES_BATCH_H
+#define INDEXES_BATCH_H
 
 #include "config.h"
 #include <stddef.h>
 
-typedef struct index_batch
+typedef struct indexes_batch
 {
+   size_t capacity;
    size_t size;
-   size_t *index;
+   size_t *indexes;
 
-} index_batch;
+} indexes_batch;
 
-index_batch *index_batch_alloc(const size_t size);
-void index_batch_free(index_batch *ix_batch);
+indexes_batch *indexes_batch_alloc(const size_t capacity);
+void indexes_batch_free(indexes_batch *ixs_batch);
 
 #endif

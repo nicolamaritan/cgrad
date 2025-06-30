@@ -1,28 +1,34 @@
 #include "dataset/index_batch.h"
 #include <stdlib.h>
 
-index_batch *index_batch_alloc(const size_t size)
+indexes_batch *indexes_batch_alloc(const size_t capacity)
 {
-    index_batch *ix_batch = (index_batch*)malloc(sizeof(index_batch));
-    if (!ix_batch)
+    indexes_batch *ixs_batch = (indexes_batch*)malloc(sizeof(indexes_batch));
+    if (!ixs_batch)
     {
         return NULL;
     }
 
-    ix_batch->index = (size_t*)calloc(size, sizeof(size_t));
-    if (!ix_batch->index)
+    ixs_batch->indexes = (size_t*)calloc(capacity, sizeof(size_t));
+    if (!ixs_batch->indexes)
     {
-        free(ix_batch);
+        free(ixs_batch);
         return NULL;
     }
 
-    ix_batch->size= size;
+    /***
+     * Set capacity to the size of allocated memory,
+     * while setting initial size to be zero, meaning the
+     * container is empty.
+     */
+    ixs_batch->capacity = capacity;
+    ixs_batch->size = 0;
 
-    return ix_batch;
+    return ixs_batch;
 }
 
-void index_batch_free(index_batch *ix_batch)
+void indexes_batch_free(indexes_batch *ixs_batch)
 {
-    free(ix_batch->index);
-    free(ix_batch);
+    free(ixs_batch->indexes);
+    free(ixs_batch);
 }

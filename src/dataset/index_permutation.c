@@ -50,7 +50,7 @@ cgrad_error index_permutation_init(index_permutation* const index_permutation)
     return NO_ERROR;
 }
 
-cgrad_error index_permutation_sample_index_batch(const index_permutation *const permutation, index_batch *const indeces, const size_t batch_size)
+cgrad_error index_permutation_sample_index_batch(const index_permutation *const permutation, indexes_batch *const indeces, const size_t batch_size)
 {
     if (!permutation)
     {
@@ -60,16 +60,15 @@ cgrad_error index_permutation_sample_index_batch(const index_permutation *const 
     {
         return INDEX_BATCH_NULL;
     }
-    if (batch_size > indeces->size)
+    if (batch_size > indeces->capacity || permutation->current + batch_size > permutation->size)
     {
         return INVALID_BATCH_SIZE;
     }
 
-    size_t missing_indexes = permutation->size - permutation->current;
-    size_t effective_batch_size = missing_indexes < batch_size ? missing_indexes : batch_size;
 
-    memcpy(indeces->index, permutation->index + permutation->current, effective_batch_size * sizeof(size_t));
-    indeces->size = effective_batch_size;
+    // Update indexes in the container and update its size.
+    memcpy(indeces->indexes, permutation->index + permutation->current, batch_size * sizeof(size_t));
+    indeces->size = batch_size;
 
     return NO_ERROR;
 }
