@@ -5,13 +5,66 @@
 #include <stdlib.h>
 #include <math.h>
 
+/**
+ * @brief Standardizes a single feature column in the dataset.
+ *
+ * @param dataset Pointer to the csv_dataset.
+ * @param col Index of the column to standardize.
+ * @param mean Mean of the column.
+ * @param std_dev Standard deviation of the column.
+ */
 static void csv_dataset_standard_scale_feature(csv_dataset *dataset, const size_t col, const double mean, const double std_dev);
+
+/**
+ * @brief Computes the mean of a feature column.
+ *
+ * @param dataset Pointer to the csv_dataset.
+ * @param col Index of the column.
+ * @return Mean value of the column.
+ */
 static double csv_dataset_standard_compute_mean(csv_dataset *dataset, const size_t col);
+
+/**
+ * @brief Computes the standard deviation of a feature column.
+ *
+ * @param dataset Pointer to the csv_dataset.
+ * @param col Index of the column.
+ * @param mean Mean of the column.
+ * @return Standard deviation of the column.
+ */
 static double csv_dataset_standard_compute_std_dev(csv_dataset *dataset, const size_t col, const double mean);
+
+/**
+ * @brief Counts the number of rows in the CSV file.
+ *
+ * @param file Pointer to the open CSV file.
+ * @return Number of rows.
+ */
 static size_t csv_dataset_count_rows(FILE *file);
+
+/**
+ * @brief Counts the number of columns in the CSV file.
+ *
+ * @param file Pointer to the open CSV file.
+ * @return Number of columns.
+ */
 static size_t csv_dataset_count_cols(FILE *file);
+
+/**
+ * @brief Fills the dataset's data array from the CSV file.
+ *
+ * @param dataset Pointer to the csv_dataset.
+ * @param file Pointer to the open CSV file.
+ * @return NO_ERROR on success, or an error code on failure.
+ */
 static cgrad_error csv_dataset_fill_data(csv_dataset *dataset, FILE *file);
 
+/**
+ * @brief Loads a CSV file into a csv_dataset structure.
+ *
+ * @param csv_path Path to the CSV file.
+ * @return Pointer to the allocated csv_dataset, or NULL if allocation failed.
+ */
 csv_dataset *csv_dataset_alloc(const char *csv_path)
 {
     size_t rows = 0;
@@ -39,11 +92,14 @@ csv_dataset *csv_dataset_alloc(const char *csv_path)
     csv_dataset* dataset = malloc(sizeof(csv_dataset));
     if (!dataset)
     {
+        fclose(file);
         return NULL;
     }
     dataset->data = calloc(sizeof(double), cols * rows);
     if (!dataset->data)
     {
+        free(dataset);
+        fclose(file);
         return NULL;
     }
 
@@ -52,13 +108,25 @@ csv_dataset *csv_dataset_alloc(const char *csv_path)
 
     if (csv_dataset_fill_data(dataset, file) != NO_ERROR)
     {
+        free(dataset->data);
+        free(dataset);
+        fclose(file);
         return NULL;
     }
 
     return dataset;
 }
 
-cgrad_error csv_dataset_sample_batch(const csv_dataset *const dataset, tensor *const inputs, tensor *const targets, const indexes_batch *const ix_batch)
+/**
+ * @brief Samples a batch of data from the dataset using the provided indexes.
+ *
+ * @param dataset Pointer to the csv_dataset.
+ * @param inputs Tensor to store the input features.
+ * @param targets Tensor to store the target labels.
+ * @param ix_batch Pointer to the indexes_batch specifying which rows to sample.
+ * @return NO_ERROR on success, or an error code on failure.
+ */
+cgrad_error csv_dataset_sample_batch(const csv_dataset *const dataset, tensor *const inputs, tensor *const targets, const indexes_batch *const ixs_batch)
 {
     cgrad_error error;
     if ((error = tensor_check_null(inputs)) != NO_ERROR)
@@ -73,18 +141,17 @@ cgrad_error csv_dataset_sample_batch(const csv_dataset *const dataset, tensor *c
     {
         return error;
     }
-    if (!ix_batch)
+    if (!ixs_batch)
     {
-        // TODO define error
-        return PERMUTATION_NULL;
+        return INDEXES_BATCH_NULL;
     }
     
     size_t cols = dataset->cols;
 
     // printf("ix_batch->size: %ld\n", ix_batch->size);
-    for (size_t i = 0; i < ix_batch->size; i++)
+    for (size_t i = 0; i < ixs_batch->size; i++)
     {
-        size_t row_idx = ix_batch->indexes[i];
+        size_t row_idx = ixs_batch->indexes[i];
 
         double *csv_row = dataset->data + row_idx * cols;
         double label = csv_row[0];
@@ -99,6 +166,14 @@ cgrad_error csv_dataset_sample_batch(const csv_dataset *const dataset, tensor *c
     return NO_ERROR;
 }
 
+/**
+ * @brief Applies standard scaling (zero mean, unit variance) to the dataset features.
+ *
+ * The first column (label) is not scaled.
+ *
+ * @param dataset Pointer to the csv_dataset.
+ * @return NO_ERROR on success, or an error code on failure.
+ */
 cgrad_error csv_dataset_standard_scale(csv_dataset *dataset)
 {
     cgrad_error error;

@@ -1,6 +1,14 @@
-#include "dataset/index_batch.h"
+#include "dataset/indexes_batch.h"
 #include <stdlib.h>
 
+/**
+ * @brief Allocates an indexes_batch structure with the specified capacity.
+ *
+ * The batch is initially empty (size = 0).
+ *
+ * @param capacity Maximum number of indexes that can be stored.
+ * @return Pointer to the allocated indexes_batch, or NULL if allocation failed.
+ */
 indexes_batch *indexes_batch_alloc(const size_t capacity)
 {
     indexes_batch *ixs_batch = (indexes_batch*)malloc(sizeof(indexes_batch));
@@ -27,6 +35,11 @@ indexes_batch *indexes_batch_alloc(const size_t capacity)
     return ixs_batch;
 }
 
+/**
+ * @brief Frees the memory allocated for an indexes_batch structure.
+ *
+ * @param ixs_batch Pointer to the indexes_batch to free.
+ */
 void indexes_batch_free(indexes_batch *ixs_batch)
 {
     free(ixs_batch->indexes);

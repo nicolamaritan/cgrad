@@ -33,10 +33,10 @@ typedef enum
     CSV_DATASET_DATA_NULL,
 
     // Permutation
-    PERMUTATION_NULL,
+    INDEXES_PERMUTATION_NULL,
 
     // Index Batch
-    INDEX_BATCH_NULL,
+    INDEXES_BATCH_NULL,
 
     // General
     INPUT_PTR_NULL,

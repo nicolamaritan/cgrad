@@ -1,20 +1,33 @@
-#include "dataset/index_permutation.h"
+#include "dataset/indexes_permutation.h"
 #include "utils/random.h"
 #include <stdlib.h>
 
-static inline void index_permutation_swap(index_permutation *const index_permutation, const size_t i, const size_t j);
+/**
+ * @brief Swaps two indexes in the permutation.
+ *
+ * @param ixs_permutation Pointer to the permutation structure.
+ * @param i Index of the first element.
+ * @param j Index of the second element.
+ */
+static inline void indexes_permutation_swap(indexes_permutation *const ixs_permutation, const size_t i, const size_t j);
 
-static inline void index_permutation_swap(index_permutation *const index_permutation, const size_t i, const size_t j)
+static inline void indexes_permutation_swap(indexes_permutation *const ixs_permutation, const size_t i, const size_t j)
 {
-    size_t temp = index_permutation->index[j];
-    index_permutation->index[j] = index_permutation->index[i];
-    index_permutation->index[i] = temp;
+    size_t temp = ixs_permutation->indexes[j];
+    ixs_permutation->indexes[j] = ixs_permutation->indexes[i];
+    ixs_permutation->indexes[i] = temp;
 }
 
-index_permutation *index_permutation_alloc(const size_t size)
+/**
+ * @brief Allocates an indexes_permutation structure for the given size.
+ *
+ * @param size Number of indexes to permute.
+ * @return Pointer to the allocated structure, or NULL if allocation failed.
+ */
+indexes_permutation *indexes_permutation_alloc(const size_t size)
 {
-    index_permutation *permutation = (index_permutation*)malloc(sizeof(index_permutation));
-    if (!permutation)
+    indexes_permutation *ixs_permutation = (indexes_permutation*)malloc(sizeof(indexes_permutation));
+    if (!ixs_permutation)
     {
         return NULL;
     }
@@ -22,53 +35,68 @@ index_permutation *index_permutation_alloc(const size_t size)
     size_t *index = (size_t*)malloc(size * sizeof(size_t));
     if (!index)
     {
-        free(permutation);
+        free(ixs_permutation);
         return NULL;
     }
 
-    permutation->size = size;
-    permutation->index = index;
-    permutation->current = 0;
+    ixs_permutation->size = size;
+    ixs_permutation->indexes = index;
+    ixs_permutation->current = 0;
 
-    return permutation;
+    return ixs_permutation;
 }
 
-cgrad_error index_permutation_init(index_permutation* const index_permutation)
+/**
+ * @brief Initializes the permutation with a random shuffle (Fisher-Yates).
+ *
+ * @param ixs_permutation Pointer to the permutation structure.
+ * @return NO_ERROR on success, or an error code on failure.
+ */
+cgrad_error indexes_permutation_init(indexes_permutation* const ixs_permutation)
 {
     // Fisher-Yates shuffles
-    for (size_t i = 0; i < index_permutation->size; i++)
+    for (size_t i = 0; i < ixs_permutation->size; i++)
     {
-        index_permutation->index[i] = i;
+        ixs_permutation->indexes[i] = i;
     }
 
-    for (size_t i = 0; i < index_permutation->size; i++)
+    for (size_t i = 0; i < ixs_permutation->size; i++)
     {
-        size_t random_index = sample_uniform_int(i, index_permutation->size - 1);
-        index_permutation_swap(index_permutation, random_index, i);
+        size_t random_index = sample_uniform_int(i, ixs_permutation->size - 1);
+        indexes_permutation_swap(ixs_permutation, random_index, i);
     }
 
     return NO_ERROR;
 }
 
-cgrad_error index_permutation_sample_index_batch(const index_permutation *const permutation, indexes_batch *const indeces, const size_t batch_size)
+/**
+ * @brief Samples a batch of indexes from the permutation.
+ *
+ * Copies batch_size indexes from the current position into the batch container.
+ *
+ * @param ixs_permutation Pointer to the permutation structure.
+ * @param ixs_batch Pointer to the batch container to fill.
+ * @param batch_size Number of indexes to sample.
+ * @return NO_ERROR on success, or an error code on failure.
+ */
+cgrad_error indexes_permutation_sample_index_batch(const indexes_permutation *const ixs_permutation, indexes_batch *const ixs_batch, const size_t batch_size)
 {
-    if (!permutation)
+    if (!ixs_permutation)
     {
-        return PERMUTATION_NULL;
+        return INDEXES_PERMUTATION_NULL;
     }
-    if (!indeces)
+    if (!ixs_batch)
     {
-        return INDEX_BATCH_NULL;
+        return INDEXES_BATCH_NULL;
     }
-    if (batch_size > indeces->capacity || permutation->current + batch_size > permutation->size)
+    if (batch_size > ixs_batch->capacity || ixs_permutation->current + batch_size > ixs_permutation->size)
     {
         return INVALID_BATCH_SIZE;
     }
 
-
     // Update indexes in the container and update its size.
-    memcpy(indeces->indexes, permutation->index + permutation->current, batch_size * sizeof(size_t));
-    indeces->size = batch_size;
+    memcpy(ixs_batch->indexes, ixs_permutation->indexes + ixs_permutation->current, batch_size * sizeof(size_t));
+    ixs_batch->size = batch_size;
 
     return NO_ERROR;
 }

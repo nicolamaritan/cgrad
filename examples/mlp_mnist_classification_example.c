@@ -7,7 +7,7 @@
 #include "optimizers/sgd.h"
 #include "utils/random.h"
 #include "dataset/csv_dataset.h"
-#include "dataset/index_permutation.h"
+#include "dataset/indexes_permutation.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -59,8 +59,8 @@ int main()
     size_t epochs = 2;
     for (size_t epoch = 0; epoch < epochs; epoch++)
     {
-        index_permutation *permutation = index_permutation_alloc(train_set->rows);
-        index_permutation_init(permutation);
+        indexes_permutation *permutation = indexes_permutation_alloc(train_set->rows);
+        indexes_permutation_init(permutation);
         
         size_t iteration = 0;
         while (!index_permutation_is_terminated(permutation))
@@ -80,7 +80,7 @@ int main()
                 exit(1); 
 
             // Sample batch indeces
-            if (index_permutation_sample_index_batch(permutation, ixs_batch, iter_batch_size) != NO_ERROR)
+            if (indexes_permutation_sample_index_batch(permutation, ixs_batch, iter_batch_size) != NO_ERROR)
                 exit(1);
 
             // Sample batch
