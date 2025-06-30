@@ -140,6 +140,5 @@ void print_computational_graph_node(const struct computational_graph_node *node)
     {
         printf("│   ├── Child %zu: %p\n", i, (void *)node->children[i]);
     }
-    // printf("├── Backprop Data: %p\n", (void *)node->data);
     printf("└── Backprop Function: %p\n\n", (void *)node->function);
 }
