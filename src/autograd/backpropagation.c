@@ -28,7 +28,9 @@ void backward(struct tensor* t, bool retain_graph)
     build_gradients(&targets);
 
     if (retain_graph)
+    {
         return;
+    }
 
     for (size_t i = 0; i < targets.size; i++)
     {
@@ -43,7 +45,9 @@ static void identify_backpropagation_nodes(struct computational_graph_node* cons
     node->is_involved_in_backprop = true;
     add_target(targets, node);
     for (size_t i = 0; i < node->n_children; i++)
+    {
         identify_backpropagation_nodes(node->children[i], targets);
+    }
 }
 
 static struct tensor* build_gradient(struct computational_graph_node* const node)
@@ -74,9 +78,7 @@ static struct tensor* build_gradient(struct computational_graph_node* const node
         
         parent_node->function[operand](operands, D, parent_i_gradient);
 
-        int terror = tensor_add_inplace(node->t->grad, parent_i_gradient);
-        if (terror != NO_ERROR)
-            exit(1); 
+        tensor_add_inplace(node->t->grad, parent_i_gradient);
 
         tensor_free(parent_i_gradient);
     }
