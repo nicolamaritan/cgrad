@@ -31,10 +31,10 @@ int main()
         exit(1);
 
     // Allocate model
-    linear_layer *linear1 = linear_create(input_dim, hidden_dim);
+    struct linear_layer *linear1 = linear_create(input_dim, hidden_dim);
     linear_xavier_init(linear1);
 
-    linear_layer *linear2 = linear_create(hidden_dim, num_classes);
+    struct linear_layer *linear2 = linear_create(hidden_dim, num_classes);
     linear_xavier_init(linear2);
 
     // Setup model params
