@@ -20,7 +20,7 @@ static cgrad_error add_child(struct computational_graph_node *const node, struct
  * @param operand The operand associated with the parent.
  * @return NO_ERROR if successful, otherwise an appropriate error code.
  */
-cgrad_error add_parent(struct computational_graph_node *const node, struct computational_graph_node *const parent, const size_t operand);
+static cgrad_error add_parent(struct computational_graph_node *const node, struct computational_graph_node *const parent, const size_t operand);
 
 struct computational_graph_node *computational_graph_node_alloc()
 {
@@ -133,7 +133,7 @@ void print_computational_graph_node(const struct computational_graph_node *node)
     printf("└── Backprop Function: %p\n\n", (void *)node->function);
 }
 
-cgrad_error add_child(struct computational_graph_node *const node, struct computational_graph_node *const child)
+static cgrad_error add_child(struct computational_graph_node *const node, struct computational_graph_node *const child)
 {
     size_t const n_children = node->n_children;
     if (n_children >= AUTOGRAD_MAX_CHILDREN)
@@ -147,7 +147,7 @@ cgrad_error add_child(struct computational_graph_node *const node, struct comput
     return NO_ERROR;
 }
 
-cgrad_error add_parent(struct computational_graph_node *const node, struct computational_graph_node *const parent, const size_t operand)
+static cgrad_error add_parent(struct computational_graph_node *const node, struct computational_graph_node *const parent, const size_t operand)
 {
     size_t const n_parents = node->n_parents;
     if (n_parents >= AUTOGRAD_MAX_PARENTS)

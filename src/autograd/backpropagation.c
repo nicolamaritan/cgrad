@@ -14,8 +14,8 @@ struct backpropagation_targets
 static void identify_backpropagation_nodes(struct computational_graph_node* const node, struct backpropagation_targets* targets);
 static struct tensor* build_gradient(struct computational_graph_node* const node);
 static void build_gradients(struct backpropagation_targets* const targets);
-cgrad_error add_target(struct backpropagation_targets* const targets, struct computational_graph_node* const node);
-void set_gradient_wrt_itself(struct tensor* const t);
+static cgrad_error add_target(struct backpropagation_targets* const targets, struct computational_graph_node* const node);
+static inline void set_gradient_wrt_itself(struct tensor* const t);
 
 void backward(struct tensor* t, bool retain_graph)
 {
@@ -96,7 +96,7 @@ static void build_gradients(struct backpropagation_targets* const targets)
     }
 }
 
-cgrad_error add_target(struct backpropagation_targets* const targets, struct computational_graph_node* const node)
+static cgrad_error add_target(struct backpropagation_targets* const targets, struct computational_graph_node* const node)
 {
     size_t const size = targets->size;
     if (size >= AUTOGRAD_MAX_TARGETS)
@@ -110,7 +110,7 @@ cgrad_error add_target(struct backpropagation_targets* const targets, struct com
     return NO_ERROR;
 }
 
-void set_gradient_wrt_itself(struct tensor* const t)
+static inline void set_gradient_wrt_itself(struct tensor* const t)
 {
     tensor2d_set_unchecked(t->grad, 0, 0, 1);
 }
