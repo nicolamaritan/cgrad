@@ -120,9 +120,8 @@ int main(int argc, char **argv)
             // ------------- Forward -------------
 
             // Linear 1
-            struct tensor *mult1 = tensor2d_alloc(iter_batch_size, hidden_dim);
             struct tensor *h1 = tensor2d_alloc(iter_batch_size, hidden_dim);
-            if (linear_forward_graph(x, linear1, mult1, h1) != NO_ERROR)
+            if (linear_forward_graph(x, linear1, h1) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
@@ -135,9 +134,8 @@ int main(int argc, char **argv)
             }
 
             // Linear 2
-            struct tensor *mult3 = tensor2d_alloc(iter_batch_size, num_classes);
             struct tensor *h3 = tensor2d_alloc(iter_batch_size, num_classes);
-            if (linear_forward_graph(h2, linear2, mult3, h3) != NO_ERROR)
+            if (linear_forward_graph(h2, linear2, h3) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
@@ -163,10 +161,8 @@ int main(int argc, char **argv)
             tensor_free(x);
             tensor_free(y);
             tensor_free(h1);
-            tensor_free(mult1);
             tensor_free(h2);
             tensor_free(h3);
-            tensor_free(mult3);
             tensor_free(z);
 
             index_permutation_update(permutation, iter_batch_size);

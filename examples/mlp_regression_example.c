@@ -66,9 +66,8 @@ int main()
     for (size_t i = 0; i < epochs; i++)
     {
         // ------------- Forward -------------
-        struct tensor *mult1 = tensor2d_alloc(batch_size, hidden_dim);
         struct tensor *h1 = tensor2d_alloc(batch_size, hidden_dim);
-        if (linear_forward_graph(x, linear1, mult1, h1) != NO_ERROR)
+        if (linear_forward_graph(x, linear1, h1) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
@@ -76,9 +75,8 @@ int main()
         struct tensor *h2 = tensor2d_alloc(batch_size, hidden_dim);
         relu_forward_graph(h1, h2);
 
-        struct tensor *mult3 = tensor2d_alloc(batch_size, out_dim);
         struct tensor *h3 = tensor2d_alloc(batch_size, out_dim);
-        if (linear_forward_graph(h2, linear2, mult3, h3) != NO_ERROR)
+        if (linear_forward_graph(h2, linear2, h3) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
@@ -98,10 +96,8 @@ int main()
 
         // Clear iteration allocations
         tensor_free(h1);
-        tensor_free(mult1);
         tensor_free(h2);
         tensor_free(h3);
-        tensor_free(mult3);
         tensor_free(z);
     }
 
