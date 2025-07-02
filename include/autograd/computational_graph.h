@@ -64,25 +64,6 @@ void free_computational_graph_node(struct computational_graph_node *const node);
 cgrad_error add_computational_graph_link(struct tensor* operand, size_t operand_id, struct tensor* result, backpropagation_function backprop_function);
 
 /**
- * @brief Adds a child node to a computational graph node.
- *
- * @param node The parent node.
- * @param child The child node to add.
- * @return NO_ERROR if successful, otherwise an appropriate error code.
- */
-cgrad_error add_child(struct computational_graph_node *const node, struct computational_graph_node *const child);
-
-/**
- * @brief Adds a parent node to a computational graph node.
- *
- * @param node The child node.
- * @param parent The parent node to add.
- * @param operand The operand associated with the parent.
- * @return NO_ERROR if successful, otherwise an appropriate error code.
- */
-cgrad_error add_parent(struct computational_graph_node *const node, struct computational_graph_node *const parent, const size_t operand);
-
-/**
  * @brief Prints the details of a computational graph node.
  *
  * @param node The node to print.

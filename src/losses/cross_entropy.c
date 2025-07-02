@@ -51,26 +51,20 @@ cgrad_error cross_entropy_loss_graph(struct tensor* const logits, struct tensor*
 {
     cgrad_error err = cross_entropy_loss(logits, targets, loss);
     if (err != NO_ERROR)
+    {
         return err;
-
-    struct computational_graph_node *logits_node = logits->node ? logits->node : computational_graph_node_tensor_alloc(logits);
-    struct computational_graph_node *targets_node = targets->node ? targets->node : computational_graph_node_tensor_alloc(targets);
-
-    targets_node->t = (struct tensor *)targets;
-
-    struct computational_graph_node *loss_node = computational_graph_node_tensor_alloc(loss);
+    }
 
     // Setup connections
     // In CrossEntropy, targets are not differentiable, so only the logits node is added. Still, the target tensor is added as operand for backward.
-    add_parent(logits_node, loss_node, CROSS_ENTROPY_PREDICTED);
-    add_child(loss_node, logits_node);
+    err = add_computational_graph_link(logits, CROSS_ENTROPY_PREDICTED, loss, &cross_entropy_loss_backpropagate_predicted);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
 
-    // Setup backpropation functions 
-    loss_node->function[CROSS_ENTROPY_PREDICTED] = (backpropagation_function)&cross_entropy_loss_backpropagate_predicted;
-
-    // Setup operands
-    loss_node->tensor_operands[CROSS_ENTROPY_PREDICTED] = logits;
-    loss_node->tensor_operands[CROSS_ENTROPY_TARGET] = targets;
+    // Setup operands manually, as the target was not added to the computational graph as node
+    loss->node->tensor_operands[CROSS_ENTROPY_TARGET] = targets;
 
     return NO_ERROR;
 }

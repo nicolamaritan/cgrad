@@ -43,28 +43,12 @@ cgrad_error mse_loss_graph(struct tensor *const y_pred, struct tensor *const y_t
 {
     cgrad_error err = mse_loss(y_pred, y_target, z);
     if (err != NO_ERROR)
+    {
         return err;
+    }
 
-    struct computational_graph_node *y_pred_node = y_pred->node ? y_pred->node : computational_graph_node_tensor_alloc(y_pred);
-    struct computational_graph_node *y_target_node = y_target->node ? y_target->node : computational_graph_node_tensor_alloc(y_target);
-
-    y_target_node->t = (struct tensor *)y_target;
-
-    struct computational_graph_node *z_node = computational_graph_node_tensor_alloc(z);
-
-    // Setup connections
-    add_parent(y_pred_node, z_node, MSE_PREDICTED);
-    add_parent(y_target_node, z_node, MSE_TARGET);
-    add_child(z_node, y_pred_node);
-    add_child(z_node, y_target_node);
-
-    // Setup backpropation functions 
-    z_node->function[MSE_PREDICTED] = (backpropagation_function)&mse_loss_backpropagate_predicted;
-    z_node->function[MSE_TARGET] = (backpropagation_function)&mse_loss_backpropagate_target;
-
-    // Setup operands
-    z_node->tensor_operands[MSE_PREDICTED] = y_pred;
-    z_node->tensor_operands[MSE_TARGET] = y_target;
+    add_computational_graph_link(y_pred, MSE_PREDICTED, z, &mse_loss_backpropagate_predicted);
+    add_computational_graph_link(y_target, MSE_TARGET, z, &mse_loss_backpropagate_target);
 
     return NO_ERROR;
 }
