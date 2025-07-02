@@ -4,21 +4,8 @@
 #include "tensor/tensor.h"
 #include "autograd/backpropagation_function.h"
 
-typedef enum tensor2d_add_row_vector_operand
-{
-    TENSOR2D = 0,
-    ROW_VECTOR = 1,
-} tensor2d_add_row_vector_operand;
-
-typedef struct
-{
-    struct tensor *t2d;
-    struct tensor *row_vector;
-} tensor2d_add_row_vector_inputs;
-
 cgrad_error tensor2d_add_row_vector_graph(struct tensor *const A, struct tensor *const v, struct tensor *const out);
 cgrad_error tensor2d_add_row_vector(const struct tensor *const A, const struct tensor *const v, struct tensor *const out);
-void tensor2d_add_row_vector_backpropagate_tensor2d(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
-void tensor2d_add_row_vector_backpropagate_row_vector(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+void tensor2d_add_row_vector_unchecked(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
 
 #endif

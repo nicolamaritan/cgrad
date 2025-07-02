@@ -5,21 +5,21 @@
 #include <string.h>
 #include <stdlib.h>
 
-typedef struct 
+struct backpropagation_targets
 {
     struct computational_graph_node* targets[AUTOGRAD_MAX_TARGETS];
     size_t size;
-} backpropagation_targets;
+};
 
-static void identify_backpropagation_nodes(struct computational_graph_node* const node, backpropagation_targets* targets);
+static void identify_backpropagation_nodes(struct computational_graph_node* const node, struct backpropagation_targets* targets);
 static struct tensor* build_gradient(struct computational_graph_node* const node);
-static void build_gradients(backpropagation_targets* const targets);
-cgrad_error add_target(backpropagation_targets* const targets, struct computational_graph_node* const node);
+static void build_gradients(struct backpropagation_targets* const targets);
+cgrad_error add_target(struct backpropagation_targets* const targets, struct computational_graph_node* const node);
 void set_gradient_wrt_itself(struct tensor* const t);
 
 void backward(struct tensor* t, bool retain_graph)
 {
-    backpropagation_targets targets;
+    struct backpropagation_targets targets;
     targets.size = 0;
 
     identify_backpropagation_nodes(t->node, &targets);
@@ -40,7 +40,7 @@ void backward(struct tensor* t, bool retain_graph)
     }
 }
 
-static void identify_backpropagation_nodes(struct computational_graph_node* const node, backpropagation_targets* targets)
+static void identify_backpropagation_nodes(struct computational_graph_node* const node, struct backpropagation_targets* targets)
 {
     node->is_involved_in_backprop = true;
     add_target(targets, node);
@@ -87,7 +87,7 @@ static struct tensor* build_gradient(struct computational_graph_node* const node
     return node->t->grad;
 }
 
-static void build_gradients(backpropagation_targets* const targets)
+static void build_gradients(struct backpropagation_targets* const targets)
 {
     size_t size = targets->size;
     for (size_t i = 0; i < size; i++)
@@ -96,7 +96,7 @@ static void build_gradients(backpropagation_targets* const targets)
     }
 }
 
-cgrad_error add_target(backpropagation_targets* const targets, struct computational_graph_node* const node)
+cgrad_error add_target(struct backpropagation_targets* const targets, struct computational_graph_node* const node)
 {
     size_t const size = targets->size;
     if (size >= AUTOGRAD_MAX_TARGETS)

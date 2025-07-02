@@ -5,7 +5,14 @@
 #include <cblas.h>
 #include <stdlib.h>
 
-void tensor2d_mult_unchecked(const struct tensor *const A, const struct tensor *const B, struct tensor *const out);
+typedef enum tensor2d_mult_operand
+{
+    LHS_TENSOR,
+    RHS_TENSOR,
+} tensor2d_mult_operand;
+
+static void tensor2d_mult_backpropagate_lhs(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static void tensor2d_mult_backpropagate_rhs(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
 cgrad_error tensor2d_mult(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
 {
@@ -71,7 +78,7 @@ void tensor2d_mult_unchecked(const struct tensor *const A, const struct tensor *
     );
 }
 
-void tensor2d_mult_backpropagate_lhs(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+static void tensor2d_mult_backpropagate_lhs(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 { 
     const struct tensor *rhs = operands[RHS_TENSOR];
     struct tensor *rhs_trans= tensor2d_no_grad_alloc(rhs->shape[1], rhs->shape[0]);
@@ -80,7 +87,7 @@ void tensor2d_mult_backpropagate_lhs(const struct tensor **const operands, const
     tensor_no_grad_free(rhs_trans);
 }
 
-void tensor2d_mult_backpropagate_rhs(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+static void tensor2d_mult_backpropagate_rhs(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 { 
     const struct tensor* lhs = operands[LHS_TENSOR];
     struct tensor *lhs_trans = tensor2d_no_grad_alloc(lhs->shape[1], lhs->shape[0]);

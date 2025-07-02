@@ -3,7 +3,14 @@
 #include <stdio.h>
 #include <math.h>
 
-double compute_softmax_normalization(const struct tensor* const logits, const size_t row);
+typedef enum cross_entropy_loss_operand
+{
+    CROSS_ENTROPY_PREDICTED,
+    CROSS_ENTROPY_TARGET
+} cross_entropy_loss_operand;
+
+static void cross_entropy_loss_backpropagate_predicted(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static double compute_softmax_normalization(const struct tensor* const logits, const size_t row);
 
 cgrad_error cross_entropy_loss(const struct tensor* const logits, const struct tensor* const targets, struct tensor* const loss)
 {
@@ -69,7 +76,7 @@ cgrad_error cross_entropy_loss_graph(struct tensor* const logits, struct tensor*
     return NO_ERROR;
 }
 
-void cross_entropy_loss_backpropagate_predicted(const struct tensor **const operands, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
+static void cross_entropy_loss_backpropagate_predicted(const struct tensor **const operands, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
 {
     const struct tensor *logits = operands[CROSS_ENTROPY_PREDICTED];
     const struct tensor *targets= operands[CROSS_ENTROPY_TARGET];
@@ -98,7 +105,7 @@ void cross_entropy_loss_backpropagate_predicted(const struct tensor **const oper
     }
 }
 
-double compute_softmax_normalization(const struct tensor* const logits, const size_t row)
+static double compute_softmax_normalization(const struct tensor* const logits, const size_t row)
 {
     double softmax_normalization = 0;
     size_t logits_size = logits->shape[1];

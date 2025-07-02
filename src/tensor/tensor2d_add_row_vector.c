@@ -2,7 +2,14 @@
 #include "autograd/computational_graph.h"
 #include <stdlib.h>
 
-void tensor2d_add_row_vector_unchecked(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
+typedef enum tensor2d_add_row_vector_operand
+{
+    TENSOR2D,
+    ROW_VECTOR,
+} tensor2d_add_row_vector_operand;
+
+static void tensor2d_add_row_vector_backpropagate_tensor2d(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static void tensor2d_add_row_vector_backpropagate_row_vector(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
 cgrad_error tensor2d_add_row_vector(const struct tensor *const A, const struct tensor *const v, struct tensor *const out)
 {
@@ -79,8 +86,8 @@ cgrad_error tensor2d_add_row_vector_graph(struct tensor *const A, struct tensor 
 
 void tensor2d_add_row_vector_unchecked(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
 {
-    size_t rows = A->shape[0]; // Number of rows
-    size_t cols = A->shape[1]; // Number of columns
+    size_t rows = A->shape[0];
+    size_t cols = A->shape[1];
 
     double *A_data = A->data;
     double *v_data = v->data;
@@ -95,12 +102,12 @@ void tensor2d_add_row_vector_unchecked(const struct tensor *const A, const struc
     }
 }
 
-void tensor2d_add_row_vector_backpropagate_tensor2d(const struct tensor **const tensor_operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+static void tensor2d_add_row_vector_backpropagate_tensor2d(const struct tensor **const tensor_operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
     tensor2d_copy(grad_wrt_out, grad_wrt_operand);
 }
 
-void tensor2d_add_row_vector_backpropagate_row_vector(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+static void tensor2d_add_row_vector_backpropagate_row_vector(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
     size_t G_rows = grad_wrt_out->shape[0];
     size_t G_cols = grad_wrt_out->shape[1];

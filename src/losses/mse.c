@@ -2,6 +2,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+typedef enum mse_loss_operand
+{
+    MSE_PREDICTED,
+    MSE_TARGET
+} mse_loss_operand;
+
+static void mse_loss_backpropagate_predicted(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static void mse_loss_backpropagate_target(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+
 cgrad_error mse_loss(const struct tensor *const y_pred, const struct tensor *const y_target, struct tensor *const z)
 {
     if (!y_pred || !y_target || !z)
@@ -53,7 +62,7 @@ cgrad_error mse_loss_graph(struct tensor *const y_pred, struct tensor *const y_t
     return NO_ERROR;
 }
 
-void mse_loss_backpropagate_predicted(const struct tensor **const operands, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
+static void mse_loss_backpropagate_predicted(const struct tensor **const operands, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
 {
     const struct tensor *predicted = operands[MSE_PREDICTED];
     const struct tensor *target= operands[MSE_TARGET];
@@ -64,7 +73,7 @@ void mse_loss_backpropagate_predicted(const struct tensor **const operands, cons
     }
 }
 
-void mse_loss_backpropagate_target(const struct tensor **const operands, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
+static void mse_loss_backpropagate_target(const struct tensor **const operands, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
 {
     mse_loss_backpropagate_predicted(operands, grad_wrt_out, grad_wrt_operand);
 

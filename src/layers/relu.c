@@ -2,27 +2,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void relu_backpropagate(const struct tensor **const operands, const struct tensor* const grad_wrt_out, struct tensor *grad_wrt_operand)
+typedef enum relu_layer_operand
 {
-    const struct tensor *const x = operands[RELU_ONLY_OPERAND];
-    
-    // Avoid multiple indirections for performance
-    double* x_data = x->data;
-    double* grad_wrt_operand_data = grad_wrt_operand->data;
-    size_t grad_wrt_operand_data_size = grad_wrt_operand->data_size;
-    
-    /*
-        Gradient computation of dz/dX.
-        dz/dX is the Hadamard Product of grad_wrt_out = dz/drelu(X) and drelu(X)/dX,
-        since element (i, j) of relu(X) depends only on element (i, j) of X.
-    */
-    
-    for (size_t i = 0; i < grad_wrt_operand_data_size; i++)
-    {
-        // Element wise product
-        grad_wrt_operand_data[i] = (x_data[i] > 0 ? 1 : 0) * grad_wrt_out->data[i];
-    }
-}
+    RELU_ONLY_OPERAND,
+} relu_layer_operand;
+
+static void relu_backpropagate(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
 cgrad_error relu_forward_graph(struct tensor* const x, struct tensor* const out)
 {
@@ -66,4 +51,26 @@ cgrad_error relu_forward(const struct tensor* const x, struct tensor* const out)
     }
 
     return NO_ERROR;
+}
+
+static void relu_backpropagate(const struct tensor **const operands, const struct tensor* const grad_wrt_out, struct tensor *grad_wrt_operand)
+{
+    const struct tensor *const x = operands[RELU_ONLY_OPERAND];
+    
+    // Avoid multiple indirections for performance
+    double* x_data = x->data;
+    double* grad_wrt_operand_data = grad_wrt_operand->data;
+    size_t grad_wrt_operand_data_size = grad_wrt_operand->data_size;
+    
+    /*
+        Gradient computation of dz/dX.
+        dz/dX is the Hadamard Product of grad_wrt_out = dz/drelu(X) and drelu(X)/dX,
+        since element (i, j) of relu(X) depends only on element (i, j) of X.
+    */
+    
+    for (size_t i = 0; i < grad_wrt_operand_data_size; i++)
+    {
+        // Element wise product
+        grad_wrt_operand_data[i] = (x_data[i] > 0 ? 1 : 0) * grad_wrt_out->data[i];
+    }
 }

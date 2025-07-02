@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <string.h>
 
-
 /**
  * @brief Adds a child node to a computational graph node.
  *
