@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct linear_layer *linear_create(size_t in_dim, size_t out_dim)
+struct linear_layer *linear_alloc(size_t in_dim, size_t out_dim)
 {
     struct linear_layer *layer = (struct linear_layer *)malloc(sizeof(struct linear_layer));
     if (!layer)

@@ -1,6 +1,6 @@
 #include "layers/linear.h"
 #include "layers/relu.h"
-#include "loss/mse.h"
+#include "losses/mse.h"
 #include "autograd/backpropagation.h"
 #include "model/model_params.h"
 #include "tensor/tensor.h"
@@ -38,10 +38,10 @@ int main()
     build_example_dataset(x, y_target);
 
     // Allocate model
-    struct linear_layer *linear1 = linear_create(input_dim, hidden_dim);
+    struct linear_layer *linear1 = linear_alloc(input_dim, hidden_dim);
     linear_xavier_init(linear1);
 
-    struct linear_layer *linear2 = linear_create(hidden_dim, out_dim);
+    struct linear_layer *linear2 = linear_alloc(hidden_dim, out_dim);
     linear_xavier_init(linear2);
 
     // Setup model params

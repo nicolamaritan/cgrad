@@ -1,4 +1,4 @@
-#include "loss/cross_entropy.h"
+#include "losses/cross_entropy.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>

@@ -1,4 +1,4 @@
-#include "loss/mse.h"
+#include "losses/mse.h"
 #include <stdlib.h>
 #include <stdio.h>
 

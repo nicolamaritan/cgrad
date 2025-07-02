@@ -1,6 +1,6 @@
 #include "layers/linear.h"
 #include "layers/relu.h"
-#include "loss/cross_entropy.h"
+#include "losses/cross_entropy.h"
 #include "autograd/backpropagation.h"
 #include "model/model_params.h"
 #include "tensor/tensor.h"
@@ -45,14 +45,14 @@ int main(int argc, char **argv)
     }
 
     // Allocate model
-    struct linear_layer *linear1 = linear_create(input_dim, hidden_dim);
+    struct linear_layer *linear1 = linear_alloc(input_dim, hidden_dim);
     if (!linear1)
     {
         return EXIT_FAILURE;
     }
     linear_xavier_init(linear1);
 
-    struct linear_layer *linear2 = linear_create(hidden_dim, num_classes);
+    struct linear_layer *linear2 = linear_alloc(hidden_dim, num_classes);
     if (!linear2)
     {
         return EXIT_FAILURE;
