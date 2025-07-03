@@ -8,8 +8,8 @@ typedef enum mse_loss_operand
     MSE_TARGET
 } mse_loss_operand;
 
-static void mse_loss_backpropagate_predicted(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
-static void mse_loss_backpropagate_target(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static void mse_loss_backpropagate_predicted(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static void mse_loss_backpropagate_target(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
 cgrad_error mse_loss(const struct tensor *const y_pred, const struct tensor *const y_target, struct tensor *const z)
 {
@@ -62,10 +62,10 @@ cgrad_error mse_loss_graph(struct tensor *const y_pred, struct tensor *const y_t
     return NO_ERROR;
 }
 
-static void mse_loss_backpropagate_predicted(const struct tensor **const operands, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
+static void mse_loss_backpropagate_predicted(const struct backpropagation_context *const ctx, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
 {
-    const struct tensor *predicted = operands[MSE_PREDICTED];
-    const struct tensor *target= operands[MSE_TARGET];
+    const struct tensor *predicted = ctx->tensors[MSE_PREDICTED];
+    const struct tensor *target= ctx->tensors[MSE_TARGET];
     double batch_size = target->shape[0];
     for (size_t i = 0; i < batch_size; i++)
     {
@@ -73,9 +73,9 @@ static void mse_loss_backpropagate_predicted(const struct tensor **const operand
     }
 }
 
-static void mse_loss_backpropagate_target(const struct tensor **const operands, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
+static void mse_loss_backpropagate_target(const struct backpropagation_context *const ctx, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
 {
-    mse_loss_backpropagate_predicted(operands, grad_wrt_out, grad_wrt_operand);
+    mse_loss_backpropagate_predicted(ctx, grad_wrt_out, grad_wrt_operand);
 
     // Gradient is the same but mult by -1
     for (size_t i = 0; i < grad_wrt_operand->shape[0]; i++)

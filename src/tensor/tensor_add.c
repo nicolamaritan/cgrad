@@ -7,7 +7,7 @@ typedef enum tensor_add_operand
     RHS_TENSOR,
 } tensor_add_operand;
 
-static void tensor_add_backpropagate(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static void tensor_add_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
 void tensor_add_unchecked(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
 {
@@ -64,7 +64,7 @@ cgrad_error tensor_add_graph(struct tensor *const A, struct tensor *const B, str
     return err;
 }
 
-static void tensor_add_backpropagate(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+static void tensor_add_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
     /**
      * Given the symmetry of the addition operation, the gradient with respect to both operands is the same.

@@ -24,11 +24,12 @@ struct computational_graph_node
     struct computational_graph_node *parents[AUTOGRAD_MAX_PARENTS];  /**< Array of parent nodes. */
     size_t parents_operands[AUTOGRAD_MAX_PARENTS];            /**< Operands associated with each parent. */
     struct computational_graph_node *children[AUTOGRAD_MAX_CHILDREN];/**< Array of child nodes. */
-    struct tensor *tensor_operands[AUTOGRAD_MAX_CHILDREN];             /**< Tensors pointed by the computational graph nodes of the children. This is used to avoid recomputation of the operands in build_gradient() in backpropagation.h even if redundant with children attribute.*/
     backpropagation_function function[AUTOGRAD_MAX_CHILDREN]; /**< Backpropagation functions for each child. */
+    struct backpropagation_context ctx;              /**< Context needed during backpropagation for computing gradients. */
     bool is_involved_in_backprop;                /**< Flag indicating if the node is involved in backpropagation. */
     bool is_grad_computed;                       /**< Flag indicating if the gradient has been computed. */
 };
+
 
 /**
  * @brief Allocates and initializes a new computational graph node.
@@ -69,5 +70,20 @@ cgrad_error add_computational_graph_link(struct tensor* operand, size_t operand_
  * @param node The node to print.
  */
 void print_computational_graph_node(const struct computational_graph_node *node);
+
+/**
+ * @brief Sets a tensor in the context of a computational graph node at the specified context id.
+ *
+ * @param node Pointer to the computational graph node.
+ * @param t Pointer to the tensor to set.
+ * @param ctx_id Index at which to store the tensor in the node's context.
+ * @return cgrad_error Error code indicating success or failure.
+ */
+static inline cgrad_error computational_graph_node_set_context_tensor(struct computational_graph_node *const node, struct tensor *t, const context_id ctx_id);
+
+static inline cgrad_error computational_graph_node_set_context_tensor(struct computational_graph_node *const node, struct tensor *t, const context_id ctx_id)
+{
+    return context_set_tensor(&node->ctx, t, ctx_id);
+}
 
 #endif

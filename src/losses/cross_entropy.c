@@ -9,7 +9,7 @@ typedef enum cross_entropy_loss_operand
     CROSS_ENTROPY_TARGET
 } cross_entropy_loss_operand;
 
-static void cross_entropy_loss_backpropagate_predicted(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static void cross_entropy_loss_backpropagate_predicted(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static double compute_softmax_normalization(const struct tensor* const logits, const size_t row);
 
 cgrad_error cross_entropy_loss(const struct tensor* const logits, const struct tensor* const targets, struct tensor* const loss)
@@ -71,15 +71,15 @@ cgrad_error cross_entropy_loss_graph(struct tensor* const logits, struct tensor*
     }
 
     // Setup operands manually, as the target was not added to the computational graph as node
-    loss->node->tensor_operands[CROSS_ENTROPY_TARGET] = targets;
+    computational_graph_node_set_context_tensor(loss->node, targets, CROSS_ENTROPY_TARGET);
 
     return NO_ERROR;
 }
 
-static void cross_entropy_loss_backpropagate_predicted(const struct tensor **const operands, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
+static void cross_entropy_loss_backpropagate_predicted(const struct backpropagation_context *const ctx, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
 {
-    const struct tensor *logits = operands[CROSS_ENTROPY_PREDICTED];
-    const struct tensor *targets= operands[CROSS_ENTROPY_TARGET];
+    const struct tensor *logits = ctx->tensors[CROSS_ENTROPY_PREDICTED];
+    const struct tensor *targets= ctx->tensors[CROSS_ENTROPY_TARGET];
     double batch_size = logits->shape[0];
     size_t num_classes = logits->shape[1];
 

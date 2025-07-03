@@ -6,7 +6,7 @@ typedef enum tensor2d_trans_operand
     TENSOR2D_TRANS_ONLY_OPERAND,
 } tensor2d_trans_operand;
 
-void tensor2d_trans_backpropagate(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+void tensor2d_trans_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
 cgrad_error tensor2d_trans(const struct tensor *const t, struct tensor *const out)
 {
@@ -62,7 +62,7 @@ void tensor2d_trans_unchecked(const struct tensor *const t, struct tensor *const
         }
     }
 }
-void tensor2d_trans_backpropagate(const struct tensor **const operands, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
+void tensor2d_trans_backpropagate(const struct backpropagation_context *const ctx, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
 {
     tensor2d_trans(grad_wrt_out, grad_wrt_operand);
 }

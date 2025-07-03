@@ -41,7 +41,7 @@ struct computational_graph_node *computational_graph_node_alloc()
     memset(node->children, 0, sizeof(node->children));
     memset(node->parents_operands, 0, sizeof(node->parents_operands));
     memset(node->function, 0, sizeof(node->function));
-    memset(node->tensor_operands, 0, sizeof(node->tensor_operands));
+    memset(node->ctx.tensors, 0, sizeof(node->ctx.tensors));
 
     return node;
 }
@@ -105,7 +105,7 @@ cgrad_error add_computational_graph_link(struct tensor* operand, size_t operand_
     result_node->function[operand_id] = backprop_function; 
 
     // Setup operand in the tensor operands pointer
-    result_node->tensor_operands[operand_id] = operand;
+    context_set_tensor(&result_node->ctx, operand, operand_id);
 
     return NO_ERROR;
 }
