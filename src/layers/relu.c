@@ -7,7 +7,7 @@ typedef enum relu_layer_operand
     RELU_ONLY_OPERAND,
 } relu_layer_operand;
 
-static void relu_backpropagate(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static void relu_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
 cgrad_error relu_forward_graph(struct tensor* const x, struct tensor* const out)
 {
@@ -53,9 +53,9 @@ cgrad_error relu_forward(const struct tensor* const x, struct tensor* const out)
     return NO_ERROR;
 }
 
-static void relu_backpropagate(const struct tensor **const operands, const struct tensor* const grad_wrt_out, struct tensor *grad_wrt_operand)
+static void relu_backpropagate(const struct backpropagation_context *const ctx, const struct tensor* const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
-    const struct tensor *const x = operands[RELU_ONLY_OPERAND];
+    const struct tensor *const x = ctx->operands[RELU_ONLY_OPERAND];
     
     // Avoid multiple indirections for performance
     double* x_data = x->data;

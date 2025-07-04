@@ -17,9 +17,9 @@ typedef enum linear_layer_operand
 } linear_layer_operand;
 
 static cgrad_error linear_update_computational_graph(struct tensor *const x, struct linear_layer *const layer, struct tensor *const out);
-static void linear_backpropagate_input(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
-static void linear_backpropagate_weights(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
-static void linear_backpropagate_bias(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static void linear_backpropagate_input(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static void linear_backpropagate_weights(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static void linear_backpropagate_bias(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
 struct linear_layer *linear_alloc(size_t in_dim, size_t out_dim)
 {
@@ -116,25 +116,25 @@ static cgrad_error linear_update_computational_graph(struct tensor *const x, str
     return add_computational_graph_link(layer->biases, BIAS, out, &linear_backpropagate_bias);
 }
 
-static void linear_backpropagate_input(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+static void linear_backpropagate_input(const struct backpropagation_context* const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
-    const struct tensor *rhs = operands[WEIGHTS];
+    const struct tensor *rhs = ctx->operands[WEIGHTS];
     struct tensor *rhs_trans= tensor2d_no_grad_alloc(rhs->shape[1], rhs->shape[0]);
     tensor2d_trans(rhs, rhs_trans);
     tensor2d_mult(grad_wrt_out, rhs_trans, grad_wrt_operand);
     tensor_no_grad_free(rhs_trans);
 }
 
-static void linear_backpropagate_weights(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+static void linear_backpropagate_weights(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
-    const struct tensor* lhs = operands[INPUT];
+    const struct tensor* lhs = ctx->operands[INPUT];
     struct tensor *lhs_trans = tensor2d_no_grad_alloc(lhs->shape[1], lhs->shape[0]);
     tensor2d_trans(lhs, lhs_trans);
     tensor2d_mult(lhs_trans, grad_wrt_out, grad_wrt_operand);
     tensor_no_grad_free(lhs_trans);
 }
 
-static void linear_backpropagate_bias(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+static void linear_backpropagate_bias(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
     size_t G_rows = grad_wrt_out->shape[0];
     size_t G_cols = grad_wrt_out->shape[1];

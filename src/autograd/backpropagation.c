@@ -67,16 +67,17 @@ static struct tensor* build_gradient(struct computational_graph_node* const node
         struct tensor* D = build_gradient(node->parents[i]);
 
         struct computational_graph_node *parent_node = node->parents[i];
-        const struct tensor **const operands = (const struct tensor** const)parent_node->tensor_operands;
 
+        // Compute gradient and add to current grad
+        struct tensor* parent_i_gradient = tensor_no_grad_alloc(node->t->shape, node->t->shape_size);
+
+        // Retrieve context
+        struct backpropagation_context *ctx = &parent_node->ctx;
+        
         // Get which is the operand of the current node in the operation
         // that created the i-th parent. This info is stored in the current node
         size_t operand = node->parents_operands[i];
-        
-        // Compute gradient and add to current grad
-        struct tensor* parent_i_gradient = tensor_no_grad_alloc(node->t->shape, node->t->shape_size);
-        
-        parent_node->function[operand](operands, D, parent_i_gradient);
+        parent_node->function[operand](ctx, D, parent_i_gradient);
 
         tensor_add_inplace(node->t->grad, parent_i_gradient);
 

@@ -11,8 +11,8 @@ typedef enum tensor2d_mult_operand
     RHS_TENSOR,
 } tensor2d_mult_operand;
 
-static void tensor2d_mult_backpropagate_lhs(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
-static void tensor2d_mult_backpropagate_rhs(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static void tensor2d_mult_backpropagate_lhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static void tensor2d_mult_backpropagate_rhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
 cgrad_error tensor2d_mult(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
 {
@@ -78,18 +78,18 @@ void tensor2d_mult_unchecked(const struct tensor *const A, const struct tensor *
     );
 }
 
-static void tensor2d_mult_backpropagate_lhs(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+static void tensor2d_mult_backpropagate_lhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 { 
-    const struct tensor *rhs = operands[RHS_TENSOR];
+    const struct tensor *rhs = ctx->operands[RHS_TENSOR];
     struct tensor *rhs_trans= tensor2d_no_grad_alloc(rhs->shape[1], rhs->shape[0]);
     tensor2d_trans(rhs, rhs_trans);
     tensor2d_mult(grad_wrt_out, rhs_trans, grad_wrt_operand);
     tensor_no_grad_free(rhs_trans);
 }
 
-static void tensor2d_mult_backpropagate_rhs(const struct tensor **const operands, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+static void tensor2d_mult_backpropagate_rhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 { 
-    const struct tensor* lhs = operands[LHS_TENSOR];
+    const struct tensor* lhs = ctx->operands[LHS_TENSOR];
     struct tensor *lhs_trans = tensor2d_no_grad_alloc(lhs->shape[1], lhs->shape[0]);
     tensor2d_trans(lhs, lhs_trans);
     tensor2d_mult(lhs_trans, grad_wrt_out, grad_wrt_operand);
