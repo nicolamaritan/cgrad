@@ -64,8 +64,8 @@ cgrad_error mse_loss_graph(struct tensor *const y_pred, struct tensor *const y_t
 
 static void mse_loss_backpropagate_predicted(const struct backpropagation_context *const ctx, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
 {
-    const struct tensor *predicted = ctx->tensors[MSE_PREDICTED];
-    const struct tensor *target= ctx->tensors[MSE_TARGET];
+    const struct tensor *predicted = ctx->operands[MSE_PREDICTED];
+    const struct tensor *target= ctx->operands[MSE_TARGET];
     double batch_size = target->shape[0];
     for (size_t i = 0; i < batch_size; i++)
     {

@@ -78,8 +78,8 @@ cgrad_error cross_entropy_loss_graph(struct tensor* const logits, struct tensor*
 
 static void cross_entropy_loss_backpropagate_predicted(const struct backpropagation_context *const ctx, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
 {
-    const struct tensor *logits = ctx->tensors[CROSS_ENTROPY_PREDICTED];
-    const struct tensor *targets= ctx->tensors[CROSS_ENTROPY_TARGET];
+    const struct tensor *logits = ctx->operands[CROSS_ENTROPY_PREDICTED];
+    const struct tensor *targets= ctx->operands[CROSS_ENTROPY_TARGET];
     double batch_size = logits->shape[0];
     size_t num_classes = logits->shape[1];
 

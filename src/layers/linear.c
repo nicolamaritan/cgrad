@@ -118,7 +118,7 @@ static cgrad_error linear_update_computational_graph(struct tensor *const x, str
 
 static void linear_backpropagate_input(const struct backpropagation_context* const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
-    const struct tensor *rhs = ctx->tensors[WEIGHTS];
+    const struct tensor *rhs = ctx->operands[WEIGHTS];
     struct tensor *rhs_trans= tensor2d_no_grad_alloc(rhs->shape[1], rhs->shape[0]);
     tensor2d_trans(rhs, rhs_trans);
     tensor2d_mult(grad_wrt_out, rhs_trans, grad_wrt_operand);
@@ -127,7 +127,7 @@ static void linear_backpropagate_input(const struct backpropagation_context* con
 
 static void linear_backpropagate_weights(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
-    const struct tensor* lhs = ctx->tensors[INPUT];
+    const struct tensor* lhs = ctx->operands[INPUT];
     struct tensor *lhs_trans = tensor2d_no_grad_alloc(lhs->shape[1], lhs->shape[0]);
     tensor2d_trans(lhs, lhs_trans);
     tensor2d_mult(lhs_trans, grad_wrt_out, grad_wrt_operand);

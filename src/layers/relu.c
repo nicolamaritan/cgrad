@@ -55,7 +55,7 @@ cgrad_error relu_forward(const struct tensor* const x, struct tensor* const out)
 
 static void relu_backpropagate(const struct backpropagation_context *const ctx, const struct tensor* const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
-    const struct tensor *const x = ctx->tensors[RELU_ONLY_OPERAND];
+    const struct tensor *const x = ctx->operands[RELU_ONLY_OPERAND];
     
     // Avoid multiple indirections for performance
     double* x_data = x->data;

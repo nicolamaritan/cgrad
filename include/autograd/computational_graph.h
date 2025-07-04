@@ -30,7 +30,6 @@ struct computational_graph_node
     bool is_grad_computed;                       /**< Flag indicating if the gradient has been computed. */
 };
 
-
 /**
  * @brief Allocates and initializes a new computational graph node.
  *
@@ -83,7 +82,7 @@ static inline cgrad_error computational_graph_node_set_context_tensor(struct com
 
 static inline cgrad_error computational_graph_node_set_context_tensor(struct computational_graph_node *const node, struct tensor *t, const context_id ctx_id)
 {
-    return context_set_tensor(&node->ctx, t, ctx_id);
+    return context_set_operand(&node->ctx, t, ctx_id);
 }
 
 #endif
