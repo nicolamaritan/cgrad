@@ -5,6 +5,7 @@
 #include "model/model_params.h"
 #include "tensor/tensor.h"
 #include "optimizers/sgd.h"
+#include "memory/tensor_pool.h"
 #include "utils/random.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,6 +37,20 @@ int main()
     }
 
     build_example_dataset(x, y_target);
+
+    // Memory initialization
+    struct tensor_pool t_pool;
+    if (tensor_pool_init(&t_pool) != NO_ERROR)
+    {
+        return EXIT_FAILURE;
+    }
+
+    printf("%p\n", t_pool.data_chunk_head);
+    void* ptr = tensor_pool_data_alloc(&t_pool);
+    printf("%p\n", ptr);
+    printf("%p\n", t_pool.data_chunk_head);
+
+    return EXIT_SUCCESS;
 
     // Allocate model
     struct linear_layer *linear1 = linear_alloc(input_dim, hidden_dim);

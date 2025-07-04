@@ -5,9 +5,10 @@
 #include "model/model_params.h"
 #include "tensor/tensor.h"
 #include "optimizers/sgd.h"
-#include "utils/random.h"
 #include "dataset/csv_dataset.h"
 #include "dataset/indexes_permutation.h"
+#include "memory/tensor_pool.h"
+#include "utils/random.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>

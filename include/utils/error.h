@@ -41,6 +41,10 @@ typedef enum
     // Index Batch
     INDEXES_BATCH_NULL,
 
+    // Memory
+    MEMORY_POOL_NULL,
+    MEMORY_POOL_CHUNK_ALLOCATION_FAILED,
+
     // General
     INPUT_PTR_NULL,
     OUTPUT_PTR_NULL,
