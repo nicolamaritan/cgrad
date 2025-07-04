@@ -5,24 +5,39 @@
 #include <cblas.h>
 #include <stdlib.h>
 
-void tensor2d_mult_unchecked(const tensor *const A, const tensor *const B, tensor *const out);
+typedef enum tensor2d_mult_operand
+{
+    LHS_TENSOR,
+    RHS_TENSOR,
+} tensor2d_mult_operand;
 
-cgrad_error tensor2d_mult(const tensor *const A, const tensor *const B, tensor *const out)
+static void tensor2d_mult_backpropagate_lhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static void tensor2d_mult_backpropagate_rhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+
+cgrad_error tensor2d_mult(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
 {
     if (!A || !B || !out)
+    {
         return TENSOR_NULL;
+    }
     if (!A->shape || !B->shape || !out->shape)
+    {
         return TENSOR_SHAPE_NULL;
+    }
     if (A->shape[1] != B->shape[0])
+    {
         return TENSOR_SHAPE_MISMATCH; // Columns of A != rows of B
+    }
     if (out->shape[0] != A->shape[0] || out->shape[1] != B->shape[1])
+    {
         return TENSOR_SHAPE_MISMATCH; // Output shape mismatch
+    }
 
     tensor2d_mult_unchecked(A, B, out);
     return NO_ERROR;
 }
 
-cgrad_error tensor2d_mult_graph(tensor *const A, tensor *const B, tensor *const out)
+cgrad_error tensor2d_mult_graph(struct tensor *const A, struct tensor *const B, struct tensor *const out)
 {
     cgrad_error err = tensor2d_mult(A, B, out);
 
@@ -43,7 +58,7 @@ cgrad_error tensor2d_mult_graph(tensor *const A, tensor *const B, tensor *const 
     return err;
 }
 
-void tensor2d_mult_unchecked(const tensor *const A, const tensor *const B, tensor *const out)
+void tensor2d_mult_unchecked(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
 {
     cblas_dgemm(
         CblasRowMajor,
@@ -63,19 +78,19 @@ void tensor2d_mult_unchecked(const tensor *const A, const tensor *const B, tenso
     );
 }
 
-void tensor2d_mult_backpropagate_lhs(const tensor **const operands, const tensor *const grad_wrt_out, tensor *grad_wrt_operand)
+static void tensor2d_mult_backpropagate_lhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 { 
-    const tensor *rhs = operands[RHS_TENSOR];
-    tensor *rhs_trans= tensor2d_no_grad_alloc(rhs->shape[1], rhs->shape[0]);
+    const struct tensor *rhs = ctx->operands[RHS_TENSOR];
+    struct tensor *rhs_trans= tensor2d_no_grad_alloc(rhs->shape[1], rhs->shape[0]);
     tensor2d_trans(rhs, rhs_trans);
     tensor2d_mult(grad_wrt_out, rhs_trans, grad_wrt_operand);
     tensor_no_grad_free(rhs_trans);
 }
 
-void tensor2d_mult_backpropagate_rhs(const tensor **const operands, const tensor *const grad_wrt_out, tensor *grad_wrt_operand)
+static void tensor2d_mult_backpropagate_rhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 { 
-    const tensor* lhs = operands[LHS_TENSOR];
-    tensor *lhs_trans = tensor2d_no_grad_alloc(lhs->shape[1], lhs->shape[0]);
+    const struct tensor* lhs = ctx->operands[LHS_TENSOR];
+    struct tensor *lhs_trans = tensor2d_no_grad_alloc(lhs->shape[1], lhs->shape[0]);
     tensor2d_trans(lhs, lhs_trans);
     tensor2d_mult(lhs_trans, grad_wrt_out, grad_wrt_operand);
     tensor_no_grad_free(lhs_trans);

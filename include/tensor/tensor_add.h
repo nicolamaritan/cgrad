@@ -4,16 +4,8 @@
 #include "tensor/tensor.h"
 #include "autograd/backpropagation_function.h"
 
-typedef enum tensor_add_operand
-{
-    LHS_TENSOR = 0,
-    RHS_TENSOR = 1,
-} tensor_add_operand;
-
-cgrad_error tensor_add(const tensor *const A, const tensor *const B, tensor *const out);
-cgrad_error tensor_add_graph(tensor *const A, tensor *const B, tensor *const out);
-void tensor_add_unchecked(const tensor *const A, const tensor *const B, tensor *const out);
-void tensor_add_backpropagate(const tensor **const operands, const tensor *const grad_wrt_out, tensor *grad_wrt_operand);
-
+cgrad_error tensor_add(const struct tensor *const A, const struct tensor *const B, struct tensor *const out);
+cgrad_error tensor_add_graph(struct tensor *const A, struct tensor *const B, struct tensor *const out);
+void tensor_add_unchecked(const struct tensor *const A, const struct tensor *const B, struct tensor *const out);
 
 #endif

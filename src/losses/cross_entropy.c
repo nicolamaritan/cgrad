@@ -1,18 +1,31 @@
-#include "loss/cross_entropy.h"
+#include "losses/cross_entropy.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 
-double compute_softmax_normalization(const tensor* const logits, const size_t row);
+typedef enum cross_entropy_loss_operand
+{
+    CROSS_ENTROPY_PREDICTED,
+    CROSS_ENTROPY_TARGET
+} cross_entropy_loss_operand;
 
-cgrad_error cross_entropy_loss(const tensor* const logits, const tensor* const targets, tensor* const loss)
+static void cross_entropy_loss_backpropagate_predicted(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static double compute_softmax_normalization(const struct tensor* const logits, const size_t row);
+
+cgrad_error cross_entropy_loss(const struct tensor* const logits, const struct tensor* const targets, struct tensor* const loss)
 {
     if (!logits|| !targets|| !loss)
+    {
         return TENSOR_NULL;
+    }
     if (!logits->data || !targets->data || !loss->data)
+    {
         return TENSOR_DATA_NULL;
+    }
     if (!logits->shape || !targets->shape || !loss->shape)
+    {
         return TENSOR_SHAPE_NULL;
+    }
     // TODO add check on tensor shape
 
     double batch_size = logits->shape[0];
@@ -41,38 +54,32 @@ cgrad_error cross_entropy_loss(const tensor* const logits, const tensor* const t
     return NO_ERROR;
 }
 
-cgrad_error cross_entropy_loss_graph(tensor* const logits, tensor* const targets, tensor* const loss)
+cgrad_error cross_entropy_loss_graph(struct tensor* const logits, struct tensor* const targets, struct tensor* const loss)
 {
     cgrad_error err = cross_entropy_loss(logits, targets, loss);
     if (err != NO_ERROR)
+    {
         return err;
-
-    computational_graph_node *logits_node = logits->node ? logits->node : computational_graph_node_tensor_alloc(logits);
-    computational_graph_node *targets_node = targets->node ? targets->node : computational_graph_node_tensor_alloc(targets);
-
-    targets_node->t = (tensor *)targets;
-
-    computational_graph_node *loss_node = computational_graph_node_tensor_alloc(loss);
+    }
 
     // Setup connections
     // In CrossEntropy, targets are not differentiable, so only the logits node is added. Still, the target tensor is added as operand for backward.
-    add_parent(logits_node, loss_node, CROSS_ENTROPY_PREDICTED);
-    add_child(loss_node, logits_node);
+    err = add_computational_graph_link(logits, CROSS_ENTROPY_PREDICTED, loss, &cross_entropy_loss_backpropagate_predicted);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
 
-    // Setup backpropation functions 
-    loss_node->function[CROSS_ENTROPY_PREDICTED] = (backpropagation_function)&cross_entropy_loss_backpropagate_predicted;
-
-    // Setup operands
-    loss_node->tensor_operands[CROSS_ENTROPY_PREDICTED] = logits;
-    loss_node->tensor_operands[CROSS_ENTROPY_TARGET] = targets;
+    // Setup operands manually, as the target was not added to the computational graph as node
+    computational_graph_node_set_context_tensor(loss->node, targets, CROSS_ENTROPY_TARGET);
 
     return NO_ERROR;
 }
 
-void cross_entropy_loss_backpropagate_predicted(const tensor **const operands, const tensor* const grad_wrt_out, tensor* grad_wrt_operand)
+static void cross_entropy_loss_backpropagate_predicted(const struct backpropagation_context *const ctx, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
 {
-    const tensor *logits = operands[CROSS_ENTROPY_PREDICTED];
-    const tensor *targets= operands[CROSS_ENTROPY_TARGET];
+    const struct tensor *logits = ctx->operands[CROSS_ENTROPY_PREDICTED];
+    const struct tensor *targets= ctx->operands[CROSS_ENTROPY_TARGET];
     double batch_size = logits->shape[0];
     size_t num_classes = logits->shape[1];
 
@@ -98,7 +105,7 @@ void cross_entropy_loss_backpropagate_predicted(const tensor **const operands, c
     }
 }
 
-double compute_softmax_normalization(const tensor* const logits, const size_t row)
+static double compute_softmax_normalization(const struct tensor* const logits, const size_t row)
 {
     double softmax_normalization = 0;
     size_t logits_size = logits->shape[1];

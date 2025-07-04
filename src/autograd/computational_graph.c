@@ -3,9 +3,33 @@
 #include <stdio.h>
 #include <string.h>
 
-computational_graph_node *computational_graph_node_alloc()
+/**
+ * @brief Adds a child node to a computational graph node.
+ *
+ * @param node The parent node.
+ * @param child The child node to add.
+ * @return NO_ERROR if successful, otherwise an appropriate error code.
+ */
+static cgrad_error add_child(struct computational_graph_node *const node, struct computational_graph_node *const child);
+
+/**
+ * @brief Adds a parent node to a computational graph node.
+ *
+ * @param node The child node.
+ * @param parent The parent node to add.
+ * @param operand The operand associated with the parent.
+ * @return NO_ERROR if successful, otherwise an appropriate error code.
+ */
+static cgrad_error add_parent(struct computational_graph_node *const node, struct computational_graph_node *const parent, const size_t operand);
+
+struct computational_graph_node *computational_graph_node_alloc()
 {
-    computational_graph_node *node = (computational_graph_node *)malloc(sizeof(computational_graph_node));
+    struct computational_graph_node *node = (struct computational_graph_node *)malloc(sizeof(struct computational_graph_node));
+    if (!node)
+    {
+        return NULL;
+    }
+
     node->n_children = 0;
     node->n_parents = 0;
     node->t = NULL;
@@ -17,71 +41,64 @@ computational_graph_node *computational_graph_node_alloc()
     memset(node->children, 0, sizeof(node->children));
     memset(node->parents_operands, 0, sizeof(node->parents_operands));
     memset(node->function, 0, sizeof(node->function));
-    memset(node->tensor_operands, 0, sizeof(node->tensor_operands));
+    context_init(&node->ctx); // Pointer is not NULL at this point
 
     return node;
 }
 
-computational_graph_node *computational_graph_node_tensor_alloc(tensor *const t)
+struct computational_graph_node *computational_graph_node_tensor_alloc(struct tensor *const t)
 {
-    computational_graph_node *node = computational_graph_node_alloc();
+    struct computational_graph_node *node = computational_graph_node_alloc();
+    if (!node)
+    {
+        return NULL;
+    }
+
     t->node = node;
     node->t = t;
     return node;
 }
 
-void free_computational_graph_node(computational_graph_node *const node)
+void free_computational_graph_node(struct computational_graph_node *const node)
 {
     if (node->t->node)
+    {
         node->t->node = NULL;
+    }
 
+    context_cleanup_owned(&node->ctx);
     free(node);
 }
 
-cgrad_error add_child(computational_graph_node *const node, computational_graph_node *const child)
+cgrad_error add_computational_graph_link(struct tensor* operand, size_t operand_id, struct tensor* result, backpropagation_function backprop_function)
 {
-    size_t const n_children = node->n_children;
-    if (n_children >= AUTOGRAD_MAX_CHILDREN)
+    struct computational_graph_node *operand_node = operand->node ? operand->node : computational_graph_node_tensor_alloc(operand);
+    if (!operand_node)
     {
-        return AUTOGRAD_MAX_CHILDREN_EXCEEDED;
+        return AUTOGRAD_COMPUTATIONAL_GRAPH_NODE_ALLOCATION_ERROR;
     }
 
-    node->children[n_children] = child;
-    node->n_children++;
-
-    return NO_ERROR;
-}
-
-cgrad_error add_parent(computational_graph_node *const node, computational_graph_node *const parent, const size_t operand)
-{
-    size_t const n_parents = node->n_parents;
-    if (n_parents >= AUTOGRAD_MAX_PARENTS)
+    struct computational_graph_node *result_node = result->node ? result->node : computational_graph_node_tensor_alloc(result);
+    if (!result_node)
     {
-        return AUTOGRAD_MAX_PARENTS_EXCEEDED;
+        free_computational_graph_node(operand_node);
+        return AUTOGRAD_COMPUTATIONAL_GRAPH_NODE_ALLOCATION_ERROR;
     }
-
-    node->parents[n_parents] = parent;
-    node->parents_operands[n_parents] = operand;
-    node->n_parents++;
-
-    return NO_ERROR;
-}
-
-cgrad_error add_computational_graph_link(tensor* operand, size_t operand_id, tensor* result, backpropagation_function backprop_function)
-{
-    computational_graph_node *operand_node = operand->node ? operand->node : computational_graph_node_tensor_alloc(operand);
-    computational_graph_node *result_node = result->node ? result->node : computational_graph_node_tensor_alloc(result);
 
     // Setup connection
     cgrad_error error = add_parent(operand_node, result_node, operand_id);
     if (error != NO_ERROR)
     {
+        free_computational_graph_node(operand_node);
+        free_computational_graph_node(result_node);
         return error;
     }
 
     error = add_child(result_node, operand_node);
     if (error != NO_ERROR)
     {
+        free_computational_graph_node(operand_node);
+        free_computational_graph_node(result_node);
         return error;
     }
 
@@ -89,12 +106,12 @@ cgrad_error add_computational_graph_link(tensor* operand, size_t operand_id, ten
     result_node->function[operand_id] = backprop_function; 
 
     // Setup operand in the tensor operands pointer
-    result_node->tensor_operands[operand_id] = operand;
+    context_set_operand(&result_node->ctx, operand, operand_id);
 
     return NO_ERROR;
 }
 
-void print_computational_graph_node(const computational_graph_node *node)
+void print_computational_graph_node(const struct computational_graph_node *node)
 {
     if (!node)
     {
@@ -114,6 +131,34 @@ void print_computational_graph_node(const computational_graph_node *node)
     {
         printf("│   ├── Child %zu: %p\n", i, (void *)node->children[i]);
     }
-    // printf("├── Backprop Data: %p\n", (void *)node->data);
     printf("└── Backprop Function: %p\n\n", (void *)node->function);
+}
+
+static cgrad_error add_child(struct computational_graph_node *const node, struct computational_graph_node *const child)
+{
+    size_t const n_children = node->n_children;
+    if (n_children >= AUTOGRAD_MAX_CHILDREN)
+    {
+        return AUTOGRAD_MAX_CHILDREN_EXCEEDED;
+    }
+
+    node->children[n_children] = child;
+    node->n_children++;
+
+    return NO_ERROR;
+}
+
+static cgrad_error add_parent(struct computational_graph_node *const node, struct computational_graph_node *const parent, const size_t operand)
+{
+    size_t const n_parents = node->n_parents;
+    if (n_parents >= AUTOGRAD_MAX_PARENTS)
+    {
+        return AUTOGRAD_MAX_PARENTS_EXCEEDED;
+    }
+
+    node->parents[n_parents] = parent;
+    node->parents_operands[n_parents] = operand;
+    node->n_parents++;
+
+    return NO_ERROR;
 }
