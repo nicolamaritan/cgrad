@@ -7,7 +7,7 @@
 #include "optimizers/sgd.h"
 #include "dataset/csv_dataset.h"
 #include "dataset/indexes_permutation.h"
-#include "memory/tensor_pool.h"
+#include "memory/tensor_pool_alloc.h"
 #include "utils/random.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,6 +26,12 @@ int main(int argc, char **argv)
 
     const int SEED = 42;
     init_random_seed(SEED);
+
+    struct tensor_pool t_pool;
+    if (tensor_pool_init(&t_pool) != NO_ERROR)
+    {
+        return EXIT_FAILURE;
+    }
 
     const size_t batch_size = 64;
     const size_t input_dim = 784;
@@ -99,8 +105,8 @@ int main(int argc, char **argv)
             size_t remaining = index_permutation_get_remaining(permutation);
             size_t iter_batch_size = remaining < batch_size ? remaining : batch_size;
 
-            struct tensor *x = tensor2d_alloc(iter_batch_size, input_dim);
-            struct tensor *y = tensor2d_alloc(iter_batch_size, 1);
+            struct tensor *x = tensor2d_pool_alloc(&t_pool, iter_batch_size, input_dim);
+            struct tensor *y = tensor2d_pool_alloc(&t_pool, iter_batch_size, 1);
             if (!x || !y)
             {
                 return EXIT_FAILURE;
@@ -121,27 +127,27 @@ int main(int argc, char **argv)
             // ------------- Forward -------------
 
             // Linear 1
-            struct tensor *h1 = tensor2d_alloc(iter_batch_size, hidden_dim);
+            struct tensor *h1 = tensor2d_pool_alloc(&t_pool, iter_batch_size, hidden_dim);
             if (linear_forward_graph(x, linear1, h1) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
 
             // ReLU 1
-            struct tensor *h2 = tensor2d_alloc(iter_batch_size, hidden_dim);
+            struct tensor *h2 = tensor2d_pool_alloc(&t_pool, iter_batch_size, hidden_dim);
             if (relu_forward_graph(h1, h2) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
 
             // Linear 2
-            struct tensor *h3 = tensor2d_alloc(iter_batch_size, num_classes);
+            struct tensor *h3 = tensor2d_pool_alloc(&t_pool, iter_batch_size, num_classes);
             if (linear_forward_graph(h2, linear2, h3) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
 
-            struct tensor *z = tensor2d_alloc(1, 1);
+            struct tensor *z = tensor2d_pool_alloc(&t_pool, 1, 1);
             if (cross_entropy_loss_graph(h3, y, z) != NO_ERROR)
             {
                 return EXIT_FAILURE;
@@ -159,12 +165,12 @@ int main(int argc, char **argv)
             sgd_step(lr, momentum, false, &opt_state, &params);
 
             // Clear iteration allocations
-            tensor_free(x);
-            tensor_free(y);
-            tensor_free(h1);
-            tensor_free(h2);
-            tensor_free(h3);
-            tensor_free(z);
+            tensor_pool_free(&t_pool, x);
+            tensor_pool_free(&t_pool, y);
+            tensor_pool_free(&t_pool, h1);
+            tensor_pool_free(&t_pool, h2);
+            tensor_pool_free(&t_pool, h3);
+            tensor_pool_free(&t_pool, z);
 
             index_permutation_update(permutation, iter_batch_size);
             iteration++;

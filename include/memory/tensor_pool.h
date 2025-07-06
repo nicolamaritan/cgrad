@@ -2,21 +2,35 @@
 #define TENSOR_POOL_H
 
 #include "utils/error.h"
+#include "tensor/tensor.h"
 
-struct tensor_pool_chunk;
-struct tensor_pool_chunk
+struct tensor_pool_tensor_chunk;
+struct tensor_pool_tensor_chunk
 {
-    struct tensor_pool_chunk *next;
+    struct tensor_pool_tensor_chunk *next;
+    struct tensor t;
+};
+
+struct tensor_pool_data_chunk;
+struct tensor_pool_data_chunk
+{
+    struct tensor_pool_data_chunk *next;
+    char data[];
 };
 
 struct tensor_pool
 {
-    struct tensor_pool_chunk *tensor_chunk_head;
-    struct tensor_pool_chunk *data_chunk_head; 
+    struct tensor_pool_tensor_chunk *tensor_chunk_head;
+    struct tensor_pool_data_chunk *data_chunk_head;
+    void *tensor_memory;
+    void *data_memory;
 };
 
 cgrad_error tensor_pool_init(struct tensor_pool *pool);
-void* tensor_pool_tensor_alloc(struct tensor_pool *pool);
-void* tensor_pool_data_alloc(struct tensor_pool *pool);
+void *tensor_pool_tensor_alloc(struct tensor_pool *pool);
+void *tensor_pool_data_alloc(struct tensor_pool *pool);
+void *tensor_pool_data_zero_alloc(struct tensor_pool *pool);
+void tensor_pool_tensor_free(struct tensor_pool *pool, void *ptr);
+void tensor_pool_data_free(struct tensor_pool *pool, void *ptr);
 
 #endif

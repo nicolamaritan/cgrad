@@ -5,7 +5,7 @@
 #include "model/model_params.h"
 #include "tensor/tensor.h"
 #include "optimizers/sgd.h"
-#include "memory/tensor_pool.h"
+#include "memory/tensor_pool_alloc.h"
 #include "utils/random.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,17 +27,6 @@ int main()
     const size_t hidden_dim = 128;
     const size_t out_dim = 1;
 
-    struct tensor *x = tensor2d_alloc(batch_size, input_dim);
-    struct tensor *y_target = tensor2d_alloc(batch_size, 1);
-    if (!x || !y_target)
-    {
-        tensor_free(x);
-        tensor_free(y_target);
-        return EXIT_FAILURE;
-    }
-
-    build_example_dataset(x, y_target);
-
     // Memory initialization
     struct tensor_pool t_pool;
     if (tensor_pool_init(&t_pool) != NO_ERROR)
@@ -45,12 +34,16 @@ int main()
         return EXIT_FAILURE;
     }
 
-    printf("%p\n", t_pool.data_chunk_head);
-    void* ptr = tensor_pool_data_alloc(&t_pool);
-    printf("%p\n", ptr);
-    printf("%p\n", t_pool.data_chunk_head);
+    struct tensor *x = tensor2d_pool_alloc(&t_pool, batch_size, input_dim);
+    struct tensor *y_target = tensor2d_pool_alloc(&t_pool, batch_size, 1);
+    if (!x || !y_target)
+    {
+        tensor_pool_free(&t_pool, x);
+        tensor_pool_free(&t_pool, y_target);
+        return EXIT_FAILURE;
+    }
 
-    return EXIT_SUCCESS;
+    build_example_dataset(x, y_target);
 
     // Allocate model
     struct linear_layer *linear1 = linear_alloc(input_dim, hidden_dim);
@@ -81,22 +74,22 @@ int main()
     for (size_t i = 0; i < epochs; i++)
     {
         // ------------- Forward -------------
-        struct tensor *h1 = tensor2d_alloc(batch_size, hidden_dim);
+        struct tensor *h1 = tensor2d_pool_alloc(&t_pool, batch_size, hidden_dim);
         if (linear_forward_graph(x, linear1, h1) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
 
-        struct tensor *h2 = tensor2d_alloc(batch_size, hidden_dim);
+        struct tensor *h2 = tensor2d_pool_alloc(&t_pool, batch_size, hidden_dim);
         relu_forward_graph(h1, h2);
 
-        struct tensor *h3 = tensor2d_alloc(batch_size, out_dim);
+        struct tensor *h3 = tensor2d_pool_alloc(&t_pool, batch_size, out_dim);
         if (linear_forward_graph(h2, linear2, h3) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
 
-        struct tensor *z = tensor2d_alloc(1, 1);
+        struct tensor *z = tensor2d_pool_alloc(&t_pool, 1, 1);
         if (mse_loss_graph(h3, y_target, z) != NO_ERROR)
         {
             return EXIT_FAILURE;
@@ -110,16 +103,16 @@ int main()
         sgd_step(lr, momentum, false, &opt_state, &params);
 
         // Clear iteration allocations
-        tensor_free(h1);
-        tensor_free(h2);
-        tensor_free(h3);
-        tensor_free(z);
+        tensor_pool_free(&t_pool, h1);
+        tensor_pool_free(&t_pool, h2);
+        tensor_pool_free(&t_pool, h3);
+        tensor_pool_free(&t_pool, z);
     }
 
     // Cleanup
     free_sgd_state_tensors(&opt_state);
-    tensor_free(x);
-    tensor_free(y_target);
+    tensor_pool_free(&t_pool, x);
+    tensor_pool_free(&t_pool, y_target);
     linear_free(linear1);
     linear_free(linear2);
     return EXIT_SUCCESS;
