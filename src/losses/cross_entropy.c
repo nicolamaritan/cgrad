@@ -22,10 +22,6 @@ cgrad_error cross_entropy_loss(const struct tensor* const logits, const struct t
     {
         return TENSOR_DATA_NULL;
     }
-    if (!logits->shape || !targets->shape || !loss->shape)
-    {
-        return TENSOR_SHAPE_NULL;
-    }
     // TODO add check on tensor shape
 
     double batch_size = logits->shape[0];

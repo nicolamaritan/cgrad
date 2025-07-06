@@ -1,6 +1,7 @@
 #ifndef TENSOR_H
 #define TENSOR_H
 
+#include "config.h"
 #include "utils/error.h"
 #include <stddef.h>
 #include <stdbool.h>
@@ -18,7 +19,7 @@ struct tensor;
 struct tensor
 {
     double *data;        /**< Pointer to the data stored in the tensor. */
-    size_t *shape;       /**< Pointer to the shape of the tensor. */
+    size_t shape[TENSOR_MAX_SHAPE_SIZE];       /**< Shape of the tensor. */
     size_t data_size;    /**< Total number of elements in the tensor. */
     size_t shape_size;   /**< Number of dimensions in the tensor. */
     struct computational_graph_node *node; /**< Pointer to the computational graph node for gradient tracking. */
@@ -206,10 +207,6 @@ static inline cgrad_error tensor_check_null(const struct tensor *const t)
     {
         return TENSOR_NULL;
     }
-    if (t->shape == NULL)
-    {
-        return TENSOR_SHAPE_NULL;
-    }
     if (t->data == NULL)
     {
         return TENSOR_DATA_NULL;
@@ -247,7 +244,6 @@ static inline void tensor2d_set_unchecked(struct tensor *t, size_t row, size_t c
  * @param value Value to be set.
  * @return NO_ERROR if successful, otherwise an appropriate error code:
  *         - TENSOR_NULL if the tensor pointer is null.
- *         - TENSOR_SHAPE_NULL if the tensor shape pointer is null.
  *         - TENSOR_DATA_NULL if the tensor data pointer is null.
  *         - TENSOR_INDEX_OUT_OF_BOUNDS if the row or column index is out of bounds.
  */
@@ -256,10 +252,6 @@ static inline cgrad_error tensor2d_set(struct tensor *t, size_t row, size_t col,
     if (t == NULL)
     {
         return TENSOR_NULL;
-    }
-    if (t->shape == NULL)
-    {
-        return TENSOR_SHAPE_NULL;
     }
     if (t->data == NULL)
     {

@@ -31,10 +31,6 @@ cgrad_error relu_forward(const struct tensor* const x, struct tensor* const out)
     {
         return TENSOR_DATA_NULL;
     }
-    if (!x->shape || !out->shape)
-    {
-        return TENSOR_SHAPE_NULL;
-    }
     if (!tensor_same_shape(x, out))
     {
         return TENSOR_SHAPE_MISMATCH;

@@ -27,10 +27,6 @@ cgrad_error tensor_add(const struct tensor *const A, const struct tensor *const 
     {
         return TENSOR_DATA_NULL;
     }
-    if (!A->shape || !B->shape || !out->shape)
-    {
-        return TENSOR_SHAPE_NULL;
-    } 
     if (A->data_size != B->data_size || B->data_size != out->data_size)
     {
         return TENSOR_DATA_SIZE_MISMATCH;

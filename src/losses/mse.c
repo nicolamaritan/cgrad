@@ -21,10 +21,6 @@ cgrad_error mse_loss(const struct tensor *const y_pred, const struct tensor *con
     {
         return TENSOR_DATA_NULL;
     }
-    if (!y_pred->shape || !y_target->shape || !z->shape)
-    {
-        return TENSOR_SHAPE_NULL;
-    }
     if (y_pred->data_size != y_target->data_size)
     {
         return TENSOR_DATA_SIZE_MISMATCH;

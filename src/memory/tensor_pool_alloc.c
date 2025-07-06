@@ -41,20 +41,10 @@ struct tensor *tensor_pool_no_grad_alloc(struct tensor_pool *pool, size_t *shape
         return NULL;
     }
 
-    size_t *_shape = (size_t *)malloc((shape_size + 1) * sizeof(size_t));
-    if (!_shape)
-    {
-        tensor_pool_tensor_free(pool, t);
-        tensor_pool_data_free(pool, data);
-        return NULL;
-    }
-
     // Init _shape
-    memcpy(_shape, shape, shape_size * sizeof(size_t));
-    _shape[shape_size] = 0;
+    memcpy(t->shape, shape, shape_size * sizeof(size_t));
 
     t->data = data;
-    t->shape = _shape;
     t->node = NULL;
     t->data_size = data_size;
     t->shape_size = shape_size;
@@ -85,20 +75,10 @@ struct tensor *tensor_pool_no_grad_zero_alloc(struct tensor_pool *pool, size_t *
         return NULL;
     }
 
-    size_t *_shape = (size_t *)malloc((shape_size + 1) * sizeof(size_t));
-    if (!_shape)
-    {
-        tensor_pool_tensor_free(pool, t);
-        tensor_pool_data_free(pool, data);
-        return NULL;
-    }
-
     // Init _shape
-    memcpy(_shape, shape, shape_size * sizeof(size_t));
-    _shape[shape_size] = 0;
+    memcpy(t->shape, shape, shape_size * sizeof(size_t));
 
     t->data = data;
-    t->shape = _shape;
     t->node = NULL;
     t->data_size = data_size;
     t->shape_size = shape_size;
@@ -123,9 +103,6 @@ void tensor_pool_free(struct tensor_pool *pool, struct tensor *t)
     tensor_pool_data_free(pool, t->data);
     t->data = NULL;
 
-    free(t->shape);
-    t->shape = NULL;
-
     if (t->grad)
     {
         tensor_pool_no_grad_free(pool, t->grad);
@@ -149,9 +126,6 @@ void tensor_pool_no_grad_free(struct tensor_pool *pool, struct tensor *t)
 
     tensor_pool_data_free(pool, t->data);
     t->data = NULL;
-
-    free(t->shape);
-    t->shape = NULL;
 
     tensor_pool_tensor_free(pool, t);
 }
@@ -188,21 +162,12 @@ struct tensor *tensor2d_pool_no_grad_alloc(struct tensor_pool *pool, size_t rows
         return NULL;
     }
 
-    size_t *shape = (size_t *)malloc(3 * sizeof(size_t));
-    if (!shape)
-    {
-        tensor_pool_tensor_free(pool, t);
-        tensor_pool_data_free(pool, data);
-        return NULL;
-    }
-
     // Set the 2 dimensions and null terminator
-    shape[0] = rows;
-    shape[1] = cols;
-    shape[2] = 0;
+    t->shape[0] = rows;
+    t->shape[1] = cols;
+    t->shape[2] = 0;
 
     t->data = data;
-    t->shape = shape;
     t->node = NULL;
     t->data_size = rows * cols;
     t->shape_size = 2;

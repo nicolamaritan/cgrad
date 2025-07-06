@@ -20,10 +20,6 @@ cgrad_error tensor2d_mult(const struct tensor *const A, const struct tensor *con
     {
         return TENSOR_NULL;
     }
-    if (!A->shape || !B->shape || !out->shape)
-    {
-        return TENSOR_SHAPE_NULL;
-    }
     if (A->shape[1] != B->shape[0])
     {
         return TENSOR_SHAPE_MISMATCH; // Columns of A != rows of B

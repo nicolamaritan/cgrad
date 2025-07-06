@@ -11,7 +11,6 @@ typedef enum
 
     // Tensor operations errors
     TENSOR_NULL,                 /**< Tensor pointer is null. */
-    TENSOR_SHAPE_NULL,           /**< Tensor shape pointer is null. */
     TENSOR_WRONG_SHAPE,          /**< Tensor has an incorrect shape. */
     TENSOR_DATA_NULL,            /**< Tensor data pointer is null. */
     TENSOR_INDEX_OUT_OF_BOUNDS,  /**< Index is out of bounds for the tensor. */

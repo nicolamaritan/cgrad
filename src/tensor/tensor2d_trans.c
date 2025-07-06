@@ -14,10 +14,6 @@ cgrad_error tensor2d_trans(const struct tensor *const t, struct tensor *const ou
     {
         return TENSOR_NULL;
     }
-    if (!t->shape || !out->shape)
-    {
-        return TENSOR_SHAPE_NULL;
-    }
     if (!t->data || !out->data)
     {
         return TENSOR_DATA_NULL;

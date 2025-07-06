@@ -1,6 +1,9 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+// Tensor
+#define TENSOR_MAX_SHAPE_SIZE 8
+
 // Model
 #define MODEL_MAX_PARAMS 1024
 

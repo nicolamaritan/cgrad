@@ -21,10 +21,6 @@ cgrad_error tensor2d_add_row_vector(const struct tensor *const A, const struct t
     {
         return TENSOR_DATA_NULL;
     }
-    if (!A->shape || !v->shape)
-    {
-        return TENSOR_SHAPE_NULL;
-    }
     if (A->shape_size != 2 || v->shape_size != 2)
     {
         return TENSOR_WRONG_SHAPE;
@@ -52,10 +48,6 @@ cgrad_error tensor2d_add_row_vector_graph(struct tensor *const A, struct tensor 
     if (!A->data || !v->data)
     {
         return TENSOR_DATA_NULL;
-    }
-    if (!A->shape || !v->shape)
-    {
-        return TENSOR_SHAPE_NULL;
     }
     if (A->shape_size != 2 || v->shape_size != 2)
     {
