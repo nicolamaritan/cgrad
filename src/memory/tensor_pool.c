@@ -16,21 +16,21 @@ cgrad_error tensor_pool_init(struct tensor_pool *pool)
         return MEMORY_POOL_NULL;
     }
 
-    pool->tensor_memory= calloc(MEMORY_TENSOR_POOL_N_CHUNKS, sizeof(struct tensor_pool_tensor_chunk));
+    pool->tensor_memory= calloc(MEMORY_TENSOR_POOL_N_CHUNKS, sizeof(struct tensor_chunk));
     if (!pool->tensor_memory)
     {
         return MEMORY_POOL_CHUNK_ALLOCATION_FAILED;
     }
-    pool->tensor_chunk_head = (struct tensor_pool_tensor_chunk *)pool->tensor_memory;
+    pool->tensor_chunk_head = (struct tensor_chunk *)pool->tensor_memory;
 
-    const size_t DATA_CHUNK_SIZE = sizeof(struct tensor_pool_data_chunk) + MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE;
+    const size_t DATA_CHUNK_SIZE = sizeof(struct data_chunk) + MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE;
     pool->data_memory = calloc(MEMORY_TENSOR_POOL_N_CHUNKS, DATA_CHUNK_SIZE);
     if (!pool->data_memory)
     {
         free(pool->tensor_memory);
         return MEMORY_POOL_CHUNK_ALLOCATION_FAILED;
     }
-    pool->data_chunk_head = (struct tensor_pool_data_chunk *)pool->data_memory;
+    pool->data_chunk_head = (struct data_chunk *)pool->data_memory;
 
     tensor_pool_init_chunks(pool);
     return NO_ERROR;
@@ -81,7 +81,7 @@ void tensor_pool_tensor_free(struct tensor_pool *pool, void *ptr)
         return;
     }
 
-    struct tensor_pool_tensor_chunk *chunk = (struct tensor_pool_tensor_chunk *)((char *)ptr - offsetof(struct tensor_pool_tensor_chunk, t));
+    struct tensor_chunk *chunk = (struct tensor_chunk *)((char *)ptr - offsetof(struct tensor_chunk, t));
     chunk->next = pool->tensor_chunk_head;
     pool->tensor_chunk_head = chunk;
 }
@@ -93,24 +93,23 @@ void tensor_pool_data_free(struct tensor_pool *pool, void *ptr)
         return;
     }
 
-    struct tensor_pool_data_chunk *chunk = (struct tensor_pool_data_chunk *)((char *)ptr - offsetof(struct tensor_pool_data_chunk, data));
-    assert(((size_t)((void*)chunk - pool->data_memory) % (sizeof(struct tensor_pool_data_chunk) + MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE)) == 0);
+    struct data_chunk *chunk = (struct data_chunk *)((char *)ptr - offsetof(struct data_chunk, data));
+    assert(((size_t)((void*)chunk - pool->data_memory) % (sizeof(struct data_chunk) + MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE)) == 0);
     chunk->next = pool->data_chunk_head;
     pool->data_chunk_head = chunk;
 }
 
 static void tensor_pool_init_chunks(struct tensor_pool *pool)
 {
-    struct tensor_pool_tensor_chunk *tensor_chunk_current = (struct tensor_pool_tensor_chunk *) pool->tensor_memory;
-    struct tensor_pool_data_chunk *data_chunk_current = (struct tensor_pool_data_chunk *) pool->data_memory;
+    struct tensor_chunk *tensor_chunk_current = (struct tensor_chunk *) pool->tensor_memory;
+    struct data_chunk *data_chunk_current = (struct data_chunk *) pool->data_memory;
 
     for (size_t i = 0; i < MEMORY_TENSOR_POOL_N_CHUNKS - 1; i++)
     {
-        tensor_chunk_current->next = (struct tensor_pool_tensor_chunk *)((char *)tensor_chunk_current + sizeof(struct tensor_pool_tensor_chunk));
+        tensor_chunk_current->next = (struct tensor_chunk *)((char *)tensor_chunk_current + sizeof(struct tensor_chunk));
         tensor_chunk_current = tensor_chunk_current->next;
 
-        data_chunk_current->next = (struct tensor_pool_data_chunk *)((char *)data_chunk_current + sizeof(struct tensor_pool_data_chunk) + MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE);
-        // printf("%td\n", (void*)data_chunk_current->next - (void*)data_chunk_current);
+        data_chunk_current->next = (struct data_chunk *)((char *)data_chunk_current + sizeof(struct data_chunk) + MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE);
         data_chunk_current = data_chunk_current->next;
     }
 

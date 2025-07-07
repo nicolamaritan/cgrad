@@ -3,25 +3,26 @@
 
 #include "utils/error.h"
 #include "tensor/tensor.h"
+#include <stdalign.h>
 
-struct tensor_pool_tensor_chunk;
-struct tensor_pool_tensor_chunk
+struct tensor_chunk;
+struct tensor_chunk
 {
-    struct tensor_pool_tensor_chunk *next;
+    struct tensor_chunk *next;
     struct tensor t;
 };
 
-struct tensor_pool_data_chunk;
-struct tensor_pool_data_chunk
+struct data_chunk;
+struct data_chunk
 {
-    struct tensor_pool_data_chunk *next;
-    char data[];
+    struct data_chunk *next;
+    alignas(max_align_t) char data[];
 };
 
 struct tensor_pool
 {
-    struct tensor_pool_tensor_chunk *tensor_chunk_head;
-    struct tensor_pool_data_chunk *data_chunk_head;
+    struct tensor_chunk *tensor_chunk_head;
+    struct data_chunk *data_chunk_head;
     void *tensor_memory;
     void *data_memory;
 };
