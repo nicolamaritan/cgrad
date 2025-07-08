@@ -1,4 +1,4 @@
-#include "memory/tensor_pool.h"
+#include "memory/tensor_cpu_pool.h"
 #include "tensor/tensor.h"
 #include "utils/error.h"
 #include "config.h"
@@ -7,9 +7,9 @@
 #include <string.h>
 #include <assert.h>
 
-static void tensor_pool_init_chunks(struct tensor_pool *pool);
+static void tensor_pool_init_chunks(struct tensor_cpu_pool *pool);
 
-cgrad_error tensor_pool_init(struct tensor_pool *pool)
+cgrad_error tensor_pool_init(struct tensor_cpu_pool *pool)
 {
     if (!pool)
     {
@@ -36,7 +36,7 @@ cgrad_error tensor_pool_init(struct tensor_pool *pool)
     return NO_ERROR;
 }
 
-void *tensor_pool_tensor_alloc(struct tensor_pool *pool)
+void *tensor_pool_tensor_alloc(struct tensor_cpu_pool *pool)
 {
     if (!pool || !pool->tensor_chunk_head)
     {
@@ -48,7 +48,7 @@ void *tensor_pool_tensor_alloc(struct tensor_pool *pool)
     return return_ptr;
 }
 
-void *tensor_pool_data_alloc(struct tensor_pool *pool)
+void *tensor_pool_data_alloc(struct tensor_cpu_pool *pool)
 {
     if (!pool || !pool->data_chunk_head)
     {
@@ -61,7 +61,7 @@ void *tensor_pool_data_alloc(struct tensor_pool *pool)
     return return_ptr;
 }
 
-void *tensor_pool_data_zero_alloc(struct tensor_pool *pool)
+void *tensor_pool_data_zero_alloc(struct tensor_cpu_pool *pool)
 {
     if (!pool || !pool->data_chunk_head)
     {
@@ -74,7 +74,7 @@ void *tensor_pool_data_zero_alloc(struct tensor_pool *pool)
     return return_ptr;
 }
 
-void tensor_pool_tensor_free(struct tensor_pool *pool, void *ptr)
+void tensor_pool_tensor_free(struct tensor_cpu_pool *pool, void *ptr)
 {
     if (!pool || !ptr)
     {
@@ -86,7 +86,7 @@ void tensor_pool_tensor_free(struct tensor_pool *pool, void *ptr)
     pool->tensor_chunk_head = chunk;
 }
 
-void tensor_pool_data_free(struct tensor_pool *pool, void *ptr)
+void tensor_pool_data_free(struct tensor_cpu_pool *pool, void *ptr)
 {
     if (!pool || !ptr)
     {
@@ -99,7 +99,7 @@ void tensor_pool_data_free(struct tensor_pool *pool, void *ptr)
     pool->data_chunk_head = chunk;
 }
 
-static void tensor_pool_init_chunks(struct tensor_pool *pool)
+static void tensor_pool_init_chunks(struct tensor_cpu_pool *pool)
 {
     struct tensor_chunk *tensor_chunk_current = (struct tensor_chunk *) pool->tensor_memory;
     struct data_chunk *data_chunk_current = (struct data_chunk *) pool->data_memory;

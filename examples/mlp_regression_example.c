@@ -28,7 +28,7 @@ int main()
     const size_t out_dim = 1;
 
     // Memory initialization
-    struct tensor_pool t_pool;
+    struct tensor_cpu_pool t_pool;
     if (tensor_pool_init(&t_pool) != NO_ERROR)
     {
         return EXIT_FAILURE;

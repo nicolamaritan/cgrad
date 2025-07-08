@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     const int SEED = 42;
     init_random_seed(SEED);
 
-    struct tensor_pool t_pool;
+    struct tensor_cpu_pool t_pool;
     if (tensor_pool_init(&t_pool) != NO_ERROR)
     {
         return EXIT_FAILURE;

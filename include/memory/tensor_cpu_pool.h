@@ -19,7 +19,7 @@ struct data_chunk
     alignas(max_align_t) char data[];
 };
 
-struct tensor_pool
+struct tensor_cpu_pool
 {
     struct tensor_chunk *tensor_chunk_head;
     struct data_chunk *data_chunk_head;
@@ -27,11 +27,11 @@ struct tensor_pool
     void *data_memory;
 };
 
-cgrad_error tensor_pool_init(struct tensor_pool *pool);
-void *tensor_pool_tensor_alloc(struct tensor_pool *pool);
-void *tensor_pool_data_alloc(struct tensor_pool *pool);
-void *tensor_pool_data_zero_alloc(struct tensor_pool *pool);
-void tensor_pool_tensor_free(struct tensor_pool *pool, void *ptr);
-void tensor_pool_data_free(struct tensor_pool *pool, void *ptr);
+cgrad_error tensor_pool_init(struct tensor_cpu_pool *pool);
+void *tensor_pool_tensor_alloc(struct tensor_cpu_pool *pool);
+void *tensor_pool_data_alloc(struct tensor_cpu_pool *pool);
+void *tensor_pool_data_zero_alloc(struct tensor_cpu_pool *pool);
+void tensor_pool_tensor_free(struct tensor_cpu_pool *pool, void *ptr);
+void tensor_pool_data_free(struct tensor_cpu_pool *pool, void *ptr);
 
 #endif

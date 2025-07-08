@@ -13,7 +13,7 @@ void tensor_cpu_no_grad_free(void *pool, struct tensor *t);
 
 struct tensor *tensor_cpu_clone(void *pool, const struct tensor *const src);
 
-struct tensor_allocator make_tensor_cpu_allocator(struct tensor_pool *pool)
+struct tensor_allocator make_tensor_cpu_allocator(struct tensor_cpu_pool *pool)
 {
     return (struct tensor_allocator)
     {
@@ -29,7 +29,7 @@ struct tensor_allocator make_tensor_cpu_allocator(struct tensor_pool *pool)
 
 struct tensor *tensor_cpu_alloc(void *pool, const size_t *const shape, const size_t shape_size)
 {
-    struct tensor_pool *cpu_pool = (struct tensor_pool *)pool;
+    struct tensor_cpu_pool *cpu_pool = (struct tensor_cpu_pool *)pool;
     struct tensor *t = tensor_cpu_no_grad_alloc(cpu_pool, shape, shape_size);
     if (!t)
     {
@@ -54,7 +54,7 @@ struct tensor* tensor_cpu_no_grad_alloc(void *pool, const size_t *const shape, c
         data_size *= shape[i];
     }
 
-    struct tensor_pool *cpu_pool = (struct tensor_pool *)pool;
+    struct tensor_cpu_pool *cpu_pool = (struct tensor_cpu_pool *)pool;
     struct tensor *t = tensor_pool_tensor_alloc(cpu_pool);
     if (!t)
     {
@@ -89,7 +89,7 @@ struct tensor *tensor_cpu_no_grad_zero_alloc(void *pool, const size_t *const sha
         data_size *= shape[i];
     }
 
-    struct tensor_pool *cpu_pool = (struct tensor_pool *)pool;
+    struct tensor_cpu_pool *cpu_pool = (struct tensor_cpu_pool *)pool;
     struct tensor *t = tensor_pool_tensor_alloc(cpu_pool);
     if (!t)
     {
@@ -122,7 +122,7 @@ void tensor_cpu_free(void *pool, struct tensor *t)
         return;
     }
 
-    struct tensor_pool *cpu_pool = (struct tensor_pool *)pool;
+    struct tensor_cpu_pool *cpu_pool = (struct tensor_cpu_pool *)pool;
     tensor_pool_data_free(cpu_pool, t->data);
     t->data = NULL;
 
@@ -147,7 +147,7 @@ void tensor_cpu_no_grad_free(void *pool, struct tensor *t)
         return;
     }
 
-    struct tensor_pool *cpu_pool = (struct tensor_pool *)pool;
+    struct tensor_cpu_pool *cpu_pool = (struct tensor_cpu_pool *)pool;
     tensor_pool_data_free(cpu_pool, t->data);
     t->data = NULL;
 
