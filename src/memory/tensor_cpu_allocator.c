@@ -54,6 +54,11 @@ struct tensor* tensor_cpu_no_grad_alloc(void *pool, const size_t *const shape, c
         data_size *= shape[i];
     }
 
+    if (data_size * sizeof(double) > MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE)
+    {
+        return NULL;
+    }
+
     struct tensor_cpu_pool *cpu_pool = (struct tensor_cpu_pool *)pool;
     struct tensor *t = tensor_pool_tensor_alloc(cpu_pool);
     if (!t)
@@ -61,6 +66,7 @@ struct tensor* tensor_cpu_no_grad_alloc(void *pool, const size_t *const shape, c
         return NULL;
     }
 
+    // TODO move check logic inside pool
     double *data = (double *)tensor_pool_data_alloc(cpu_pool);
     if (!data)
     {
@@ -87,6 +93,12 @@ struct tensor *tensor_cpu_no_grad_zero_alloc(void *pool, const size_t *const sha
     for (size_t i = 0; i < shape_size; i++)
     {
         data_size *= shape[i];
+    }
+
+    // TODO move check logic inside pool
+    if (data_size * sizeof(double) > MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE)
+    {
+        return NULL;
     }
 
     struct tensor_cpu_pool *cpu_pool = (struct tensor_cpu_pool *)pool;

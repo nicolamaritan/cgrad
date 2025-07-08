@@ -55,14 +55,14 @@ int main(int argc, char **argv)
     }
 
     // Allocate model
-    struct linear_layer *linear1 = linear_alloc(input_dim, hidden_dim);
+    struct linear_layer *linear1 = linear_alloc(input_dim, hidden_dim, &allocator);
     if (!linear1)
     {
         return EXIT_FAILURE;
     }
     linear_xavier_init(linear1);
 
-    struct linear_layer *linear2 = linear_alloc(hidden_dim, num_classes);
+    struct linear_layer *linear2 = linear_alloc(hidden_dim, num_classes, &allocator);
     if (!linear2)
     {
         return EXIT_FAILURE;

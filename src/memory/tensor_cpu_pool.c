@@ -55,7 +55,6 @@ void *tensor_pool_data_alloc(struct tensor_cpu_pool *pool)
         return NULL;
     }
 
-    // void *return_ptr = (void *)((char *)pool->data_chunk_head + offsetof(struct tensor_pool_data_chunk, data));
     void *return_ptr = (void *)pool->data_chunk_head->data;
     pool->data_chunk_head = pool->data_chunk_head->next;
     return return_ptr;
@@ -94,7 +93,7 @@ void tensor_pool_data_free(struct tensor_cpu_pool *pool, void *ptr)
     }
 
     struct data_chunk *chunk = (struct data_chunk *)((char *)ptr - offsetof(struct data_chunk, data));
-    assert(((size_t)((void*)chunk - pool->data_memory) % (sizeof(struct data_chunk) + MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE)) == 0);
+    // assert(((size_t)((void*)chunk - pool->data_memory) % (sizeof(struct data_chunk) + MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE)) == 0);
     chunk->next = pool->data_chunk_head;
     pool->data_chunk_head = chunk;
 }

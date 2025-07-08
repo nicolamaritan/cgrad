@@ -23,6 +23,7 @@ void backward(struct tensor* t, bool retain_graph)
     targets.size = 0;
 
     identify_backpropagation_nodes(t->node, &targets);
+    // printf("\n\n");
 
     set_gradient_wrt_itself(t);
     build_gradients(&targets);
@@ -44,6 +45,7 @@ static void identify_backpropagation_nodes(struct computational_graph_node* cons
 {
     node->is_involved_in_backprop = true;
     add_target(targets, node);
+    // printf("%p\n", node->t);
     for (size_t i = 0; i < node->n_children; i++)
     {
         identify_backpropagation_nodes(node->children[i], targets);
