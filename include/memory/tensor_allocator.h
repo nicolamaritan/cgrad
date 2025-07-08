@@ -25,6 +25,7 @@ static inline struct tensor *tensor_allocator_no_grad_alloc(struct tensor_alloca
 static inline struct tensor *tensor_allocator_no_grad_zero_alloc(struct tensor_allocator *allocator, size_t *shape, size_t shape_size);
 static inline void tensor_allocator_free(struct tensor_allocator *allocator, struct tensor *ptr);
 static inline void tensor_allocator_no_grad_free(struct tensor_allocator *allocator, struct tensor *ptr);
+static inline struct tensor* tensor_allocator_clone(struct tensor_allocator *allocator, struct tensor *src);
 
 struct tensor *tensor_allocator_alloc(struct tensor_allocator *allocator, size_t *shape, size_t shape_size)
 {
@@ -36,19 +37,24 @@ static inline struct tensor *tensor_allocator_no_grad_alloc(struct tensor_alloca
     return allocator->no_grad_alloc(allocator->pool, shape, shape_size);
 }
 
-struct tensor *tensor_allocator_no_grad_zero_alloc(struct tensor_allocator *allocator, size_t *shape, size_t shape_size)
+static inline struct tensor *tensor_allocator_no_grad_zero_alloc(struct tensor_allocator *allocator, size_t *shape, size_t shape_size)
 {
     return allocator->no_grad_zero_alloc(allocator->pool, shape, shape_size);
 }
 
-void tensor_allocator_free(struct tensor_allocator *allocator, struct tensor *ptr)
+static inline void tensor_allocator_free(struct tensor_allocator *allocator, struct tensor *ptr)
 {
     allocator->free(allocator->pool, ptr);
 }
 
-void tensor_allocator_no_grad_free(struct tensor_allocator *allocator, struct tensor *ptr)
+static inline void tensor_allocator_no_grad_free(struct tensor_allocator *allocator, struct tensor *ptr)
 {
     allocator->no_grad_free(allocator->pool, ptr);
+}
+
+static inline struct tensor* tensor_allocator_clone(struct tensor_allocator *allocator, struct tensor *src)
+{
+    return allocator->clone(allocator->pool, src);
 }
 
 #endif

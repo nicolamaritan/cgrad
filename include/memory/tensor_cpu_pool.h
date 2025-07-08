@@ -28,9 +28,9 @@ struct tensor_cpu_pool
 };
 
 cgrad_error tensor_pool_init(struct tensor_cpu_pool *pool);
-void *tensor_pool_tensor_alloc(struct tensor_cpu_pool *pool);
-void *tensor_pool_data_alloc(struct tensor_cpu_pool *pool);
-void *tensor_pool_data_zero_alloc(struct tensor_cpu_pool *pool);
+void *tensor_pool_tensor_alloc(struct tensor_cpu_pool *pool, const size_t size);
+void *tensor_pool_data_alloc(struct tensor_cpu_pool *pool, const size_t size);
+void *tensor_pool_data_zero_alloc(struct tensor_cpu_pool *pool, const size_t size);
 void tensor_pool_tensor_free(struct tensor_cpu_pool *pool, void *ptr);
 void tensor_pool_data_free(struct tensor_cpu_pool *pool, void *ptr);
 

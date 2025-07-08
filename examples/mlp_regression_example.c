@@ -69,8 +69,8 @@ int main()
     add_model_param(&params, linear2->biases);
 
     // Setup optimizer
-    struct sgd_state opt_state;
-    if (init_sgd_state(&opt_state, &params) != NO_ERROR)
+    struct sgd_optimizer opt_state;
+    if (init_sgd_state(&opt_state, &params, &allocator) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
