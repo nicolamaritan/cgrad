@@ -5,7 +5,7 @@
 #include "utils/error.h"
 #include <stddef.h>
 
-typedef struct tensor *(*alloc_fn)(void*, size_t*, size_t);
+typedef struct tensor *(*alloc_fn)(void*, const size_t *const, const size_t);
 typedef void (*free_fn)(void*, struct tensor*);
 typedef struct tensor *(*clone_fn)(void*, const struct tensor *const);
 

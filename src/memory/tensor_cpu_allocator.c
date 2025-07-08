@@ -1,21 +1,17 @@
 #include "memory/tensor_cpu_allocator.h"
+#include <string.h>
 
-struct tensor *tensor_cpu_alloc(void *pool, size_t *shape, size_t shape_size);
+struct tensor *tensor_cpu_alloc(void *pool, const size_t *const shape, const size_t shape_size);
 
-struct tensor* tensor_cpu_no_grad_alloc(void *pool, size_t *shape, size_t shape_size);
+struct tensor* tensor_cpu_no_grad_alloc(void *pool, const size_t *const shape, const size_t shape_size);
 
-struct tensor *tensor_cpu_no_grad_zero_alloc(void *pool, size_t *shape, size_t shape_size);
+struct tensor *tensor_cpu_no_grad_zero_alloc(void *pool, const size_t *const shape, const size_t shape_size);
 
 void tensor_cpu_free(void *pool, struct tensor *t);
 
 void tensor_cpu_no_grad_free(void *pool, struct tensor *t);
 
-struct tensor *tensor2d_cpu_alloc(void *pool, size_t rows, size_t cols);
-
-struct tensor *tensor2d_cpu_no_grad_alloc(void *pool, size_t rows, size_t cols);
-
 struct tensor *tensor_cpu_clone(void *pool, const struct tensor *const src);
-
 
 struct tensor_allocator make_tensor_cpu_allocator(struct tensor_pool *pool)
 {
@@ -31,42 +27,146 @@ struct tensor_allocator make_tensor_cpu_allocator(struct tensor_pool *pool)
     };    
 }
 
-struct tensor *tensor_cpu_alloc(void *pool, size_t *shape, size_t shape_size)
+struct tensor *tensor_cpu_alloc(void *pool, const size_t *const shape, const size_t shape_size)
 {
-    return tensor_pool_alloc((struct tensor_pool *)pool, shape, shape_size);
+    struct tensor_pool *cpu_pool = (struct tensor_pool *)pool;
+    struct tensor *t = tensor_cpu_no_grad_alloc(cpu_pool, shape, shape_size);
+    if (!t)
+    {
+        return NULL;
+    }
+
+    t->grad = tensor_cpu_no_grad_zero_alloc(cpu_pool, shape, shape_size);
+    if (!t->grad)
+    {
+        tensor_cpu_free(cpu_pool, t);
+        return NULL;
+    }
+    return t;
 }
 
-struct tensor* tensor_cpu_no_grad_alloc(void *pool, size_t *shape, size_t shape_size)
+struct tensor* tensor_cpu_no_grad_alloc(void *pool, const size_t *const shape, const size_t shape_size)
 {
-    return tensor_pool_no_grad_alloc((struct tensor_pool *)pool, shape, shape_size);
+    // Compute data_size, needed for data allocation
+    size_t data_size = 1;
+    for (size_t i = 0; i < shape_size; i++)
+    {
+        data_size *= shape[i];
+    }
+
+    struct tensor_pool *cpu_pool = (struct tensor_pool *)pool;
+    struct tensor *t = tensor_pool_tensor_alloc(cpu_pool);
+    if (!t)
+    {
+        return NULL;
+    }
+
+    double *data = (double *)tensor_pool_data_alloc(cpu_pool);
+    if (!data)
+    {
+        tensor_pool_tensor_free(cpu_pool, t);
+        return NULL;
+    }
+
+    // Init _shape
+    memcpy(t->shape, shape, shape_size * sizeof(size_t));
+
+    t->data = data;
+    t->node = NULL;
+    t->data_size = data_size;
+    t->shape_size = shape_size;
+    t->grad = NULL;
+
+    return t;
 }
 
-struct tensor *tensor_cpu_no_grad_zero_alloc(void *pool, size_t *shape, size_t shape_size)
+struct tensor *tensor_cpu_no_grad_zero_alloc(void *pool, const size_t *const shape, const size_t shape_size)
 {
-    return tensor_pool_no_grad_zero_alloc((struct tensor_pool *)pool, shape, shape_size);
+    // Compute data_size, needed for data allocation
+    size_t data_size = 1;
+    for (size_t i = 0; i < shape_size; i++)
+    {
+        data_size *= shape[i];
+    }
+
+    struct tensor_pool *cpu_pool = (struct tensor_pool *)pool;
+    struct tensor *t = tensor_pool_tensor_alloc(cpu_pool);
+    if (!t)
+    {
+        return NULL;
+    }
+
+    double *data = (double *)tensor_pool_data_zero_alloc(cpu_pool);
+    if (!data)
+    {
+        tensor_pool_tensor_free(cpu_pool, t);
+        return NULL;
+    }
+
+    // Init _shape
+    memcpy(t->shape, shape, shape_size * sizeof(size_t));
+
+    t->data = data;
+    t->node = NULL;
+    t->data_size = data_size;
+    t->shape_size = shape_size;
+    t->grad = NULL;
+
+    return t;
 }
 
 void tensor_cpu_free(void *pool, struct tensor *t)
 {
-    return tensor_pool_free((struct tensor_pool *)pool, t);
+    if (!t)
+    {
+        return;
+    }
+
+    struct tensor_pool *cpu_pool = (struct tensor_pool *)pool;
+    tensor_pool_data_free(cpu_pool, t->data);
+    t->data = NULL;
+
+    if (t->grad)
+    {
+        tensor_cpu_no_grad_free(cpu_pool, t->grad);
+        t->grad = NULL;
+    }
+
+    if (t->node)
+    {
+        t->node = NULL; // The node will be freed separately
+    }
+
+    tensor_pool_tensor_free(cpu_pool, t);
 }
 
 void tensor_cpu_no_grad_free(void *pool, struct tensor *t)
 {
-    return tensor_pool_no_grad_free((struct tensor_pool *)pool, t);
-}
+    if (!t)
+    {
+        return;
+    }
 
-struct tensor *tensor2d_cpu_alloc(void *pool, size_t rows, size_t cols)
-{
-    return tensor2d_pool_alloc((struct tensor_pool *)pool, rows, cols);
-}
+    struct tensor_pool *cpu_pool = (struct tensor_pool *)pool;
+    tensor_pool_data_free(cpu_pool, t->data);
+    t->data = NULL;
 
-struct tensor *tensor2d_cpu_no_grad_alloc(void *pool, size_t rows, size_t cols)
-{
-    return tensor2d_pool_no_grad_alloc((struct tensor_pool *)pool, rows, cols);
+    tensor_pool_tensor_free(cpu_pool, t);
 }
 
 struct tensor *tensor_cpu_clone(void *pool, const struct tensor *const src)
 {
-    return tensor_pool_clone((struct tensor_pool *)pool, src);
+    if (!src)
+    {
+        return NULL;
+    }
+
+    struct tensor *new_tensor = tensor_cpu_alloc(pool, src->shape, src->shape_size);
+    if (!new_tensor)
+    {
+        return NULL;
+    }
+
+    memcpy(new_tensor->data, src->data, src->shape[0] * src->shape[1] * sizeof(double));
+    return new_tensor;
 }
