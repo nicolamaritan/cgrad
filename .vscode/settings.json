@@ -3,6 +3,7 @@
         "array": "c",
         "string": "c",
         "string_view": "c",
-        "csv_dataset.h": "c"
+        "csv_dataset.h": "c",
+        "tensor.h": "c"
     }
 }

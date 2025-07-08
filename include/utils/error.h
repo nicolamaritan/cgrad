@@ -19,6 +19,13 @@ typedef enum
 
     // Model errors
     MODEL_MAX_PARAMS_EXCEEDED,
+    MODEL_PARAMS_NULL,
+
+    // Optimizers
+    OPTIMIZER_NULL,
+
+    // Allocator
+    ALLOCATOR_NULL,
 
     // Autograd errors
     AUTOGRAD_MAX_PARENTS_EXCEEDED,

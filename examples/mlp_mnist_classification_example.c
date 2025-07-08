@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     init_random_seed(SEED);
 
     struct tensor_cpu_pool t_pool;
-    if (tensor_pool_init(&t_pool) != NO_ERROR)
+    if (tensor_cpu_pool_init(&t_pool) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
@@ -78,8 +78,8 @@ int main(int argc, char **argv)
     add_model_param(&params, linear2->biases);
 
     // Setup optimizer
-    struct sgd_optimizer opt_state;
-    if (init_sgd_state(&opt_state, &params, &allocator) != NO_ERROR)
+    struct sgd_optimizer opt;
+    if (sgd_optimizer_init(&opt, &params, &allocator) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
@@ -178,7 +178,7 @@ int main(int argc, char **argv)
             zero_grad(&params);
             backward(z, false);
 
-            sgd_step(lr, momentum, false, &opt_state, &params);
+            sgd_optimizer_step(&opt, lr, momentum, false);
 
             // Clear iteration allocations
             tensor_allocator_free(&allocator, x);
@@ -194,7 +194,7 @@ int main(int argc, char **argv)
     }
 
     // Cleanup
-    free_sgd_state_tensors(&opt_state);
+    sgd_optimizer_cleanup(&opt);
     linear_free(linear1);
     linear_free(linear2);
     indexes_batch_free(ixs_batch);
