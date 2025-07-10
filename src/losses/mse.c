@@ -1,4 +1,5 @@
 #include "losses/mse.h"
+#include "autograd/computational_graph_link.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -44,7 +45,7 @@ cgrad_error mse_loss(const struct tensor *const y_pred, const struct tensor *con
     return NO_ERROR;
 }
 
-cgrad_error mse_loss_graph(struct tensor *const y_pred, struct tensor *const y_target, struct tensor *const z)
+cgrad_error mse_loss_graph(struct tensor *const y_pred, struct tensor *const y_target, struct tensor *const z, struct autograd_allocators *ag_allocators)
 {
     cgrad_error err = mse_loss(y_pred, y_target, z);
     if (err != NO_ERROR)
@@ -52,8 +53,8 @@ cgrad_error mse_loss_graph(struct tensor *const y_pred, struct tensor *const y_t
         return err;
     }
 
-    add_computational_graph_link(y_pred, MSE_PREDICTED, z, &mse_loss_backpropagate_predicted);
-    add_computational_graph_link(y_target, MSE_TARGET, z, &mse_loss_backpropagate_target);
+    add_computational_graph_link(y_pred, MSE_PREDICTED, z, &mse_loss_backpropagate_predicted, ag_allocators);
+    add_computational_graph_link(y_target, MSE_TARGET, z, &mse_loss_backpropagate_target, ag_allocators);
 
     return NO_ERROR;
 }

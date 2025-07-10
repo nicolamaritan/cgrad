@@ -1,6 +1,7 @@
 #ifndef BACKPROPAGATION_CONTEXT_H
 #define BACKPROPAGATION_CONTEXT_H
 
+#include "memory/tensor_allocator.h"
 #include "utils/error.h"
 #include "config.h"
 #include <string.h>
@@ -20,14 +21,14 @@ typedef uint8_t context_id;
  *
  * - `operands`: An array where each element points to a tensor allocated by the caller of the operation.
  *   The caller is responsible for deallocating these tensors.
- * 
+ *
  * - `owned`: An array where each element points to a tensor allocated by the forward function.
  *   These tensors are needed for backpropagation when they cannot be recomputed solely from the operands
  *   (e.g., results of random operations) or for performance reasons. All tensors pointed to by this array
  *   are deallocated by a dedicated cleanup function.
- *   The structure assumes that the first `n_owned` positions of the array 
+ *   The structure assumes that the first `n_owned` positions of the array
  *   contain the owned tensors; otherwise, behavior is undefined.
- * 
+ *
  * - `n_owned`: The number of owned tensors currently stored in the context.
  */
 struct backpropagation_context
@@ -35,6 +36,7 @@ struct backpropagation_context
     struct tensor *operands[AUTOGRAD_MAX_BACKPROPAGATION_FUNCTION_CONTEXT_SIZE];
     struct tensor *owned[AUTOGRAD_MAX_BACKPROPAGATION_FUNCTION_CONTEXT_SIZE];
     size_t n_owned;
+    struct tensor_allocator *t_allocator;
 };
 
 /**
@@ -44,11 +46,11 @@ struct backpropagation_context
  * @param ctx Pointer to the backpropagation context.
  * @return cgrad_error Error code indicating success or failure.
  */
-static inline cgrad_error context_init(struct backpropagation_context *const ctx);
+static inline cgrad_error context_init(struct backpropagation_context *const ctx, struct tensor_allocator *t_allocator);
 
 /**
  * @brief Sets an operand in the backpropagation context at the specified ctx_id.
- * 
+ *
  * @param ctx Pointer to the backpropagation context.
  * @param t Pointer to the tensor to set.
  * @param ctx_id Index at which to store the tensor.
@@ -59,7 +61,7 @@ static inline cgrad_error context_set_operand(struct backpropagation_context *co
 /**
  * @brief Sets a tensor in the backpropagation context at the specified ctx_id.
  * The context takes ownership of the tensors set via this function.
- * 
+ *
  * @param ctx Pointer to the backpropagation context.
  * @param t Pointer to the tensor to set.
  * @param ctx_id Index at which to store the tensor.
@@ -67,7 +69,7 @@ static inline cgrad_error context_set_operand(struct backpropagation_context *co
  */
 static inline cgrad_error context_set_owned(struct backpropagation_context *const ctx, struct tensor *t, const context_id ctx_id);
 
-static inline cgrad_error context_init(struct backpropagation_context *const ctx)
+static inline cgrad_error context_init(struct backpropagation_context *const ctx, struct tensor_allocator *t_allocator)
 {
     if (!ctx)
     {
@@ -76,6 +78,7 @@ static inline cgrad_error context_init(struct backpropagation_context *const ctx
     memset(ctx->operands, 0, sizeof(ctx->operands));
     memset(ctx->owned, 0, sizeof(ctx->owned));
     ctx->n_owned = 0;
+    ctx->t_allocator = t_allocator;
 
     return NO_ERROR;
 }
@@ -109,7 +112,7 @@ static inline void context_cleanup_owned(struct backpropagation_context *const c
 {
     for (size_t i = 0; i < ctx->n_owned; i++)
     {
-        tensor_free(ctx->owned[i]);
+        tensor_allocator_free(ctx->t_allocator, ctx->owned[i]);
     }
 }
 

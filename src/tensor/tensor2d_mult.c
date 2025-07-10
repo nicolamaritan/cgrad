@@ -2,6 +2,7 @@
 #include "tensor/tensor2d_mult.h"
 #include "tensor/tensor2d_trans.h"
 #include "autograd/computational_graph.h"
+#include "autograd/computational_graph_link.h"
 #include <cblas.h>
 #include <stdlib.h>
 
@@ -33,7 +34,7 @@ cgrad_error tensor2d_mult(const struct tensor *const A, const struct tensor *con
     return NO_ERROR;
 }
 
-cgrad_error tensor2d_mult_graph(struct tensor *const A, struct tensor *const B, struct tensor *const out)
+cgrad_error tensor2d_mult_graph(struct tensor *const A, struct tensor *const B, struct tensor *const out, struct autograd_allocators *allocators)
 {
     cgrad_error err = tensor2d_mult(A, B, out);
 
@@ -43,13 +44,13 @@ cgrad_error tensor2d_mult_graph(struct tensor *const A, struct tensor *const B, 
     }
 
     // Update computational graph
-    err = add_computational_graph_link(A, LHS_TENSOR, out, &tensor2d_mult_backpropagate_lhs);
+    err = add_computational_graph_link(A, LHS_TENSOR, out, &tensor2d_mult_backpropagate_lhs, allocators);
     if (err != NO_ERROR)
     {
         return err;
     }
     
-    err = add_computational_graph_link(B, RHS_TENSOR, out, &tensor2d_mult_backpropagate_rhs);
+    err = add_computational_graph_link(B, RHS_TENSOR, out, &tensor2d_mult_backpropagate_rhs, allocators);
 
     return err;
 }

@@ -14,7 +14,7 @@ cgrad_error sgd_optimizer_init(struct sgd_optimizer *opt, struct model_params *c
     }
     if (!allocator)
     {
-        return ALLOCATOR_NULL;
+        return TENSOR_ALLOCATOR_NULL;
     }
 
     opt->params = params;

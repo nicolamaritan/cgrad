@@ -2,6 +2,7 @@
 #include "layers/relu.h"
 #include "losses/mse.h"
 #include "autograd/backpropagation.h"
+#include "autograd/autograd_allocators.h"
 #include "model/model_params.h"
 #include "tensor/tensor.h"
 #include "optimizers/sgd.h"
@@ -44,6 +45,7 @@ int main()
     // Allocator initialization
     struct tensor_allocator t_allocator = make_tensor_cpu_allocator(&t_pool);
     struct computational_graph_allocator cg_allocator = make_computational_graph_cpu_allocator(&cg_pool);
+    struct autograd_allocators allocators = {&t_allocator, &cg_allocator};
 
     // size_t shape[] = {2, 2};
     // struct tensor *t = tensor_allocator_alloc(&t_allocator, shape, 2);
@@ -75,10 +77,10 @@ int main()
     build_example_dataset(x, y_target);
 
     // Allocate model
-    struct linear_layer *linear1 = linear_alloc(input_dim, hidden_dim, &t_allocator);
+    struct linear_layer *linear1 = linear_alloc(input_dim, hidden_dim, &t_allocator, &allocators);
     linear_xavier_init(linear1);
 
-    struct linear_layer *linear2 = linear_alloc(hidden_dim, out_dim, &t_allocator);
+    struct linear_layer *linear2 = linear_alloc(hidden_dim, out_dim, &t_allocator, &allocators);
     linear_xavier_init(linear2);
 
     // Setup model params
@@ -114,7 +116,7 @@ int main()
         size_t h2_shape[] = {batch_size, hidden_dim};
         size_t h2_shape_size = 2;
         struct tensor *h2 = tensor_allocator_alloc(&t_allocator, h2_shape, h2_shape_size);
-        relu_forward_graph(h1, h2);
+        relu_forward_graph(h1, h2, &allocators);
 
         size_t h3_shape[] = {batch_size, out_dim};
         size_t h3_shape_size = 2;
@@ -127,7 +129,7 @@ int main()
         size_t z_shape[] = {1, 1};
         size_t z_shape_size = 2;
         struct tensor *z = tensor_allocator_alloc(&t_allocator, z_shape, z_shape_size);
-        if (mse_loss_graph(h3, y_target, z) != NO_ERROR)
+        if (mse_loss_graph(h3, y_target, z, &allocators) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
@@ -136,7 +138,7 @@ int main()
 
         // ------------- Backward -------------
         zero_grad(&params);
-        backward(z, false);
+        backward(z, &allocators);
         sgd_optimizer_step(&opt, lr, momentum, false);
 
         // Clear iteration allocations

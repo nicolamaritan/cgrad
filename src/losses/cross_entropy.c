@@ -1,4 +1,5 @@
 #include "losses/cross_entropy.h"
+#include "autograd/computational_graph_link.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -50,7 +51,7 @@ cgrad_error cross_entropy_loss(const struct tensor* const logits, const struct t
     return NO_ERROR;
 }
 
-cgrad_error cross_entropy_loss_graph(struct tensor* const logits, struct tensor* const targets, struct tensor* const loss)
+cgrad_error cross_entropy_loss_graph(struct tensor* const logits, struct tensor* const targets, struct tensor* const loss, struct autograd_allocators *ag_allocators)
 {
     cgrad_error err = cross_entropy_loss(logits, targets, loss);
     if (err != NO_ERROR)
@@ -60,7 +61,7 @@ cgrad_error cross_entropy_loss_graph(struct tensor* const logits, struct tensor*
 
     // Setup connections
     // In CrossEntropy, targets are not differentiable, so only the logits node is added. Still, the target tensor is added as operand for backward.
-    err = add_computational_graph_link(logits, CROSS_ENTROPY_PREDICTED, loss, &cross_entropy_loss_backpropagate_predicted);
+    err = add_computational_graph_link(logits, CROSS_ENTROPY_PREDICTED, loss, &cross_entropy_loss_backpropagate_predicted, ag_allocators);
     if (err != NO_ERROR)
     {
         return err;

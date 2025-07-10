@@ -2,7 +2,7 @@
 #include "memory/computational_graph_cpu_pool.h"
 #include <string.h>
 
-static struct computational_graph_node *computational_graph_cpu_alloc(void *pool, struct tensor *t);
+static struct computational_graph_node *computational_graph_cpu_alloc(void *pool, struct tensor *t, struct tensor_allocator *t_allocator);
 
 static void computational_graph_cpu_free(void *pool, struct computational_graph_node *node);
 
@@ -14,7 +14,7 @@ struct computational_graph_allocator make_computational_graph_cpu_allocator(stru
         .pool = pool};
 }
 
-static struct computational_graph_node *computational_graph_cpu_alloc(void *pool, struct tensor *t)
+static struct computational_graph_node *computational_graph_cpu_alloc(void *pool, struct tensor *t, struct tensor_allocator *t_allocator)
 { 
     struct computational_graph_cpu_pool *cpu_pool = (struct computational_graph_cpu_pool *)pool;
     struct computational_graph_node *node = computational_graph_cpu_pool_alloc(cpu_pool);
@@ -35,7 +35,7 @@ static struct computational_graph_node *computational_graph_cpu_alloc(void *pool
     memset(node->children, 0, sizeof(node->children));
     memset(node->parents_operands, 0, sizeof(node->parents_operands));
     memset(node->function, 0, sizeof(node->function));
-    context_init(&node->ctx); // Pointer is not NULL at this point
+    context_init(&node->ctx, t_allocator); // Pointer is not NULL at this point
 
     return node;
 }

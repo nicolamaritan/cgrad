@@ -25,7 +25,8 @@ typedef enum
     OPTIMIZER_NULL,
 
     // Allocator
-    ALLOCATOR_NULL,
+    TENSOR_ALLOCATOR_NULL,
+    COMPUTATIONAL_GRAPH_ALLOCATOR_NULL,
 
     // Autograd errors
     AUTOGRAD_MAX_PARENTS_EXCEEDED,

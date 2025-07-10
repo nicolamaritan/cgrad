@@ -1,4 +1,5 @@
 #include "layers/relu.h"
+#include "autograd/computational_graph_link.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -9,7 +10,7 @@ typedef enum relu_layer_operand
 
 static void relu_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
-cgrad_error relu_forward_graph(struct tensor* const x, struct tensor* const out)
+cgrad_error relu_forward_graph(struct tensor *const x, struct tensor *const out, struct autograd_allocators *ag_allocators)
 {
     cgrad_error error = relu_forward(x, out);
     if (error != NO_ERROR)
@@ -17,7 +18,7 @@ cgrad_error relu_forward_graph(struct tensor* const x, struct tensor* const out)
         return error;
     }
 
-    error = add_computational_graph_link(x, RELU_ONLY_OPERAND, out, &relu_backpropagate);
+    error = add_computational_graph_link(x, RELU_ONLY_OPERAND, out, &relu_backpropagate, ag_allocators);
     return error;
 }
 

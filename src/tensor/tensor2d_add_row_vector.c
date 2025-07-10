@@ -1,5 +1,6 @@
 #include "tensor/tensor2d_add_row_vector.h"
 #include "autograd/computational_graph.h"
+#include "autograd/computational_graph_link.h"
 #include <stdlib.h>
 
 typedef enum tensor2d_add_row_vector_operand
@@ -39,7 +40,7 @@ cgrad_error tensor2d_add_row_vector(const struct tensor *const A, const struct t
     return NO_ERROR;
 }
 
-cgrad_error tensor2d_add_row_vector_graph(struct tensor *const A, struct tensor *const v, struct tensor *const out)
+cgrad_error tensor2d_add_row_vector_graph(struct tensor *const A, struct tensor *const v, struct tensor *const out, struct autograd_allocators *allocators)
 {
     if (!A || !v)
     {
@@ -65,13 +66,13 @@ cgrad_error tensor2d_add_row_vector_graph(struct tensor *const A, struct tensor 
     tensor2d_add_row_vector_unchecked(A, v, out);
 
     // Update computational graph
-    cgrad_error err = add_computational_graph_link(A, TENSOR2D, out, &tensor2d_add_row_vector_backpropagate_tensor2d);
+    cgrad_error err = add_computational_graph_link(A, TENSOR2D, out, &tensor2d_add_row_vector_backpropagate_tensor2d, allocators);
     if (err != NO_ERROR) 
     {
         return err;
     }
 
-    err = add_computational_graph_link(v, ROW_VECTOR, out, &tensor2d_add_row_vector_backpropagate_row_vector);
+    err = add_computational_graph_link(v, ROW_VECTOR, out, &tensor2d_add_row_vector_backpropagate_row_vector, allocators);
 
     return err;
 }
