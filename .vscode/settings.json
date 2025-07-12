@@ -5,6 +5,7 @@
         "string_view": "c",
         "csv_dataset.h": "c",
         "tensor.h": "c",
-        "computational_graph_cpu_allocator.h": "c"
+        "computational_graph_cpu_allocator.h": "c",
+        "relu.h": "c"
     }
 }

@@ -36,60 +36,106 @@ struct backpropagation_context
     struct tensor *operands[AUTOGRAD_MAX_BACKPROPAGATION_FUNCTION_CONTEXT_SIZE];
     struct tensor *owned[AUTOGRAD_MAX_BACKPROPAGATION_FUNCTION_CONTEXT_SIZE];
     size_t n_owned;
-    struct tensor_allocator *t_allocator;
+    struct tensor_allocator *owned_allocator;
 };
 
-/**
- * @brief Initialize a backpropagation context. Not invoking this causes
- * undefined behaviour.
- *
- * @param ctx Pointer to the backpropagation context.
- * @return cgrad_error Error code indicating success or failure.
- */
-static inline cgrad_error context_init(struct backpropagation_context *const ctx, struct tensor_allocator *t_allocator);
+// --- Function declarations ---
 
 /**
- * @brief Sets an operand in the backpropagation context at the specified ctx_id.
+ * @brief Initializes a backpropagation context for use in autograd operations.
+ *
+ * This function must be called before using the context. It sets all operand and owned
+ * tensor pointers to NULL, resets the owned tensor count, and assigns the provided
+ * tensor allocator for owned tensors.
+ *
+ * @param ctx Pointer to the backpropagation context to initialize.
+ * @param autograd_tensor_allocator Allocator to use for owned tensors.
+ * @return cgrad_error Error code indicating success or failure.
+ *         - NO_ERROR on success.
+ *         - AUTOGRAD_BACKPROPAGATION_CONTEXT_NULL if ctx is NULL.
+ *         - TENSOR_ALLOCATOR_NULL if autograd_tensor_allocator is NULL.
+ */
+static inline cgrad_error context_init(struct backpropagation_context *const ctx, struct tensor_allocator *autograd_tensor_allocator);
+
+/**
+ * @brief Stores a tensor pointer as an operand in the context at the given index.
+ *
+ * The context does not take ownership of the tensor; the caller is responsible for
+ * deallocating it. Overwrites any existing pointer at the specified index.
  *
  * @param ctx Pointer to the backpropagation context.
- * @param t Pointer to the tensor to set.
- * @param ctx_id Index at which to store the tensor.
+ * @param t Pointer to the tensor to store.
+ * @param ctx_id Index at which to store the tensor (must be less than AUTOGRAD_MAX_BACKPROPAGATION_FUNCTION_CONTEXT_SIZE).
  * @return cgrad_error Error code indicating success or failure.
+ *         - NO_ERROR on success.
+ *         - AUTOGRAD_BACKPROPAGATION_CONTEXT_NULL if ctx is NULL.
+ *         - AUTOGRAD_INVALID_CONTEXT_ID if ctx_id is out of bounds.
+ *         - TENSOR_NULL if t is NULL.
  */
 static inline cgrad_error context_set_operand(struct backpropagation_context *const ctx, struct tensor *t, const context_id ctx_id);
 
 /**
- * @brief Sets a tensor in the backpropagation context at the specified ctx_id.
- * The context takes ownership of the tensors set via this function.
+ * @brief Stores a tensor pointer as an owned tensor in the context at the given index.
+ *
+ * The context takes ownership of the tensor and will deallocate it during cleanup.
+ * Fails if the index is already occupied.
  *
  * @param ctx Pointer to the backpropagation context.
- * @param t Pointer to the tensor to set.
- * @param ctx_id Index at which to store the tensor.
+ * @param t Pointer to the tensor to store.
+ * @param ctx_id Index at which to store the tensor (must be less than AUTOGRAD_MAX_BACKPROPAGATION_FUNCTION_CONTEXT_SIZE).
  * @return cgrad_error Error code indicating success or failure.
+ *         - NO_ERROR on success.
+ *         - AUTOGRAD_INVALID_CONTEXT_ID if ctx_id is out of bounds.
+ *         - AUTOGRAD_CONTEXT_ID_ALREADY_TAKEN if the slot is already occupied.
  */
 static inline cgrad_error context_set_owned(struct backpropagation_context *const ctx, struct tensor *t, const context_id ctx_id);
 
-static inline cgrad_error context_init(struct backpropagation_context *const ctx, struct tensor_allocator *t_allocator)
+/**
+ * @brief Frees all owned tensors in the context using the assigned allocator.
+ *
+ * Iterates over the first n_owned entries in the owned array and frees each tensor.
+ * Does nothing if ctx is NULL.
+ *
+ * @param ctx Pointer to the backpropagation context.
+ */
+static inline void context_cleanup_owned(struct backpropagation_context *const ctx);
+
+#endif
+
+// --- Function definitions ---
+
+static inline cgrad_error context_init(struct backpropagation_context *const ctx, struct tensor_allocator *autograd_tensor_allocator)
 {
     if (!ctx)
     {
         return AUTOGRAD_BACKPROPAGATION_CONTEXT_NULL;
     }
+    if (!autograd_tensor_allocator)
+    {
+        return TENSOR_ALLOCATOR_NULL;
+    }
+
     memset(ctx->operands, 0, sizeof(ctx->operands));
     memset(ctx->owned, 0, sizeof(ctx->owned));
     ctx->n_owned = 0;
-    ctx->t_allocator = t_allocator;
+    ctx->owned_allocator = autograd_tensor_allocator;
 
     return NO_ERROR;
 }
 
-static inline void context_cleanup_owned(struct backpropagation_context *const ctx);
-
 static inline cgrad_error context_set_operand(struct backpropagation_context *const ctx, struct tensor *t, const context_id ctx_id)
 {
+    if (!ctx)
+    {
+        return AUTOGRAD_BACKPROPAGATION_CONTEXT_NULL;
+    }
     if (ctx_id >= AUTOGRAD_MAX_BACKPROPAGATION_FUNCTION_CONTEXT_SIZE)
     {
         return AUTOGRAD_INVALID_CONTEXT_ID;
+    }
+    if (!t)
+    {
+        return TENSOR_NULL;
     }
 
     ctx->operands[ctx_id] = t;
@@ -98,9 +144,13 @@ static inline cgrad_error context_set_operand(struct backpropagation_context *co
 
 static inline cgrad_error context_set_owned(struct backpropagation_context *const ctx, struct tensor *t, const context_id ctx_id)
 {
-    if (ctx_id >= AUTOGRAD_MAX_BACKPROPAGATION_FUNCTION_CONTEXT_SIZE || ctx->owned[ctx_id] != NULL)
+    if (ctx_id >= AUTOGRAD_MAX_BACKPROPAGATION_FUNCTION_CONTEXT_SIZE)
     {
         return AUTOGRAD_INVALID_CONTEXT_ID;
+    }
+    if (ctx->owned[ctx_id])
+    {
+        return AUTOGRAD_CONTEXT_ID_ALREADY_TAKEN;
     }
 
     ctx->owned[ctx_id] = t;
@@ -110,10 +160,13 @@ static inline cgrad_error context_set_owned(struct backpropagation_context *cons
 
 static inline void context_cleanup_owned(struct backpropagation_context *const ctx)
 {
+    if (!ctx)
+    {
+        return;
+    }
+
     for (size_t i = 0; i < ctx->n_owned; i++)
     {
-        tensor_allocator_free(ctx->t_allocator, ctx->owned[i]);
+        tensor_allocator_free(ctx->owned_allocator, ctx->owned[i]);
     }
 }
-
-#endif

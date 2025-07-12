@@ -22,7 +22,7 @@ static void linear_backpropagate_input(const struct backpropagation_context *con
 static void linear_backpropagate_weights(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static void linear_backpropagate_bias(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
-struct linear_layer *linear_alloc(const size_t in_dim, const size_t out_dim, struct tensor_allocator *params_allocator, struct autograd_allocators *ag_allocators)
+struct linear_layer *linear_alloc(const size_t in_dim, const size_t out_dim, struct tensor_allocator *params_allocator, struct autograd_allocators *const ag_allocators)
 {
     struct linear_layer *layer = (struct linear_layer *)malloc(sizeof(struct linear_layer));
     if (!layer)
@@ -133,7 +133,7 @@ static cgrad_error linear_update_computational_graph(struct tensor *const x, str
 static void linear_backpropagate_input(const struct backpropagation_context* const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
     const struct tensor *rhs = ctx->operands[WEIGHTS];
-    struct tensor_allocator *t_allocator = ctx->t_allocator;
+    struct tensor_allocator *t_allocator = ctx->owned_allocator;
 
     size_t shape[] = {rhs->shape[1], rhs->shape[0]};
     size_t shape_size = 2;
@@ -150,7 +150,7 @@ static void linear_backpropagate_input(const struct backpropagation_context* con
 static void linear_backpropagate_weights(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
     const struct tensor* lhs = ctx->operands[INPUT];
-    struct tensor_allocator *t_allocator = ctx->t_allocator;
+    struct tensor_allocator *t_allocator = ctx->owned_allocator;
 
     size_t shape[] = {lhs->shape[1], lhs->shape[0]};
     size_t shape_size = 2;

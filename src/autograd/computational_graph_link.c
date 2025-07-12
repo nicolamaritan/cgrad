@@ -21,6 +21,19 @@ static cgrad_error add_parent(struct computational_graph_node *const node, struc
 
 cgrad_error add_computational_graph_link(struct tensor *operand, size_t operand_id, struct tensor *result, backpropagation_function backprop_function, struct autograd_allocators *allocators)
 {
+    if (!operand || !result)
+    {
+        return TENSOR_NULL;
+    }
+    if (!allocators)
+    {
+        return AUTOGRAD_ALLOCATORS_NULL;
+    }
+    if (!backprop_function)
+    {
+        return AUTOGRAD_BACKPROPAGATION_FUNCTION_NULL;
+    }
+
     struct computational_graph_node *operand_node = operand->node ? operand->node : computational_graph_allocator_alloc(allocators->cg_allocator, operand, allocators->t_allocator);
     if (!operand_node)
     {

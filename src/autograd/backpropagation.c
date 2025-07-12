@@ -17,8 +17,17 @@ static void build_gradients(struct backpropagation_targets* const targets, struc
 static cgrad_error add_target(struct backpropagation_targets* const targets, struct computational_graph_node* const node);
 static inline void set_gradient_wrt_itself(struct tensor* const t);
 
-void backward(struct tensor* t, struct autograd_allocators *allocators)
+cgrad_error backward(struct tensor* t, struct autograd_allocators *allocators)
 {
+    if (!t)
+    {
+        return TENSOR_NULL;
+    }
+    if (!allocators)
+    {
+        return AUTOGRAD_ALLOCATORS_NULL;
+    }
+
     struct backpropagation_targets targets;
     targets.size = 0;
 
@@ -33,13 +42,14 @@ void backward(struct tensor* t, struct autograd_allocators *allocators)
         node->t->node = NULL;
         computational_graph_allocator_free(allocators->cg_allocator, node);
     }
+
+    return NO_ERROR;
 }
 
 static void identify_backpropagation_nodes(struct computational_graph_node* const node, struct backpropagation_targets* targets)
 {
     node->is_involved_in_backprop = true;
     add_target(targets, node);
-    // printf("%p\n", node->t);
     for (size_t i = 0; i < node->n_children; i++)
     {
         identify_backpropagation_nodes(node->children[i], targets);
