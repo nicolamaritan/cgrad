@@ -3,7 +3,7 @@
 
 #include "autograd/backpropagation.h"
 #include "model/model_params.h"
-#include "memory/tensor_allocator.h"
+#include "memory/tensor/tensor_allocator.h"
 
 struct sgd_optimizer
 {

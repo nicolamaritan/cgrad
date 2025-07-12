@@ -1,7 +1,7 @@
 #ifndef BACKPROPAGATION_CONTEXT_H
 #define BACKPROPAGATION_CONTEXT_H
 
-#include "memory/tensor_allocator.h"
+#include "memory/tensor/tensor_allocator.h"
 #include "utils/error.h"
 #include "config.h"
 #include <string.h>

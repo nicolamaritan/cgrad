@@ -1,6 +1,6 @@
 #include "autograd/computational_graph.h"
-#include "memory/computational_graph_allocator.h"
-#include "memory/tensor_allocator.h"
+#include "memory/computational_graph/computational_graph_allocator.h"
+#include "memory/tensor/tensor_allocator.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

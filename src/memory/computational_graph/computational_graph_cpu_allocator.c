@@ -1,5 +1,5 @@
-#include "memory/computational_graph_cpu_allocator.h"
-#include "memory/computational_graph_cpu_pool.h"
+#include "memory/computational_graph/computational_graph_cpu_allocator.h"
+#include "memory/computational_graph/computational_graph_cpu_pool.h"
 #include <string.h>
 
 static struct computational_graph_node *computational_graph_cpu_alloc(void *pool, struct tensor *t, struct tensor_allocator *t_allocator);

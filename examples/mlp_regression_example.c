@@ -6,8 +6,8 @@
 #include "model/model_params.h"
 #include "tensor/tensor.h"
 #include "optimizers/sgd.h"
-#include "memory/tensor_cpu_allocator.h"
-#include "memory/computational_graph_cpu_allocator.h"
+#include "memory/tensor/cpu/tensor_cpu_allocator.h"
+#include "memory/computational_graph/computational_graph_cpu_allocator.h"
 #include "utils/random.h"
 #include <stdio.h>
 #include <stdlib.h>

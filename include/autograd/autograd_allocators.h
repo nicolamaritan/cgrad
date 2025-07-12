@@ -1,8 +1,8 @@
 #ifndef AUTOGRAD_CONFIG_H
 #define AUTOGRAD_CONFIG_H
 
-#include "memory/tensor_allocator.h"
-#include "memory/computational_graph_allocator.h"
+#include "memory/tensor/tensor_allocator.h"
+#include "memory/computational_graph/computational_graph_allocator.h"
 
 struct autograd_allocators
 {

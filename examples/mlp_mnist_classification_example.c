@@ -8,8 +8,8 @@
 #include "optimizers/sgd.h"
 #include "dataset/csv_dataset.h"
 #include "dataset/indexes_permutation.h"
-#include "memory/tensor_cpu_allocator.h"
-#include "memory/computational_graph_cpu_allocator.h"
+#include "memory/tensor/cpu/tensor_cpu_allocator.h"
+#include "memory/computational_graph/computational_graph_cpu_allocator.h"
 #include "utils/random.h"
 #include <stdio.h>
 #include <stdlib.h>

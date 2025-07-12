@@ -25,6 +25,10 @@ cgrad_error add_computational_graph_link(struct tensor *operand, size_t operand_
     {
         return TENSOR_NULL;
     }
+    if (!operand->grad || !result->grad)
+    {
+        return TENSOR_GRAD_NULL;
+    }
     if (!allocators)
     {
         return AUTOGRAD_ALLOCATORS_NULL;

@@ -1,4 +1,4 @@
-#include "memory/tensor_cpu_allocator.h"
+#include "memory/tensor/cpu/tensor_cpu_allocator.h"
 #include <string.h>
 
 static struct tensor *tensor_cpu_alloc(void *pool, const size_t *const shape, const size_t shape_size);

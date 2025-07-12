@@ -1,4 +1,4 @@
-#include "memory/tensor_cpu_pool.h"
+#include "memory/tensor/cpu/tensor_cpu_pool.h"
 #include "tensor/tensor.h"
 #include "utils/error.h"
 #include "config.h"
