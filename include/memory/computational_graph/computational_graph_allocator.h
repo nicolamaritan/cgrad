@@ -1,7 +1,7 @@
 #ifndef COMPUTATIONAL_GRAPH_ALLOCATOR_H
 #define COMPUTATIONAL_GRAPH_ALLOCATOR_H
 
-#include "autograd/computational_graph.h"
+#include "autograd/computational_graph/computational_graph.h"
 
 typedef struct computational_graph_node *(*computational_graph_alloc_fn)(void *, struct tensor *const, struct tensor_allocator *);
 typedef void (*computational_graph_free_fn)(void *, struct computational_graph_node *);

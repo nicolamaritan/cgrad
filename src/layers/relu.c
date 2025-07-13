@@ -1,5 +1,6 @@
 #include "layers/relu.h"
-#include "autograd/computational_graph_link.h"
+#include "autograd/computational_graph/computational_graph.h"
+#include "autograd/computational_graph/computational_graph_link.h"
 #include <stdlib.h>
 #include <stdio.h>
 

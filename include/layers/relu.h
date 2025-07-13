@@ -2,7 +2,6 @@
 #define RELU_H
 
 #include "tensor/tensor.h"
-#include "autograd/computational_graph.h"
 #include "autograd/autograd_allocators.h"
 #include <stddef.h>
 

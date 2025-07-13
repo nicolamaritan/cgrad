@@ -1,7 +1,7 @@
 #ifndef COMPUTATIONAL_GRAPH_POOL_H
 #define COMPUTATIONAL_GRAPH_POOL_H
 
-#include "autograd/computational_graph.h"
+#include "autograd/computational_graph/computational_graph.h"
 
 struct computational_graph_chunk;
 struct computational_graph_chunk

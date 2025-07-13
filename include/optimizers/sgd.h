@@ -1,7 +1,7 @@
 #ifndef SGD_H
 #define SGD_H
 
-#include "autograd/backpropagation.h"
+#include "autograd/backpropagation/backpropagation.h"
 #include "model/model_params.h"
 #include "memory/tensor/tensor_allocator.h"
 

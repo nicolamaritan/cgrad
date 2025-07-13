@@ -1,5 +1,5 @@
 #include "tensor/tensor_add.h"
-#include "autograd/computational_graph.h"
+#include "autograd/computational_graph/computational_graph.h"
 
 typedef enum tensor_add_operand
 {

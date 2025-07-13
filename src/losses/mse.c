@@ -1,5 +1,5 @@
 #include "losses/mse.h"
-#include "autograd/computational_graph_link.h"
+#include "autograd/computational_graph/computational_graph_link.h"
 #include <stdlib.h>
 #include <stdio.h>
 

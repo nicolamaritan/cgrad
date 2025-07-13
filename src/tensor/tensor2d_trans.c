@@ -1,6 +1,6 @@
 #include "tensor/tensor2d_trans.h"
-#include "autograd/computational_graph.h"
-#include "autograd/computational_graph_link.h"
+#include "autograd/computational_graph/computational_graph.h"
+#include "autograd/computational_graph/computational_graph_link.h"
 
 typedef enum tensor2d_trans_operand
 {

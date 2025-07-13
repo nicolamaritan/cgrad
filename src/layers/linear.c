@@ -2,7 +2,7 @@
 #include "tensor/tensor2d_mult.h"
 #include "tensor/tensor2d_add_row_vector.h"
 #include "tensor/tensor2d_trans.h"
-#include "autograd/computational_graph_link.h"
+#include "autograd/computational_graph/computational_graph_link.h"
 #include "utils/random.h"
 #include <math.h>
 #include <stdio.h>

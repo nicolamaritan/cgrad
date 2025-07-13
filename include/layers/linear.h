@@ -3,8 +3,8 @@
 
 #include "tensor/tensor.h"
 #include "memory/tensor/tensor_allocator.h"
-#include "autograd/computational_graph.h"
-#include "autograd/backpropagation.h"
+#include "autograd/computational_graph/computational_graph.h"
+#include "autograd/backpropagation/backpropagation.h"
 #include "autograd/autograd_allocators.h"
 #include <stddef.h>
 

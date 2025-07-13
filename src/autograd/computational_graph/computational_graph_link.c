@@ -1,4 +1,4 @@
-#include "autograd/computational_graph_link.h"
+#include "autograd/computational_graph/computational_graph_link.h"
 
 /**
  * @brief Adds a child node to a computational graph node.

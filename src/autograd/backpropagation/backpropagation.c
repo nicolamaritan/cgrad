@@ -1,5 +1,5 @@
-#include "autograd/backpropagation.h"
-#include "autograd/computational_graph.h"
+#include "autograd/backpropagation/backpropagation.h"
+#include "autograd/computational_graph/computational_graph.h"
 #include "config.h"
 #include <stdio.h>
 #include <string.h>

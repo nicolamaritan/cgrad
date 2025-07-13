@@ -1,8 +1,8 @@
 #include "tensor/tensor.h"
 #include "tensor/tensor2d_mult.h"
 #include "tensor/tensor2d_trans.h"
-#include "autograd/computational_graph.h"
-#include "autograd/computational_graph_link.h"
+#include "autograd/computational_graph/computational_graph.h"
+#include "autograd/computational_graph/computational_graph_link.h"
 #include <cblas.h>
 #include <stdlib.h>
 

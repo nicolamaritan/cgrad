@@ -1,7 +1,7 @@
 #include "layers/linear.h"
 #include "layers/relu.h"
 #include "losses/cross_entropy.h"
-#include "autograd/backpropagation.h"
+#include "autograd/backpropagation/backpropagation.h"
 #include "autograd/autograd_allocators.h"
 #include "model/model_params.h"
 #include "tensor/tensor.h"

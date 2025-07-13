@@ -1,7 +1,7 @@
 #ifndef COMPUTATIONAL_GRAPH_H
 #define COMPUTATIONAL_GRAPH_H
 
-#include "autograd/backpropagation_function.h"
+#include "autograd/backpropagation/backpropagation_function.h"
 #include "utils/error.h"
 #include "config.h"
 #include <stdbool.h>
