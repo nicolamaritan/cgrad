@@ -1,5 +1,5 @@
 # C-Grad
-Neural network library written in C.
+C neural network library.
 
 ## Dependencies
 - libblas-dev
@@ -28,5 +28,5 @@ Some examples are provided inside the `examples` directory to demonstrate the us
 2. Execute the MLP example executable:
 
 ```bash
-./examples/mlp_mnist_classification_example.out
+./examples/mlp_mnist_classification_example.out <mnist_train_dataset_path>
 ```
