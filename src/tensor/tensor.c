@@ -24,6 +24,11 @@ struct tensor *tensor_alloc(size_t *shape, size_t shape_size)
 
 struct tensor* tensor_no_grad_alloc(size_t *shape, size_t shape_size)
 {
+    if (shape_size > TENSOR_MAX_SHAPE_SIZE)
+    {
+        return NULL;
+    }
+
     // Compute data_size, needed for data allocation
     size_t data_size = 1;
     for (size_t i = 0; i < shape_size; i++)
@@ -44,20 +49,10 @@ struct tensor* tensor_no_grad_alloc(size_t *shape, size_t shape_size)
         return NULL;
     }
 
-    size_t *_shape = (size_t *)malloc((shape_size + 1)* sizeof(size_t));
-    if (!_shape)
-    {
-        free(t);
-        free(data);
-        return NULL;
-    }
-
     // Init _shape
-    memcpy(_shape, shape, shape_size * sizeof(size_t));
-    _shape[shape_size] = 0;
+    memcpy(t->shape, shape, shape_size * sizeof(size_t));
 
     t->data = data;
-    t->shape = _shape;
     t->node = NULL;
     t->data_size = data_size;
     t->shape_size = shape_size;
@@ -68,6 +63,11 @@ struct tensor* tensor_no_grad_alloc(size_t *shape, size_t shape_size)
 
 struct tensor* tensor_no_grad_zero_alloc(size_t *shape, size_t shape_size)
 {
+    if (shape_size > TENSOR_MAX_SHAPE_SIZE)
+    {
+        return NULL;
+    }
+
     // Compute data_size, needed for data allocation
     size_t data_size = 1;
     for (size_t i = 0; i < shape_size; i++)
@@ -88,21 +88,10 @@ struct tensor* tensor_no_grad_zero_alloc(size_t *shape, size_t shape_size)
         return NULL;
     }
 
-    size_t *_shape = (size_t *)malloc((shape_size + 1)* sizeof(size_t));
-    if (!_shape)
-    {
-        free(t);
-        free(data);
-        return NULL;
-    }
-
     // Init _shape
-    memcpy(_shape, shape, shape_size * sizeof(size_t));
-    _shape[shape_size] = 0;
-
+    memcpy(t->shape, shape, shape_size * sizeof(size_t));
 
     t->data = data;
-    t->shape = _shape;
     t->node = NULL;
     t->data_size = data_size;
     t->shape_size = shape_size;
@@ -143,21 +132,12 @@ struct tensor *tensor2d_no_grad_alloc(size_t rows, size_t cols)
         return NULL;
     }
 
-    size_t *shape = (size_t *)malloc(3 * sizeof(size_t));
-    if (!shape)
-    {
-        free(t);
-        free(data);
-        return NULL;
-    }
-
     // Set the 2 dimensions and null terminator
-    shape[0] = rows;
-    shape[1] = cols;
-    shape[2] = 0;
+    t->shape[0] = rows;
+    t->shape[1] = cols;
+    t->shape[2] = 0;
 
     t->data = data;
-    t->shape = shape;
     t->node = NULL;
     t->data_size = rows * cols;
     t->shape_size = 2;
@@ -181,21 +161,12 @@ struct tensor *tensor2d_no_grad_zero_alloc(size_t rows, size_t cols)
         return NULL;
     }
 
-    size_t *shape = (size_t *)malloc(3 * sizeof(size_t));
-    if (!shape)
-    {
-        free(t);
-        free(data);
-        return NULL;
-    }
-
     // Set the 2 dimensions and null terminator
-    shape[0] = rows;
-    shape[1] = cols;
-    shape[2] = 0;
+    t->shape[0] = rows;
+    t->shape[1] = cols;
+    t->shape[2] = 0;
 
     t->data = data;
-    t->shape = shape;
     t->node = NULL;
     t->data_size = rows * cols;
     t->shape_size = 2;
@@ -206,10 +177,6 @@ struct tensor *tensor2d_no_grad_zero_alloc(size_t rows, size_t cols)
 
 struct tensor *tensor2d_alloc_like(struct tensor *t)
 {
-    if (!t->shape)
-    {
-        return NULL;
-    }
     if (!t->shape[0] || !t->shape[1])
     {
         return NULL;
@@ -228,9 +195,6 @@ void tensor_free(struct tensor *t)
     free(t->data);
     t->data = NULL;
     
-    free(t->shape);
-    t->shape = NULL;
-
     if (t->grad)
     {
         tensor_no_grad_free(t->grad);
@@ -255,9 +219,6 @@ void tensor_no_grad_free(struct tensor *t)
     free(t->data);
     t->data = NULL;
 
-    free(t->shape);
-    t->shape = NULL;
-    
     free(t);
 }
 
@@ -270,10 +231,6 @@ cgrad_error tensor2d_copy(const struct tensor *const src, struct tensor *const d
     if (!src->data || !dest->data)
     {
         return TENSOR_DATA_NULL;
-    }
-    if (!src->shape || !dest->shape_size)
-    {
-        return TENSOR_SHAPE_NULL;
     }
     if (src->shape[0] != dest->shape[0] || src->shape[1] != dest->shape[1])
     {
@@ -293,10 +250,6 @@ cgrad_error tensor_copy(const struct tensor *const src, struct tensor *const des
     if (!src->data || !dest->data)
     {
         return TENSOR_DATA_NULL;
-    }
-    if (!src->shape || !dest->shape_size)
-    {
-        return TENSOR_SHAPE_NULL;
     }
     if (src->shape_size != dest->shape_size)
     {
@@ -358,10 +311,6 @@ cgrad_error tensor_add_inplace(struct tensor *A, const struct tensor *const B)
     if (!A->data || !B->data)
     {
         return TENSOR_DATA_NULL;
-    }
-    if (!A->shape || !B->shape)
-    {
-        return TENSOR_SHAPE_NULL;
     }
     if (A->data_size != B->data_size)
     {
@@ -433,7 +382,7 @@ void print_tensor_recursive(const double *data, const size_t *shape, size_t dime
 
 void print_tensor(const struct tensor *const t)
 {
-    if (t == NULL || t->data == NULL || t->shape == NULL)
+    if (t == NULL || t->data == NULL)
     {
         printf("Invalid tensor\n");
         return;

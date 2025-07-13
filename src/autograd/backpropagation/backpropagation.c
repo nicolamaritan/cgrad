@@ -1,5 +1,5 @@
-#include "autograd/backpropagation.h"
-#include "autograd/computational_graph.h"
+#include "autograd/backpropagation/backpropagation.h"
+#include "autograd/computational_graph/computational_graph.h"
 #include "config.h"
 #include <stdio.h>
 #include <string.h>
@@ -12,32 +12,38 @@ struct backpropagation_targets
 };
 
 static void identify_backpropagation_nodes(struct computational_graph_node* const node, struct backpropagation_targets* targets);
-static struct tensor* build_gradient(struct computational_graph_node* const node);
-static void build_gradients(struct backpropagation_targets* const targets);
+static struct tensor* build_gradient(struct computational_graph_node* const node, struct autograd_allocators *allocators);
+static void build_gradients(struct backpropagation_targets* const targets, struct autograd_allocators *allocators);
 static cgrad_error add_target(struct backpropagation_targets* const targets, struct computational_graph_node* const node);
 static inline void set_gradient_wrt_itself(struct tensor* const t);
 
-void backward(struct tensor* t, bool retain_graph)
+cgrad_error backward(struct tensor* t, struct autograd_allocators *allocators)
 {
+    if (!t)
+    {
+        return TENSOR_NULL;
+    }
+    if (!allocators)
+    {
+        return AUTOGRAD_ALLOCATORS_NULL;
+    }
+
     struct backpropagation_targets targets;
     targets.size = 0;
 
     identify_backpropagation_nodes(t->node, &targets);
 
     set_gradient_wrt_itself(t);
-    build_gradients(&targets);
-
-    if (retain_graph)
-    {
-        return;
-    }
+    build_gradients(&targets, allocators);
 
     for (size_t i = 0; i < targets.size; i++)
     {
         struct computational_graph_node* node = targets.targets[i];
         node->t->node = NULL;
-        free_computational_graph_node(node);
+        computational_graph_allocator_free(allocators->cg_allocator, node);
     }
+
+    return NO_ERROR;
 }
 
 static void identify_backpropagation_nodes(struct computational_graph_node* const node, struct backpropagation_targets* targets)
@@ -50,7 +56,7 @@ static void identify_backpropagation_nodes(struct computational_graph_node* cons
     }
 }
 
-static struct tensor* build_gradient(struct computational_graph_node* const node)
+static struct tensor* build_gradient(struct computational_graph_node* const node, struct autograd_allocators *allocators)
 {
     if (node->is_grad_computed)
     {
@@ -64,12 +70,13 @@ static struct tensor* build_gradient(struct computational_graph_node* const node
             continue;
         }
 
-        struct tensor* D = build_gradient(node->parents[i]);
+        struct tensor* D = build_gradient(node->parents[i], allocators);
 
         struct computational_graph_node *parent_node = node->parents[i];
 
         // Compute gradient and add to current grad
-        struct tensor* parent_i_gradient = tensor_no_grad_alloc(node->t->shape, node->t->shape_size);
+        // struct tensor* parent_i_gradient = tensor_no_grad_alloc(node->t->shape, node->t->shape_size);
+        struct tensor *parent_i_gradient = tensor_allocator_no_grad_alloc(allocators->t_allocator, node->t->shape, node->t->shape_size);
 
         // Retrieve context
         struct backpropagation_context *ctx = &parent_node->ctx;
@@ -81,19 +88,20 @@ static struct tensor* build_gradient(struct computational_graph_node* const node
 
         tensor_add_inplace(node->t->grad, parent_i_gradient);
 
-        tensor_free(parent_i_gradient);
+        // tensor_free(parent_i_gradient);
+        tensor_allocator_free(allocators->t_allocator, parent_i_gradient);
     }
 
     node->is_grad_computed = true;
     return node->t->grad;
 }
 
-static void build_gradients(struct backpropagation_targets* const targets)
+static void build_gradients(struct backpropagation_targets* const targets, struct autograd_allocators *allocators)
 {
     size_t size = targets->size;
     for (size_t i = 0; i < size; i++)
     {
-        build_gradient(targets->targets[i]);
+        build_gradient(targets->targets[i], allocators);
     }
 }
 

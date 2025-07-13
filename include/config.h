@@ -1,6 +1,9 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+// Tensor
+#define TENSOR_MAX_SHAPE_SIZE 8
+
 // Model
 #define MODEL_MAX_PARAMS 1024
 
@@ -12,5 +15,9 @@
 
 // Dataset
 #define DATASET_CSV_MAX_LINE_CHAR_LENGTH 8192
+
+// Memory
+#define MEMORY_TENSOR_POOL_N_CHUNKS 512
+#define MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE 1024 * 1024 * 8
 
 #endif

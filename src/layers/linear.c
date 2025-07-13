@@ -2,6 +2,7 @@
 #include "tensor/tensor2d_mult.h"
 #include "tensor/tensor2d_add_row_vector.h"
 #include "tensor/tensor2d_trans.h"
+#include "autograd/computational_graph/computational_graph_link.h"
 #include "utils/random.h"
 #include <math.h>
 #include <stdio.h>
@@ -21,7 +22,7 @@ static void linear_backpropagate_input(const struct backpropagation_context *con
 static void linear_backpropagate_weights(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static void linear_backpropagate_bias(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
-struct linear_layer *linear_alloc(size_t in_dim, size_t out_dim)
+struct linear_layer *linear_alloc(const size_t in_dim, const size_t out_dim, struct tensor_allocator *params_allocator, struct autograd_allocators *const ag_allocators)
 {
     struct linear_layer *layer = (struct linear_layer *)malloc(sizeof(struct linear_layer));
     if (!layer)
@@ -29,21 +30,27 @@ struct linear_layer *linear_alloc(size_t in_dim, size_t out_dim)
         return NULL;
     }
 
-    struct tensor *weights = tensor2d_alloc(in_dim, out_dim);
+    size_t weights_shape[] = {in_dim, out_dim};
+    size_t weights_shape_size = 2;
+    struct tensor *weights = tensor_allocator_alloc(params_allocator, weights_shape, weights_shape_size);
     if (!weights)
     {
         free(layer);
         return NULL;
     }
 
-    struct tensor *biases = tensor2d_alloc(out_dim, 1);
+    size_t biases_shape[] = {out_dim, 1};
+    size_t biases_shape_size = 2;
+    struct tensor *biases = tensor_allocator_alloc(params_allocator, biases_shape, biases_shape_size);
     if (!biases)
     {
         free(layer);
-        tensor_no_grad_free(weights);
+        tensor_allocator_free(params_allocator, weights);
         return NULL;
     }
 
+    layer->params_allocator = params_allocator;
+    layer->ag_allocators = ag_allocators;
     layer->in_dim = in_dim;
     layer->out_dim = out_dim;
     layer->weights = weights;
@@ -94,44 +101,67 @@ void linear_xavier_init(struct linear_layer *layer)
 
 void linear_free(struct linear_layer *layer)
 {
-    tensor_free(layer->weights);
-    tensor_free(layer->biases);
+    tensor_allocator_free(layer->params_allocator, layer->weights);
+    tensor_allocator_free(layer->params_allocator, layer->biases);
     free(layer);
 }
 
 static cgrad_error linear_update_computational_graph(struct tensor *const x, struct linear_layer *const layer, struct tensor *const out)
 {
-    cgrad_error err = add_computational_graph_link(x, INPUT, out, &linear_backpropagate_input);
+    // struct tensor_allocator *t_allocator = layer->ag_allocators->t_allocator;
+    // struct computational_graph_allocator *cg_allocator = layer->ag_allocators->cg_allocator;
+    // if (!ag_allocators)
+    // {
+    //     return COMPUTATIONAL_GRAPH_ALLOCATOR_NULL;
+    // }
+
+    cgrad_error err = add_computational_graph_link(x, INPUT, out, &linear_backpropagate_input, layer->ag_allocators);
     if (err != NO_ERROR) 
     {
         return err;
     }
 
-    err = add_computational_graph_link(layer->weights, WEIGHTS, out, &linear_backpropagate_weights);
+    err = add_computational_graph_link(layer->weights, WEIGHTS, out, &linear_backpropagate_weights, layer->ag_allocators);
     if (err != NO_ERROR) 
     {
         return err;
     }
 
-    return add_computational_graph_link(layer->biases, BIAS, out, &linear_backpropagate_bias);
+    return add_computational_graph_link(layer->biases, BIAS, out, &linear_backpropagate_bias, layer->ag_allocators);
 }
 
 static void linear_backpropagate_input(const struct backpropagation_context* const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
     const struct tensor *rhs = ctx->operands[WEIGHTS];
-    struct tensor *rhs_trans= tensor2d_no_grad_alloc(rhs->shape[1], rhs->shape[0]);
+    struct tensor_allocator *t_allocator = ctx->owned_allocator;
+
+    size_t shape[] = {rhs->shape[1], rhs->shape[0]};
+    size_t shape_size = 2;
+    // struct tensor *rhs_trans= tensor2d_no_grad_alloc(rhs->shape[1], rhs->shape[0]);
+    struct tensor *rhs_trans = tensor_allocator_no_grad_alloc(t_allocator, shape, shape_size);
+
     tensor2d_trans(rhs, rhs_trans);
     tensor2d_mult(grad_wrt_out, rhs_trans, grad_wrt_operand);
-    tensor_no_grad_free(rhs_trans);
+
+    tensor_allocator_no_grad_free(t_allocator, rhs_trans);
+    // tensor_no_grad_free(rhs_trans);
 }
 
 static void linear_backpropagate_weights(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
     const struct tensor* lhs = ctx->operands[INPUT];
-    struct tensor *lhs_trans = tensor2d_no_grad_alloc(lhs->shape[1], lhs->shape[0]);
+    struct tensor_allocator *t_allocator = ctx->owned_allocator;
+
+    size_t shape[] = {lhs->shape[1], lhs->shape[0]};
+    size_t shape_size = 2;
+    // struct tensor *lhs_trans = tensor2d_no_grad_alloc(lhs->shape[1], lhs->shape[0]);
+    struct tensor *lhs_trans = tensor_allocator_no_grad_alloc(t_allocator, shape, shape_size);
+
     tensor2d_trans(lhs, lhs_trans);
     tensor2d_mult(lhs_trans, grad_wrt_out, grad_wrt_operand);
-    tensor_no_grad_free(lhs_trans);
+
+    // tensor_no_grad_free(lhs_trans);
+    tensor_allocator_no_grad_free(t_allocator, lhs_trans);
 }
 
 static void linear_backpropagate_bias(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)

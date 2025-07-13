@@ -1,10 +1,13 @@
 #include "layers/linear.h"
 #include "layers/relu.h"
 #include "losses/mse.h"
-#include "autograd/backpropagation.h"
+#include "autograd/backpropagation/backpropagation.h"
+#include "autograd/autograd_allocators.h"
 #include "model/model_params.h"
 #include "tensor/tensor.h"
 #include "optimizers/sgd.h"
+#include "memory/tensor/cpu/tensor_cpu_allocator.h"
+#include "memory/computational_graph/computational_graph_cpu_allocator.h"
 #include "utils/random.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,22 +29,58 @@ int main()
     const size_t hidden_dim = 128;
     const size_t out_dim = 1;
 
-    struct tensor *x = tensor2d_alloc(batch_size, input_dim);
-    struct tensor *y_target = tensor2d_alloc(batch_size, 1);
+    // Memory initialization
+    struct tensor_cpu_pool t_pool;
+    if (tensor_cpu_pool_init(&t_pool) != NO_ERROR)
+    {
+        return EXIT_FAILURE;
+    }
+
+    struct computational_graph_cpu_pool cg_pool;
+    if (computational_graph_cpu_pool_init(&cg_pool) != NO_ERROR)
+    {
+        return EXIT_FAILURE;
+    }
+
+    // Allocator initialization
+    struct tensor_allocator t_allocator = make_tensor_cpu_allocator(&t_pool);
+    struct computational_graph_allocator cg_allocator = make_computational_graph_cpu_allocator(&cg_pool);
+    struct autograd_allocators allocators = {&t_allocator, &cg_allocator};
+
+    // size_t shape[] = {2, 2};
+    // struct tensor *t = tensor_allocator_alloc(&t_allocator, shape, 2);
+    // struct computational_graph_node *node;
+    // printf("%ld\n", sizeof(struct computational_graph_node));
+    
+    // for (size_t i = 0; i < 100; i++)
+    // {
+    //     struct computational_graph_node* next_node = computational_graph_allocator_alloc(&cg_allocator, t);
+    //     printf("%td\n", (void*)next_node - (void*)node);
+    //     node = next_node;
+    //     // computational_graph_allocator_free(&cg_allocator, node);
+    // }
+
+    size_t x_shape[] = {batch_size, input_dim};
+    size_t x_shape_size = 2;
+    struct tensor *x = tensor_allocator_alloc(&t_allocator, x_shape, x_shape_size);
+
+    size_t y_shape[] = {batch_size, 1};
+    size_t y_shape_size = 2;
+    struct tensor *y_target = tensor_allocator_alloc(&t_allocator, y_shape, y_shape_size);
     if (!x || !y_target)
     {
-        tensor_free(x);
-        tensor_free(y_target);
+        tensor_allocator_free(&t_allocator, x);
+        tensor_allocator_free(&t_allocator, y_target);
         return EXIT_FAILURE;
     }
 
     build_example_dataset(x, y_target);
 
     // Allocate model
-    struct linear_layer *linear1 = linear_alloc(input_dim, hidden_dim);
+    struct linear_layer *linear1 = linear_alloc(input_dim, hidden_dim, &t_allocator, &allocators);
     linear_xavier_init(linear1);
 
-    struct linear_layer *linear2 = linear_alloc(hidden_dim, out_dim);
+    struct linear_layer *linear2 = linear_alloc(hidden_dim, out_dim, &t_allocator, &allocators);
     linear_xavier_init(linear2);
 
     // Setup model params
@@ -53,8 +92,8 @@ int main()
     add_model_param(&params, linear2->biases);
 
     // Setup optimizer
-    struct sgd_state opt_state;
-    if (init_sgd_state(&opt_state, &params) != NO_ERROR)
+    struct sgd_optimizer opt;
+    if (sgd_optimizer_init(&opt, &params, &t_allocator) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
@@ -66,23 +105,31 @@ int main()
     for (size_t i = 0; i < epochs; i++)
     {
         // ------------- Forward -------------
-        struct tensor *h1 = tensor2d_alloc(batch_size, hidden_dim);
+        size_t h1_shape[] = {batch_size, hidden_dim};
+        size_t h1_shape_size = 2;
+        struct tensor *h1 = tensor_allocator_alloc(&t_allocator, h1_shape, h1_shape_size);
         if (linear_forward_graph(x, linear1, h1) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
 
-        struct tensor *h2 = tensor2d_alloc(batch_size, hidden_dim);
-        relu_forward_graph(h1, h2);
+        size_t h2_shape[] = {batch_size, hidden_dim};
+        size_t h2_shape_size = 2;
+        struct tensor *h2 = tensor_allocator_alloc(&t_allocator, h2_shape, h2_shape_size);
+        relu_forward_graph(h1, h2, &allocators);
 
-        struct tensor *h3 = tensor2d_alloc(batch_size, out_dim);
+        size_t h3_shape[] = {batch_size, out_dim};
+        size_t h3_shape_size = 2;
+        struct tensor *h3 = tensor_allocator_alloc(&t_allocator, h3_shape, h3_shape_size);
         if (linear_forward_graph(h2, linear2, h3) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
 
-        struct tensor *z = tensor2d_alloc(1, 1);
-        if (mse_loss_graph(h3, y_target, z) != NO_ERROR)
+        size_t z_shape[] = {1, 1};
+        size_t z_shape_size = 2;
+        struct tensor *z = tensor_allocator_alloc(&t_allocator, z_shape, z_shape_size);
+        if (mse_loss_graph(h3, y_target, z, &allocators) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
@@ -91,20 +138,20 @@ int main()
 
         // ------------- Backward -------------
         zero_grad(&params);
-        backward(z, false);
-        sgd_step(lr, momentum, false, &opt_state, &params);
+        backward(z, &allocators);
+        sgd_optimizer_step(&opt, lr, momentum, false);
 
         // Clear iteration allocations
-        tensor_free(h1);
-        tensor_free(h2);
-        tensor_free(h3);
-        tensor_free(z);
+        tensor_allocator_free(&t_allocator, h1);
+        tensor_allocator_free(&t_allocator, h2);
+        tensor_allocator_free(&t_allocator, h3);
+        tensor_allocator_free(&t_allocator, z);
     }
 
     // Cleanup
-    free_sgd_state_tensors(&opt_state);
-    tensor_free(x);
-    tensor_free(y_target);
+    sgd_optimizer_cleanup(&opt);
+    tensor_allocator_free(&t_allocator, x);
+    tensor_allocator_free(&t_allocator, y_target);
     linear_free(linear1);
     linear_free(linear2);
     return EXIT_SUCCESS;

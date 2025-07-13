@@ -11,7 +11,7 @@ typedef enum
 
     // Tensor operations errors
     TENSOR_NULL,                 /**< Tensor pointer is null. */
-    TENSOR_SHAPE_NULL,           /**< Tensor shape pointer is null. */
+    TENSOR_GRAD_NULL,
     TENSOR_WRONG_SHAPE,          /**< Tensor has an incorrect shape. */
     TENSOR_DATA_NULL,            /**< Tensor data pointer is null. */
     TENSOR_INDEX_OUT_OF_BOUNDS,  /**< Index is out of bounds for the tensor. */
@@ -20,14 +20,25 @@ typedef enum
 
     // Model errors
     MODEL_MAX_PARAMS_EXCEEDED,
+    MODEL_PARAMS_NULL,
+
+    // Optimizers
+    OPTIMIZER_NULL,
+
+    // Allocator
+    TENSOR_ALLOCATOR_NULL,
+    COMPUTATIONAL_GRAPH_ALLOCATOR_NULL,
 
     // Autograd errors
     AUTOGRAD_MAX_PARENTS_EXCEEDED,
     AUTOGRAD_MAX_CHILDREN_EXCEEDED,
     AUTOGRAD_MAX_TARGETS_EXCEEDED,
     AUTOGRAD_INVALID_CONTEXT_ID,
+    AUTOGRAD_CONTEXT_ID_ALREADY_TAKEN,
     AUTOGRAD_COMPUTATIONAL_GRAPH_NODE_ALLOCATION_ERROR,
     AUTOGRAD_BACKPROPAGATION_CONTEXT_NULL,
+    AUTOGRAD_ALLOCATORS_NULL,
+    AUTOGRAD_BACKPROPAGATION_FUNCTION_NULL,
 
     // Dataset
     DATASET_NULL,
@@ -40,6 +51,10 @@ typedef enum
 
     // Index Batch
     INDEXES_BATCH_NULL,
+
+    // Memory
+    MEMORY_POOL_NULL,
+    MEMORY_POOL_CHUNK_ALLOCATION_FAILED,
 
     // General
     INPUT_PTR_NULL,

@@ -1,5 +1,5 @@
 #include "tensor/tensor_add.h"
-#include "autograd/computational_graph.h"
+#include "autograd/computational_graph/computational_graph.h"
 
 typedef enum tensor_add_operand
 {
@@ -27,10 +27,6 @@ cgrad_error tensor_add(const struct tensor *const A, const struct tensor *const 
     {
         return TENSOR_DATA_NULL;
     }
-    if (!A->shape || !B->shape || !out->shape)
-    {
-        return TENSOR_SHAPE_NULL;
-    } 
     if (A->data_size != B->data_size || B->data_size != out->data_size)
     {
         return TENSOR_DATA_SIZE_MISMATCH;
@@ -44,7 +40,7 @@ cgrad_error tensor_add(const struct tensor *const A, const struct tensor *const 
     return NO_ERROR;
 }
 
-cgrad_error tensor_add_graph(struct tensor *const A, struct tensor *const B, struct tensor *const out)
+cgrad_error tensor_add_graph(struct tensor *const A, struct tensor *const B, struct tensor *const out, struct autograd_allocators *allocators)
 {
     cgrad_error err = tensor_add(A, B, out);
     if (err != NO_ERROR)
@@ -53,13 +49,13 @@ cgrad_error tensor_add_graph(struct tensor *const A, struct tensor *const B, str
     }
 
     // Update computational graph
-    err = add_computational_graph_link(A, LHS_TENSOR, out, &tensor_add_backpropagate);
+    err = add_computational_graph_link(A, LHS_TENSOR, out, &tensor_add_backpropagate, allocators);
     if (err != NO_ERROR)
     {
         return err;
     }
 
-    err = add_computational_graph_link(B, RHS_TENSOR, out, &tensor_add_backpropagate);
+    err = add_computational_graph_link(B, RHS_TENSOR, out, &tensor_add_backpropagate, allocators);
 
     return err;
 }

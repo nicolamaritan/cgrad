@@ -1,7 +1,7 @@
 #ifndef COMPUTATIONAL_GRAPH_H
 #define COMPUTATIONAL_GRAPH_H
 
-#include "autograd/backpropagation_function.h"
+#include "autograd/backpropagation/backpropagation_function.h"
 #include "utils/error.h"
 #include "config.h"
 #include <stdbool.h>
@@ -29,39 +29,6 @@ struct computational_graph_node
     bool is_involved_in_backprop;                /**< Flag indicating if the node is involved in backpropagation. */
     bool is_grad_computed;                       /**< Flag indicating if the gradient has been computed. */
 };
-
-/**
- * @brief Allocates and initializes a new computational graph node.
- *
- * @return A pointer to the newly allocated computational graph node.
- */
-struct computational_graph_node *computational_graph_node_alloc();
-
-/**
- * @brief Allocates and initializes a new computational graph node with an associated tensor.
- *
- * @param t The tensor to associate with the new node.
- * @return A pointer to the newly allocated computational graph node.
- */
-struct computational_graph_node *computational_graph_node_tensor_alloc(struct tensor *const t);
-
-/**
- * @brief Frees the memory allocated for a computational graph node.
- *
- * @param node The node to free.
- */
-void free_computational_graph_node(struct computational_graph_node *const node);
-
-/**
- * @brief Adds a link between two tensors in the computational graph.
- *
- * @param operand The operand tensor.
- * @param operand_id The ID of the operand.
- * @param result The result tensor.
- * @param backprop_function The backpropagation function to use.
- * @return NO_ERROR if successful, otherwise an appropriate error code.
- */
-cgrad_error add_computational_graph_link(struct tensor* operand, size_t operand_id, struct tensor* result, backpropagation_function backprop_function);
 
 /**
  * @brief Prints the details of a computational graph node.

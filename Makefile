@@ -3,7 +3,7 @@ CFLAGS = -Wall -Iinclude
 DEBUG_CFLAGS = -Wall -Iinclude -g
 LDFLAGS = -lblas -lm
 
-SRC = $(wildcard src/*/*.c)
+SRC = $(shell find src -name "*.c" -type f)
 OBJ = $(SRC:.c=.o)
 DEBUG_OBJ = $(SRC:.c=.debug.o)
 

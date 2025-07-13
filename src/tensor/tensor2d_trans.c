@@ -1,5 +1,6 @@
 #include "tensor/tensor2d_trans.h"
-#include "autograd/computational_graph.h"
+#include "autograd/computational_graph/computational_graph.h"
+#include "autograd/computational_graph/computational_graph_link.h"
 
 typedef enum tensor2d_trans_operand
 {
@@ -14,10 +15,6 @@ cgrad_error tensor2d_trans(const struct tensor *const t, struct tensor *const ou
     {
         return TENSOR_NULL;
     }
-    if (!t->shape || !out->shape)
-    {
-        return TENSOR_SHAPE_NULL;
-    }
     if (!t->data || !out->data)
     {
         return TENSOR_DATA_NULL;
@@ -31,7 +28,7 @@ cgrad_error tensor2d_trans(const struct tensor *const t, struct tensor *const ou
     return NO_ERROR;
 }
 
-cgrad_error tensor2d_trans_graph(struct tensor *const t, struct tensor *const out)
+cgrad_error tensor2d_trans_graph(struct tensor *const t, struct tensor *const out, struct autograd_allocators *allocators)
 {
     cgrad_error err = tensor2d_trans(t, out);
 
@@ -40,7 +37,7 @@ cgrad_error tensor2d_trans_graph(struct tensor *const t, struct tensor *const ou
         return err;
     }
 
-    err = add_computational_graph_link(t, TENSOR2D_TRANS_ONLY_OPERAND, out, &tensor2d_trans_backpropagate);
+    err = add_computational_graph_link(t, TENSOR2D_TRANS_ONLY_OPERAND, out, &tensor2d_trans_backpropagate, allocators);
     return err;
 }
 
