@@ -1,5 +1,6 @@
 #include "autograd/backpropagation/backpropagation.h"
 #include "autograd/computational_graph/computational_graph.h"
+#include "autograd/backpropagation/backpropagation_queue.h"
 #include "config.h"
 #include <stdio.h>
 #include <string.h>
@@ -11,9 +12,7 @@ struct backpropagation_targets
     size_t size;
 };
 
-static void identify_backpropagation_nodes(struct computational_graph_node* const node, struct backpropagation_targets* targets);
-static struct tensor* build_gradient(struct computational_graph_node* const node, struct autograd_allocators *allocators);
-static void build_gradients(struct backpropagation_targets* const targets, struct autograd_allocators *allocators);
+static void build_gradients(struct computational_graph_node *loss_node, struct autograd_allocators *allocators, struct backpropagation_targets *targets);
 static cgrad_error add_target(struct backpropagation_targets* const targets, struct computational_graph_node* const node);
 static inline void set_gradient_wrt_itself(struct tensor* const t);
 
@@ -31,10 +30,8 @@ cgrad_error backward(struct tensor* t, struct autograd_allocators *allocators)
     struct backpropagation_targets targets;
     targets.size = 0;
 
-    identify_backpropagation_nodes(t->node, &targets);
-
     set_gradient_wrt_itself(t);
-    build_gradients(&targets, allocators);
+    build_gradients(t->node, allocators, &targets);
 
     for (size_t i = 0; i < targets.size; i++)
     {
@@ -46,62 +43,37 @@ cgrad_error backward(struct tensor* t, struct autograd_allocators *allocators)
     return NO_ERROR;
 }
 
-static void identify_backpropagation_nodes(struct computational_graph_node* const node, struct backpropagation_targets* targets)
+static void build_gradients(struct computational_graph_node *loss_node, struct autograd_allocators *allocators, struct backpropagation_targets *targets)
 {
-    node->is_involved_in_backprop = true;
-    add_target(targets, node);
-    for (size_t i = 0; i < node->n_children; i++)
-    {
-        identify_backpropagation_nodes(node->children[i], targets);
-    }
-}
+    struct backpropagation_queue queue;
+    backpropagation_queue_init(&queue);
 
-static struct tensor* build_gradient(struct computational_graph_node* const node, struct autograd_allocators *allocators)
-{
-    if (node->is_grad_computed)
-    {
-        return node->t->grad;
-    }
+    backpropagation_queue_push(&queue, loss_node);
 
-    for (size_t i = 0; i < node->n_parents; i++)
+    while (!backpropagation_queue_is_empty(&queue))
     {
-        if (!node->parents[i]->is_involved_in_backprop)
+        struct computational_graph_node *node = NULL;
+        backpropagation_queue_pop(&queue, &node);
+        add_target(targets, node);
+
+        for (size_t i = 0; i < node->n_children; i++)
         {
-            continue;
+            struct computational_graph_node *child_node = node->children[i];
+            struct tensor *gradient = tensor_allocator_no_grad_alloc(allocators->t_allocator, child_node->t->shape, child_node->t->shape_size);
+            struct backpropagation_context *ctx = &node->ctx;
+            size_t operand = node->children_operands[i];
+
+            node->function[operand](ctx, node->t->grad, gradient);
+            tensor_add_inplace(child_node->t->grad, gradient);
+            child_node->pushed_gradients_count++;
+
+            tensor_allocator_free(allocators->t_allocator, gradient);
+
+            if (child_node->pushed_gradients_count == child_node->n_parents)
+            {
+                backpropagation_queue_push(&queue, child_node);
+            }
         }
-
-        struct tensor* D = build_gradient(node->parents[i], allocators);
-
-        struct computational_graph_node *parent_node = node->parents[i];
-
-        // Compute gradient and add to current grad
-        // struct tensor* parent_i_gradient = tensor_no_grad_alloc(node->t->shape, node->t->shape_size);
-        struct tensor *parent_i_gradient = tensor_allocator_no_grad_alloc(allocators->t_allocator, node->t->shape, node->t->shape_size);
-
-        // Retrieve context
-        struct backpropagation_context *ctx = &parent_node->ctx;
-        
-        // Get which is the operand of the current node in the operation
-        // that created the i-th parent. This info is stored in the current node
-        size_t operand = node->parents_operands[i];
-        parent_node->function[operand](ctx, D, parent_i_gradient);
-
-        tensor_add_inplace(node->t->grad, parent_i_gradient);
-
-        // tensor_free(parent_i_gradient);
-        tensor_allocator_free(allocators->t_allocator, parent_i_gradient);
-    }
-
-    node->is_grad_computed = true;
-    return node->t->grad;
-}
-
-static void build_gradients(struct backpropagation_targets* const targets, struct autograd_allocators *allocators)
-{
-    size_t size = targets->size;
-    for (size_t i = 0; i < size; i++)
-    {
-        build_gradient(targets->targets[i], allocators);
     }
 }
 

@@ -22,12 +22,14 @@ struct computational_graph_node
     size_t n_parents;                            /**< Number of parent nodes. */
     size_t n_children;                           /**< Number of child nodes. */
     struct computational_graph_node *parents[AUTOGRAD_MAX_PARENTS];  /**< Array of parent nodes. */
-    size_t parents_operands[AUTOGRAD_MAX_PARENTS];            /**< Operands associated with each parent. */
+    // size_t parents_operands[AUTOGRAD_MAX_PARENTS];            /**< Operands associated with each parent. */
+    size_t children_operands[AUTOGRAD_MAX_CHILDREN];
     struct computational_graph_node *children[AUTOGRAD_MAX_CHILDREN];/**< Array of child nodes. */
     backpropagation_function function[AUTOGRAD_MAX_CHILDREN]; /**< Backpropagation functions for each child. */
     struct backpropagation_context ctx;              /**< Context needed during backpropagation for computing gradients. */
     bool is_involved_in_backprop;                /**< Flag indicating if the node is involved in backpropagation. */
     bool is_grad_computed;                       /**< Flag indicating if the gradient has been computed. */
+    size_t pushed_gradients_count;
 };
 
 /**
