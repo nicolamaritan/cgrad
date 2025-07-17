@@ -2,7 +2,13 @@
 #include "autograd/computational_graph/computational_graph.h"
 #include "autograd/computational_graph/computational_graph_link.h"
 #include <stdlib.h>
-#include <immintrin.h>
+
+#ifdef USE_AVX
+    #include <immintrin.h>
+    #define HAS_AVX_SUPPORT 1
+#else
+    #define HAS_AVX_SUPPORT 0
+#endif
 
 typedef enum tensor2d_add_row_vector_operand
 {
@@ -12,6 +18,12 @@ typedef enum tensor2d_add_row_vector_operand
 
 static void tensor2d_add_row_vector_backpropagate_tensor2d(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static void tensor2d_add_row_vector_backpropagate_row_vector(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+
+#if HAS_AVX_SUPPORT
+    void tensor2d_add_row_vector_unchecked_avx(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
+#else
+    void tensor2d_add_row_vector_unchecked_sequential(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
+#endif
 
 cgrad_error tensor2d_add_row_vector(const struct tensor *const A, const struct tensor *const v, struct tensor *const out)
 {
@@ -68,7 +80,7 @@ cgrad_error tensor2d_add_row_vector_graph(struct tensor *const A, struct tensor 
 
     // Update computational graph
     cgrad_error err = add_computational_graph_link(A, TENSOR2D, out, &tensor2d_add_row_vector_backpropagate_tensor2d, allocators);
-    if (err != NO_ERROR) 
+    if (err != NO_ERROR)
     {
         return err;
     }
@@ -80,31 +92,11 @@ cgrad_error tensor2d_add_row_vector_graph(struct tensor *const A, struct tensor 
 
 void tensor2d_add_row_vector_unchecked(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
 {
-    size_t rows = A->shape[0];
-    size_t cols = A->shape[1];
-
-    double *A_data = A->data;
-    double *v_data = v->data;
-    double *out_data = out->data;
-
-    for (size_t i = 0; i < rows; i++)
-    {
-        size_t row_offset = i * cols;
-        size_t j = 0;
-
-        for (; j + 3 < cols; j+=4)
-        {
-            __m256d a_vals = _mm256_loadu_pd(&A_data[row_offset + j]);
-            __m256d v_vals = _mm256_loadu_pd(&v_data[j]);
-            __m256d sum = _mm256_add_pd(a_vals, v_vals);
-            _mm256_storeu_pd(&out_data[row_offset + j], sum);
-        }
-
-        for (; j < cols; j++)
-        {
-            out_data[row_offset + j] = A_data[row_offset + j] + v_data[j];
-        }
-    }
+    #if HAS_AVX_SUPPORT
+        tensor2d_add_row_vector_unchecked_avx(A, v, out);
+    #else
+        tensor2d_add_row_vector_unchecked_sequential(A, v, out);
+    #endif
 }
 
 static void tensor2d_add_row_vector_backpropagate_tensor2d(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
@@ -131,3 +123,55 @@ static void tensor2d_add_row_vector_backpropagate_row_vector(const struct backpr
         }
     }
 }
+
+#if HAS_AVX_SUPPORT 
+    #define AVX_DOUBLE_NUMBER 4
+    void tensor2d_add_row_vector_unchecked_avx(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
+    {
+        size_t rows = A->shape[0];
+        size_t cols = A->shape[1];
+
+        double *A_data = A->data;
+        double *v_data = v->data;
+        double *out_data = out->data;
+
+        for (size_t i = 0; i < rows; i++)
+        {
+            size_t row_offset = i * cols;
+            size_t j = 0;
+
+            for (; j + AVX_DOUBLE_NUMBER - 1 < cols; j += AVX_DOUBLE_NUMBER)
+            {
+                __m256d a_vals = _mm256_loadu_pd(&A_data[row_offset + j]);
+                __m256d v_vals = _mm256_loadu_pd(&v_data[j]);
+                __m256d sum = _mm256_add_pd(a_vals, v_vals);
+                _mm256_storeu_pd(&out_data[row_offset + j], sum);
+            }
+
+            for (; j < cols; j++)
+            {
+                out_data[row_offset + j] = A_data[row_offset + j] + v_data[j];
+            }
+        }
+    }
+#else
+    void tensor2d_add_row_vector_unchecked_sequential(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
+    {
+        size_t rows = A->shape[0];
+        size_t cols = A->shape[1];
+
+        double *A_data = A->data;
+        double *v_data = v->data;
+        double *out_data = out->data;
+
+        for (size_t i = 0; i < rows; i++)
+        {
+            size_t row_offset = i * cols;
+
+            for (size_t j = 0; j < cols; j++)
+            {
+                out_data[row_offset + j] = A_data[row_offset + j] + v_data[j];
+            }
+        }
+    }
+#endif
