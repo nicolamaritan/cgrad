@@ -100,7 +100,7 @@ int main(int argc, char **argv)
     // Setup indexes batch container. In this case, the container's capacity is the batch size.
     struct indexes_batch *ixs_batch = indexes_batch_alloc(batch_size);
 
-    size_t epochs = 2;
+    size_t epochs = 1;
     for (size_t epoch = 0; epoch < epochs; epoch++)
     {
         struct indexes_permutation *permutation = indexes_permutation_alloc(train_set->rows);
