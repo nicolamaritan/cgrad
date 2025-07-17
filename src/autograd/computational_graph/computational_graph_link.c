@@ -7,7 +7,7 @@
  * @param child The child node to add.
  * @return NO_ERROR if successful, otherwise an appropriate error code.
  */
-static cgrad_error add_child(struct computational_graph_node *const node, struct computational_graph_node *const child);
+static cgrad_error add_child(struct computational_graph_node *const node, struct computational_graph_node *const child, const size_t operand);
 
 /**
  * @brief Adds a parent node to a computational graph node.
@@ -17,7 +17,7 @@ static cgrad_error add_child(struct computational_graph_node *const node, struct
  * @param operand The operand associated with the parent.
  * @return NO_ERROR if successful, otherwise an appropriate error code.
  */
-static cgrad_error add_parent(struct computational_graph_node *const node, struct computational_graph_node *const parent, const size_t operand);
+static cgrad_error add_parent(struct computational_graph_node *const node, struct computational_graph_node *const parent);
 
 cgrad_error add_computational_graph_link(struct tensor *operand, size_t operand_id, struct tensor *result, backpropagation_function backprop_function, struct autograd_allocators *allocators)
 {
@@ -52,7 +52,7 @@ cgrad_error add_computational_graph_link(struct tensor *operand, size_t operand_
     }
 
     // Setup connection
-    cgrad_error error = add_parent(operand_node, result_node, operand_id);
+    cgrad_error error = add_parent(operand_node, result_node);
     if (error != NO_ERROR)
     {
         computational_graph_allocator_free(allocators->cg_allocator, operand_node);
@@ -60,7 +60,7 @@ cgrad_error add_computational_graph_link(struct tensor *operand, size_t operand_
         return error;
     }
 
-    error = add_child(result_node, operand_node);
+    error = add_child(result_node, operand_node, operand_id);
     if (error != NO_ERROR)
     {
         computational_graph_allocator_free(allocators->cg_allocator, operand_node);
@@ -77,7 +77,7 @@ cgrad_error add_computational_graph_link(struct tensor *operand, size_t operand_
     return NO_ERROR;
 }
 
-static cgrad_error add_child(struct computational_graph_node *const node, struct computational_graph_node *const child)
+static cgrad_error add_child(struct computational_graph_node *const node, struct computational_graph_node *const child, const size_t operand)
 {
     size_t const n_children = node->n_children;
     if (n_children >= AUTOGRAD_MAX_CHILDREN)
@@ -86,12 +86,13 @@ static cgrad_error add_child(struct computational_graph_node *const node, struct
     }
 
     node->children[n_children] = child;
+    node->children_operands[n_children] = operand;
     node->n_children++;
 
     return NO_ERROR;
 }
 
-static cgrad_error add_parent(struct computational_graph_node *const node, struct computational_graph_node *const parent, const size_t operand)
+static cgrad_error add_parent(struct computational_graph_node *const node, struct computational_graph_node *const parent)
 {
     size_t const n_parents = node->n_parents;
     if (n_parents >= AUTOGRAD_MAX_PARENTS)
@@ -100,7 +101,6 @@ static cgrad_error add_parent(struct computational_graph_node *const node, struc
     }
 
     node->parents[n_parents] = parent;
-    node->parents_operands[n_parents] = operand;
     node->n_parents++;
 
     return NO_ERROR;

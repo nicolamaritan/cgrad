@@ -29,11 +29,13 @@ static struct computational_graph_node *computational_graph_cpu_alloc(void *pool
     t->node = node;
     node->is_involved_in_backprop = false;
     node->is_grad_computed = false;
+    node->pushed_gradients_count = 0;
 
     // Initialize arrays to prevent undefined behavior
     memset(node->parents, 0, sizeof(node->parents));
     memset(node->children, 0, sizeof(node->children));
-    memset(node->parents_operands, 0, sizeof(node->parents_operands));
+    // memset(node->parents_operands, 0, sizeof(node->parents_operands));
+    memset(node->children_operands, 0, sizeof(node->children_operands));
     memset(node->function, 0, sizeof(node->function));
     context_init(&node->ctx, t_allocator); // Pointer is not NULL at this point
 
