@@ -2,6 +2,7 @@
 #include "autograd/computational_graph/computational_graph.h"
 #include "autograd/computational_graph/computational_graph_link.h"
 #include <stdlib.h>
+#include <immintrin.h>
 
 typedef enum tensor2d_add_row_vector_operand
 {
@@ -84,13 +85,24 @@ void tensor2d_add_row_vector_unchecked(const struct tensor *const A, const struc
 
     double *A_data = A->data;
     double *v_data = v->data;
+    double *out_data = out->data;
 
     for (size_t i = 0; i < rows; i++)
     {
-        for (size_t j = 0; j < cols; j++)
+        size_t row_offset = i * cols;
+        size_t j = 0;
+
+        for (; j + 3 < cols; j+=4)
         {
-            // Unchecked is invoked for performance reasons.
-            tensor2d_set_unchecked(out, i, j, A_data[i * cols + j] + v_data[j]);
+            __m256d a_vals = _mm256_loadu_pd(&A_data[row_offset + j]);
+            __m256d v_vals = _mm256_loadu_pd(&v_data[j]);
+            __m256d sum = _mm256_add_pd(a_vals, v_vals);
+            _mm256_storeu_pd(&out_data[row_offset + j], sum);
+        }
+
+        for (; j < cols; j++)
+        {
+            out_data[row_offset + j] = A_data[row_offset + j] + v_data[j];
         }
     }
 }
