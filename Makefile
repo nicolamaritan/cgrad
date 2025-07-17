@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS = -Wall -Iinclude
-DEBUG_CFLAGS = -Wall -Iinclude -g
+CFLAGS = -Wall -Iinclude -mavx
+DEBUG_CFLAGS = -Wall -Iinclude -mavx -g
 LDFLAGS = -lblas -lm
 
 SRC = $(shell find src -name "*.c" -type f)

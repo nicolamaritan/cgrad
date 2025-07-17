@@ -47,19 +47,6 @@ int main()
     struct computational_graph_allocator cg_allocator = make_computational_graph_cpu_allocator(&cg_pool);
     struct autograd_allocators allocators = {&t_allocator, &cg_allocator};
 
-    // size_t shape[] = {2, 2};
-    // struct tensor *t = tensor_allocator_alloc(&t_allocator, shape, 2);
-    // struct computational_graph_node *node;
-    // printf("%ld\n", sizeof(struct computational_graph_node));
-    
-    // for (size_t i = 0; i < 100; i++)
-    // {
-    //     struct computational_graph_node* next_node = computational_graph_allocator_alloc(&cg_allocator, t);
-    //     printf("%td\n", (void*)next_node - (void*)node);
-    //     node = next_node;
-    //     // computational_graph_allocator_free(&cg_allocator, node);
-    // }
-
     size_t x_shape[] = {batch_size, input_dim};
     size_t x_shape_size = 2;
     struct tensor *x = tensor_allocator_alloc(&t_allocator, x_shape, x_shape_size);
