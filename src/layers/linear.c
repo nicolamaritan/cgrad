@@ -10,6 +10,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef USE_AVX
+    #include "immintrin.h"
+    #define HAS_AVX_SUPPORT 1
+#else
+    #define HAS_AVX_SUPPORT 0
+#endif
+
 typedef enum linear_layer_operand
 {
     INPUT,
@@ -21,6 +28,12 @@ static cgrad_error linear_update_computational_graph(struct tensor *const x, str
 static void linear_backpropagate_input(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static void linear_backpropagate_weights(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static void linear_backpropagate_bias(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+
+#if HAS_AVX_SUPPORT
+    static void linear_backpropagate_bias_avx(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+#else
+    static void linear_backpropagate_bias_sequential(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+#endif
 
 struct linear_layer *linear_alloc(const size_t in_dim, const size_t out_dim, struct tensor_allocator *params_allocator, struct autograd_allocators *const ag_allocators)
 {
@@ -108,13 +121,6 @@ void linear_free(struct linear_layer *layer)
 
 static cgrad_error linear_update_computational_graph(struct tensor *const x, struct linear_layer *const layer, struct tensor *const out)
 {
-    // struct tensor_allocator *t_allocator = layer->ag_allocators->t_allocator;
-    // struct computational_graph_allocator *cg_allocator = layer->ag_allocators->cg_allocator;
-    // if (!ag_allocators)
-    // {
-    //     return COMPUTATIONAL_GRAPH_ALLOCATOR_NULL;
-    // }
-
     cgrad_error err = add_computational_graph_link(x, INPUT, out, &linear_backpropagate_input, layer->ag_allocators);
     if (err != NO_ERROR) 
     {
@@ -137,14 +143,12 @@ static void linear_backpropagate_input(const struct backpropagation_context* con
 
     size_t shape[] = {rhs->shape[1], rhs->shape[0]};
     size_t shape_size = 2;
-    // struct tensor *rhs_trans= tensor2d_no_grad_alloc(rhs->shape[1], rhs->shape[0]);
     struct tensor *rhs_trans = tensor_allocator_no_grad_alloc(t_allocator, shape, shape_size);
 
     tensor2d_trans(rhs, rhs_trans);
     tensor2d_mult(grad_wrt_out, rhs_trans, grad_wrt_operand);
 
     tensor_allocator_no_grad_free(t_allocator, rhs_trans);
-    // tensor_no_grad_free(rhs_trans);
 }
 
 static void linear_backpropagate_weights(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
@@ -154,32 +158,63 @@ static void linear_backpropagate_weights(const struct backpropagation_context *c
 
     size_t shape[] = {lhs->shape[1], lhs->shape[0]};
     size_t shape_size = 2;
-    // struct tensor *lhs_trans = tensor2d_no_grad_alloc(lhs->shape[1], lhs->shape[0]);
     struct tensor *lhs_trans = tensor_allocator_no_grad_alloc(t_allocator, shape, shape_size);
 
     tensor2d_trans(lhs, lhs_trans);
     tensor2d_mult(lhs_trans, grad_wrt_out, grad_wrt_operand);
 
-    // tensor_no_grad_free(lhs_trans);
     tensor_allocator_no_grad_free(t_allocator, lhs_trans);
 }
 
 static void linear_backpropagate_bias(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
-    size_t G_rows = grad_wrt_out->shape[0];
-    size_t G_cols = grad_wrt_out->shape[1];
+    #if HAS_AVX_SUPPORT
+        linear_backpropagate_bias_avx(ctx, grad_wrt_out, grad_wrt_operand);
+    #else
+        linear_backpropagate_bias_sequential(ctx, grad_wrt_out, grad_wrt_operand);
+    #endif
+}
 
-    for (size_t j = 0; j < G_cols; j++)
+#if HAS_AVX_SUPPORT
+    #define AVX_DOUBLE_NUMBER 4
+    static void linear_backpropagate_bias_avx(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
     {
-        grad_wrt_operand->data[j] = 0;
-    }
+        size_t G_rows = grad_wrt_out->shape[0];
+        size_t G_cols = grad_wrt_out->shape[1];
 
-    // Iterating by row since vectors are stored in row-major
-    for (size_t i = 0; i < G_rows; i++)
-    {
-        for (size_t j = 0; j < G_cols; j++)
+        // Iterating by row since vectors are stored in row-major
+        for (size_t i = 0; i < G_rows; i++)
         {
-            grad_wrt_operand->data[j] += grad_wrt_out->data[i * G_cols + j];
+            size_t j = 0;
+            size_t row_offset = i * G_cols;
+
+            for (; j + AVX_DOUBLE_NUMBER - 1 < G_cols; j += AVX_DOUBLE_NUMBER)
+            {
+                __m256d grad_wrt_operand_vals = _mm256_loadu_pd(&grad_wrt_operand->data[j]);
+                __m256d grad_wrt_out_vals = _mm256_loadu_pd(&grad_wrt_out->data[i * G_cols + j]);
+                __m256d sum = _mm256_add_pd(grad_wrt_operand_vals, grad_wrt_out_vals);
+                _mm256_storeu_pd(&grad_wrt_operand->data[j], sum);
+            }
+
+            for (; j < G_cols; j++)
+            {
+                grad_wrt_operand->data[row_offset + j] += grad_wrt_out->data[j];
+            }
         }
     }
-}
+#else
+    static void linear_backpropagate_bias_sequential(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+    {
+        size_t G_rows = grad_wrt_out->shape[0];
+        size_t G_cols = grad_wrt_out->shape[1];
+
+        // Iterating by row since vectors are stored in row-major
+        for (size_t i = 0; i < G_rows; i++)
+        {
+            for (size_t j = 0; j < G_cols; j++)
+            {
+                grad_wrt_operand->data[j] += grad_wrt_out->data[i * G_cols + j];
+            }
+        }
+    }
+#endif

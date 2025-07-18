@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Iinclude -mavx -DUSE_AVX
+CFLAGS = -Wall -Iinclude -mavx -DUSE_AVX -O3
 DEBUG_CFLAGS = -Wall -Iinclude -mavx -g
 LDFLAGS = -lblas -lm
 
