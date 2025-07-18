@@ -109,11 +109,6 @@ static void tensor2d_add_row_vector_backpropagate_row_vector(const struct backpr
     size_t G_rows = grad_wrt_out->shape[0];
     size_t G_cols = grad_wrt_out->shape[1];
 
-    for (size_t j = 0; j < G_cols; j++)
-    {
-        grad_wrt_operand->data[j] = 0;
-    }
-
     // Iterating by row since vectors are stored in row-major
     for (size_t i = 0; i < G_rows; i++)
     {
