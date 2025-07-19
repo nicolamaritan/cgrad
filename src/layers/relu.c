@@ -17,9 +17,9 @@ typedef enum relu_layer_operand
 static void relu_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 void relu_forward_unchecked(const struct tensor *const x, struct tensor *const out);
 #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256
-    void relu_forward_unchecked_avx(const struct tensor* const x, struct tensor* const out);
+    void relu_forward_unchecked_avx_256(const struct tensor* const x, struct tensor* const out);
 #else
-    void relu_forward_unchecked_sequential(const struct tensor* const x, struct tensor* const out);
+    void relu_forward_unchecked_scalar(const struct tensor* const x, struct tensor* const out);
 #endif
 
 cgrad_error relu_forward_graph(struct tensor *const x, struct tensor *const out, struct autograd_allocators *ag_allocators)
@@ -51,18 +51,6 @@ cgrad_error relu_forward(const struct tensor* const x, struct tensor* const out)
 
     relu_forward_unchecked(x, out);
     return NO_ERROR;
-
-    // Avoid multiple indirections for performance
-    // double* x_data = x->data;
-    // double* out_data = out->data;
-    // size_t out_data_size = out->data_size;
-
-    // for (size_t i = 0; i < out_data_size; i++)
-    // {
-    //     out_data[i] = x_data[i] > 0 ? x_data[i] : 0;
-    // }
-
-    // return NO_ERROR;
 }
 
 static void relu_backpropagate(const struct backpropagation_context *const ctx, const struct tensor* const grad_wrt_out, struct tensor *grad_wrt_operand)
@@ -90,15 +78,15 @@ static void relu_backpropagate(const struct backpropagation_context *const ctx, 
 void relu_forward_unchecked(const struct tensor *const x, struct tensor *const out)
 {
     #if SIMD_LEVEL >= 256 
-        relu_forward_unchecked_avx(x, out);
+        relu_forward_unchecked_avx_256(x, out);
     #else
-        relu_forward_unchecked_sequential(x, out);
+        relu_forward_unchecked_scalar(x, out);
     #endif
 }
 
 #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256 
     #define AVX_DOUBLE_NUMBER 4
-    void relu_forward_unchecked_avx(const struct tensor* const x, struct tensor* const out)
+    void relu_forward_unchecked_avx_256(const struct tensor* const x, struct tensor* const out)
     {
         double zeros[AVX_DOUBLE_NUMBER];
         memset(zeros, 0, sizeof(zeros));
@@ -118,7 +106,7 @@ void relu_forward_unchecked(const struct tensor *const x, struct tensor *const o
         }
     }
 #else
-    void relu_forward_unchecked_sequential(const struct tensor* const x, struct tensor* const out)
+    void relu_forward_unchecked_scalar(const struct tensor* const x, struct tensor* const out)
     {
         for (size_t i = 0; i < out->data_size; i++)
         {
