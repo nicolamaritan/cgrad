@@ -18,9 +18,9 @@ static void tensor2d_add_row_vector_backpropagate_tensor2d(const struct backprop
 static void tensor2d_add_row_vector_backpropagate_row_vector(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
 #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256
-    void tensor2d_add_row_vector_unchecked_avx(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
+    void tensor2d_add_row_vector_unchecked_avx_256(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
 #else
-    void tensor2d_add_row_vector_unchecked_sequential(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
+    void tensor2d_add_row_vector_unchecked_scalar(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
 #endif
 
 cgrad_error tensor2d_add_row_vector(const struct tensor *const A, const struct tensor *const v, struct tensor *const out)
@@ -91,9 +91,9 @@ cgrad_error tensor2d_add_row_vector_graph(struct tensor *const A, struct tensor 
 void tensor2d_add_row_vector_unchecked(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
 {
     #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256
-        tensor2d_add_row_vector_unchecked_avx(A, v, out);
+        tensor2d_add_row_vector_unchecked_avx_256(A, v, out);
     #else
-        tensor2d_add_row_vector_unchecked_sequential(A, v, out);
+        tensor2d_add_row_vector_unchecked_scalar(A, v, out);
     #endif
 }
 
@@ -119,7 +119,7 @@ static void tensor2d_add_row_vector_backpropagate_row_vector(const struct backpr
 
 #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256
     #define AVX_DOUBLE_NUMBER 4
-    void tensor2d_add_row_vector_unchecked_avx(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
+    void tensor2d_add_row_vector_unchecked_avx_256(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
     {
         size_t rows = A->shape[0];
         size_t cols = A->shape[1];
@@ -148,7 +148,7 @@ static void tensor2d_add_row_vector_backpropagate_row_vector(const struct backpr
         }
     }
 #else
-    void tensor2d_add_row_vector_unchecked_sequential(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
+    void tensor2d_add_row_vector_unchecked_scalar(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
     {
         size_t rows = A->shape[0];
         size_t cols = A->shape[1];

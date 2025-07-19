@@ -28,9 +28,9 @@ static void linear_backpropagate_weights(const struct backpropagation_context *c
 static void linear_backpropagate_bias(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
 #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256 
-    static void linear_backpropagate_bias_avx(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+    static void linear_backpropagate_bias_avx_256(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 #else
-    static void linear_backpropagate_bias_sequential(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+    static void linear_backpropagate_bias_scalar(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 #endif
 
 struct linear_layer *linear_alloc(const size_t in_dim, const size_t out_dim, struct tensor_allocator *params_allocator, struct autograd_allocators *const ag_allocators)
@@ -167,15 +167,15 @@ static void linear_backpropagate_weights(const struct backpropagation_context *c
 static void linear_backpropagate_bias(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
     #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256 
-        linear_backpropagate_bias_avx(ctx, grad_wrt_out, grad_wrt_operand);
+        linear_backpropagate_bias_avx_256(ctx, grad_wrt_out, grad_wrt_operand);
     #else
-        linear_backpropagate_bias_sequential(ctx, grad_wrt_out, grad_wrt_operand);
+        linear_backpropagate_bias_scalar(ctx, grad_wrt_out, grad_wrt_operand);
     #endif
 }
 
 #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256 
     #define AVX_DOUBLE_NUMBER 4
-    static void linear_backpropagate_bias_avx(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+    static void linear_backpropagate_bias_avx_256(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
     {
         size_t G_rows = grad_wrt_out->shape[0];
         size_t G_cols = grad_wrt_out->shape[1];
@@ -201,7 +201,7 @@ static void linear_backpropagate_bias(const struct backpropagation_context *cons
         }
     }
 #else
-    static void linear_backpropagate_bias_sequential(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+    static void linear_backpropagate_bias_scalar(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
     {
         size_t G_rows = grad_wrt_out->shape[0];
         size_t G_cols = grad_wrt_out->shape[1];
