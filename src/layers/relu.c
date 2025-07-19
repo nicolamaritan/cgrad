@@ -1,14 +1,12 @@
 #include "layers/relu.h"
 #include "autograd/computational_graph/computational_graph.h"
 #include "autograd/computational_graph/computational_graph_link.h"
+#include "utils/simd_support.h"
 #include <stdlib.h>
 #include <stdio.h>
 
-#ifdef USE_AVX
+#if SIMD_AVX_LEVEL > SIMD_AVX_LEVEL_0
     #include <immintrin.h>
-    #define HAS_AVX_SUPPORT 1
-#else
-    #define HAS_AVX_SUPPORT 0
 #endif
 
 typedef enum relu_layer_operand
@@ -18,7 +16,7 @@ typedef enum relu_layer_operand
 
 static void relu_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 void relu_forward_unchecked(const struct tensor *const x, struct tensor *const out);
-#if HAS_AVX_SUPPORT
+#if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256
     void relu_forward_unchecked_avx(const struct tensor* const x, struct tensor* const out);
 #else
     void relu_forward_unchecked_sequential(const struct tensor* const x, struct tensor* const out);
@@ -91,19 +89,19 @@ static void relu_backpropagate(const struct backpropagation_context *const ctx, 
 
 void relu_forward_unchecked(const struct tensor *const x, struct tensor *const out)
 {
-    #if HAS_AVX_SUPPORT
+    #if SIMD_LEVEL >= 256 
         relu_forward_unchecked_avx(x, out);
     #else
         relu_forward_unchecked_sequential(x, out);
     #endif
 }
 
-#if HAS_AVX_SUPPORT
+#if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256 
     #define AVX_DOUBLE_NUMBER 4
     void relu_forward_unchecked_avx(const struct tensor* const x, struct tensor* const out)
     {
         double zeros[AVX_DOUBLE_NUMBER];
-        memset(zeros, 0, HAS_AVX_SUPPORT);
+        memset(zeros, 0, sizeof(zeros));
         __m256d zeros_vals = _mm256_loadu_pd(zeros);
 
         size_t i = 0;

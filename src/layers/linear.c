@@ -4,17 +4,15 @@
 #include "tensor/tensor2d_trans.h"
 #include "autograd/computational_graph/computational_graph_link.h"
 #include "utils/random.h"
+#include "utils/simd_support.h"
 #include <math.h>
 #include <stdio.h>
 #include <cblas.h>
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef USE_AVX
+#if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_0
     #include "immintrin.h"
-    #define HAS_AVX_SUPPORT 1
-#else
-    #define HAS_AVX_SUPPORT 0
 #endif
 
 typedef enum linear_layer_operand
@@ -29,7 +27,7 @@ static void linear_backpropagate_input(const struct backpropagation_context *con
 static void linear_backpropagate_weights(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static void linear_backpropagate_bias(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
-#if HAS_AVX_SUPPORT
+#if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256 
     static void linear_backpropagate_bias_avx(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 #else
     static void linear_backpropagate_bias_sequential(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
@@ -168,14 +166,14 @@ static void linear_backpropagate_weights(const struct backpropagation_context *c
 
 static void linear_backpropagate_bias(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
-    #if HAS_AVX_SUPPORT
+    #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256 
         linear_backpropagate_bias_avx(ctx, grad_wrt_out, grad_wrt_operand);
     #else
         linear_backpropagate_bias_sequential(ctx, grad_wrt_out, grad_wrt_operand);
     #endif
 }
 
-#if HAS_AVX_SUPPORT
+#if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256 
     #define AVX_DOUBLE_NUMBER 4
     static void linear_backpropagate_bias_avx(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
     {
