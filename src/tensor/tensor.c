@@ -288,50 +288,6 @@ struct tensor *tensor_clone(const struct tensor *const src)
     return new_tensor;
 }
 
-void tensor_fill(struct tensor *const t, double value)
-{
-    if (!t || !t->data)
-    {
-        return;
-    }
-
-    size_t data_size = t->data_size;
-    for (size_t i = 0; i < data_size; i++)
-    {
-        t->data[i] = value;
-    }
-}
-
-cgrad_error tensor_add_inplace(struct tensor *A, const struct tensor *const B)
-{
-    if (!A || !B)
-    {
-        return TENSOR_NULL;
-    }
-    if (!A->data || !B->data)
-    {
-        return TENSOR_DATA_NULL;
-    }
-    if (A->data_size != B->data_size)
-    {
-        return TENSOR_DATA_SIZE_MISMATCH;
-    }
-    if (!tensor_same_shape(A, B))
-    {
-        return false;
-    }
-
-    tensor_add_inplace_unchecked(A, B);
-    return NO_ERROR;
-}
-
-void tensor_add_inplace_unchecked(struct tensor *A, const struct tensor *const B)
-{
-    for (size_t i = 0; i < A->data_size; i++)
-    {
-        A->data[i] += B->data[i];
-    }
-}
 
 bool tensor_same_shape(const struct tensor *const A, const struct tensor *const B)
 {

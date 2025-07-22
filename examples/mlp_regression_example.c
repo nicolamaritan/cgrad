@@ -5,6 +5,8 @@
 #include "autograd/autograd_allocators.h"
 #include "model/model_params.h"
 #include "tensor/tensor.h"
+#include "tensor/tensor_get.h"
+#include "tensor/tensor_set.h"
 #include "optimizers/sgd.h"
 #include "memory/tensor/cpu/tensor_cpu_allocator.h"
 #include "memory/computational_graph/computational_graph_cpu_allocator.h"
@@ -121,7 +123,9 @@ int main()
             return EXIT_FAILURE;
         }
 
-        printf("epoch %ld, loss: %f\n", i, z->data[0]);
+        double loss;
+        tensor2d_get(z, 0, 0, &loss);
+        printf("epoch %ld, loss: %f\n", i, loss);
 
         // ------------- Backward -------------
         zero_grad(&params);
@@ -175,10 +179,10 @@ void build_example_dataset(struct tensor *x, struct tensor *y_target)
         {
             double value = sample_uniform(lb, ub);
             x_row[j] = value;
-            tensor2d_set_unchecked(x, i, j, value);
+            tensor2d_set(x, i, j, value);
         }
 
         double y_value = compute_example_y_target(x_row, weights, bias, x->shape[1]);
-        tensor2d_set_unchecked(y_target, i, 0, y_value);
+        tensor2d_set(y_target, i, 0, y_value);
     }
 }

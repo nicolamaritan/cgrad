@@ -7,7 +7,9 @@ typedef enum tensor2d_trans_operand
     TENSOR2D_TRANS_ONLY_OPERAND,
 } tensor2d_trans_operand;
 
-void tensor2d_trans_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static void tensor2d_trans_unchecked(const struct tensor *const t, struct tensor *const out);
+static void tensor2d_trans_unchecked_f64(const struct tensor *const t, struct tensor *const out);
+static void tensor2d_trans_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
 cgrad_error tensor2d_trans(const struct tensor *const t, struct tensor *const out)
 {
@@ -41,11 +43,26 @@ cgrad_error tensor2d_trans_graph(struct tensor *const t, struct tensor *const ou
     return err;
 }
 
-void tensor2d_trans_unchecked(const struct tensor *const t, struct tensor *const out)
+static void tensor2d_trans_unchecked(const struct tensor *const t, struct tensor *const out)
+{
+    switch (t->dtype)
+    {
+        case DTYPE_FLOAT64:
+            tensor2d_trans_unchecked_f64(t, out);
+            break;
+        default:
+            break;
+    }
+}
+
+static void tensor2d_trans_unchecked_f64(const struct tensor *const t, struct tensor *const out)
 {
     // Extract the shape of t 
     size_t rows = t->shape[0];
     size_t cols = t->shape[1];
+
+    double *out_data = (double *)out->data;
+    double *t_data = (double *)t->data;
 
     out->shape[0] = cols;
     out->shape[1] = rows;
@@ -55,11 +72,12 @@ void tensor2d_trans_unchecked(const struct tensor *const t, struct tensor *const
     {
         for (size_t j = 0; j < cols; j++)
         {
-            out->data[j * rows + i] = t->data[i * cols + j];
+            out_data[j * rows + i] = t_data[i * cols + j];
         }
     }
 }
-void tensor2d_trans_backpropagate(const struct backpropagation_context *const ctx, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
+
+static void tensor2d_trans_backpropagate(const struct backpropagation_context *const ctx, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
 {
     tensor2d_trans(grad_wrt_out, grad_wrt_operand);
 }

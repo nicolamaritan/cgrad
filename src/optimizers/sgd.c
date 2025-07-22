@@ -1,4 +1,5 @@
 #include "optimizers/sgd.h"
+#include "tensor/tensor_add_inplace.h"
 
 static cgrad_error add_prev_b_t(struct sgd_optimizer *const opt, struct tensor *const prev_grad);
 
@@ -52,12 +53,17 @@ cgrad_error sgd_optimizer_step(struct sgd_optimizer* opt, double lr, double mome
         struct tensor* b_t = tensor_allocator_clone(allocator, prev_b_t);
         size_t grad_size = g_t->data_size;
 
+        // TODO absolutely remove this
+        double *b_t_data = b_t->data;
+        double *prev_b_t_data = prev_b_t->data;
+        double *g_t_data = g_t->data;
+
         if (momentum != 0)
         {
             // b_t <- momentum * b_t-1 + g_t
             for (size_t j = 0; j < grad_size; j++)
             {
-                b_t->data[j] = momentum * prev_b_t->data[j] + g_t->data[j];
+                b_t_data[j] = momentum * prev_b_t_data[j] + g_t_data[j];
             }
 
             if (nesterov)
@@ -65,7 +71,7 @@ cgrad_error sgd_optimizer_step(struct sgd_optimizer* opt, double lr, double mome
                 // g_t <- g_t + momentum * b_t
                 for (size_t j = 0; j < grad_size; j++)
                 {
-                    g_t->data[j] += (momentum * b_t->data[j]);
+                    g_t_data[j] += (momentum * b_t_data[j]);
                 }
             }
             else
@@ -76,7 +82,7 @@ cgrad_error sgd_optimizer_step(struct sgd_optimizer* opt, double lr, double mome
         }
 
         // SGD update using g_t
-        double* g_t_data = g_t->data;
+        // double* g_t_data = g_t->data;
         for (size_t i = 0; i < grad_size; i++)
         {
             g_t_data[i] *= -lr;

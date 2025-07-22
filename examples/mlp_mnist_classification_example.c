@@ -5,6 +5,7 @@
 #include "autograd/autograd_allocators.h"
 #include "model/model_params.h"
 #include "tensor/tensor.h"
+#include "tensor/tensor_get.h"
 #include "optimizers/sgd.h"
 #include "dataset/csv_dataset.h"
 #include "dataset/indexes_permutation.h"
@@ -181,7 +182,9 @@ int main(int argc, char **argv)
 
             if (iteration % OUTPUT_ITERATION_FREQ == 0)
             {
-                printf("epoch %02ld, iteration %04ld - loss: %f\n", epoch, iteration, z->data[0]);
+                double loss;
+                tensor2d_get(z, 0, 0, &loss);
+                printf("epoch %02ld, iteration %04ld - loss: %f\n", epoch, iteration, loss);
             }
 
             // ------------- Backward -------------

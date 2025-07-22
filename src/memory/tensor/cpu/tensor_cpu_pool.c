@@ -43,6 +43,7 @@ void *tensor_cpu_pool_tensor_alloc(struct tensor_cpu_pool *pool, const size_t si
         return NULL;
     }
 
+    // TODO decouple dtype of the tensor with size checking
     if (size * sizeof(double) > MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE)
     {
         return NULL;

@@ -7,13 +7,31 @@ typedef enum tensor_add_operand
     RHS_TENSOR,
 } tensor_add_operand;
 
+static void tensor_add_unchecked(const struct tensor *const A, const struct tensor *const B, struct tensor *const out);
+static void tensor_add_unchecked_f64(const struct tensor *const A, const struct tensor *const B, struct tensor *const out);
 static void tensor_add_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
-void tensor_add_unchecked(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
+static void tensor_add_unchecked(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
 {
+    switch(A->dtype)
+    {
+        case DTYPE_FLOAT64:
+            tensor_add_unchecked_f64(A, B, out);
+            break;
+        default:
+            break;
+    }
+}
+
+static void tensor_add_unchecked_f64(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
+{
+    double *out_data = (double *)out->data;
+    double *A_data = (double *)A->data;
+    double *B_data = (double *)B->data;
+
     for (size_t i = 0; i < A->data_size; i++)
     {
-        out->data[i] = A->data[i] + B->data[i];
+        out_data[i] = A_data[i] + B_data[i];
     }
 }
 

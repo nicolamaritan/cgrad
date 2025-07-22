@@ -12,6 +12,8 @@ typedef enum tensor2d_mult_operand
     RHS_TENSOR,
 } tensor2d_mult_operand;
 
+static void tensor2d_mult_unchecked(const struct tensor *const A, const struct tensor *const B, struct tensor *const out);
+static void tensor2d_mult_unchecked_f64(const struct tensor *const A, const struct tensor *const B, struct tensor *const out);
 static void tensor2d_mult_backpropagate_lhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static void tensor2d_mult_backpropagate_rhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
@@ -55,7 +57,19 @@ cgrad_error tensor2d_mult_graph(struct tensor *const A, struct tensor *const B, 
     return err;
 }
 
-void tensor2d_mult_unchecked(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
+static void tensor2d_mult_unchecked(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
+{
+    switch (A->dtype)
+    {
+        case DTYPE_FLOAT64:
+            tensor2d_mult_unchecked_f64(A, B, out);
+            break;
+        default:
+            break;
+    }
+}
+
+static void tensor2d_mult_unchecked_f64(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
 {
     cblas_dgemm(
         CblasRowMajor,
@@ -65,12 +79,12 @@ void tensor2d_mult_unchecked(const struct tensor *const A, const struct tensor *
         B->shape[1], // N
         A->shape[1], // K (must match B->shape[0])
         1.0,
-        A->data,
+        (double *)A->data,
         A->shape[1], // lda
         B->data,
         B->shape[1], // ldb
         0.0,
-        out->data,
+        (double *)out->data,
         out->shape[1] // ldc
     );
 }

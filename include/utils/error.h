@@ -17,6 +17,7 @@ typedef enum
     TENSOR_INDEX_OUT_OF_BOUNDS,  /**< Index is out of bounds for the tensor. */
     TENSOR_SHAPE_MISMATCH,       /**< Shapes of tensors do not match. */
     TENSOR_DATA_SIZE_MISMATCH,    /**< Data sizes of tensors do not match. */
+    TENSOR_INVALID_DTYPE,
 
     // Model errors
     MODEL_MAX_PARAMS_EXCEEDED,

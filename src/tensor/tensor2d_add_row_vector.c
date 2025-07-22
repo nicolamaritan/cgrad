@@ -14,13 +14,17 @@ typedef enum tensor2d_add_row_vector_operand
     ROW_VECTOR,
 } tensor2d_add_row_vector_operand;
 
+static void tensor2d_add_row_vector_unchecked(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
 static void tensor2d_add_row_vector_backpropagate_tensor2d(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static void tensor2d_add_row_vector_backpropagate_row_vector(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static void tensor2d_add_row_vector_backpropagate_row_vector_f64(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
 #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256
-    void tensor2d_add_row_vector_unchecked_avx_256(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
+    static void tensor2d_add_row_vector_unchecked_avx_256(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
+    static void tensor2d_add_row_vector_unchecked_avx_256_f64(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
 #else
-    void tensor2d_add_row_vector_unchecked_scalar(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
+    static void tensor2d_add_row_vector_unchecked_scalar(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
+    static void tensor2d_add_row_vector_unchecked_scalar_f64(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
 #endif
 
 cgrad_error tensor2d_add_row_vector(const struct tensor *const A, const struct tensor *const v, struct tensor *const out)
@@ -88,7 +92,7 @@ cgrad_error tensor2d_add_row_vector_graph(struct tensor *const A, struct tensor 
     return err;
 }
 
-void tensor2d_add_row_vector_unchecked(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
+static void tensor2d_add_row_vector_unchecked(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
 {
     #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256
         tensor2d_add_row_vector_unchecked_avx_256(A, v, out);
@@ -104,36 +108,64 @@ static void tensor2d_add_row_vector_backpropagate_tensor2d(const struct backprop
 
 static void tensor2d_add_row_vector_backpropagate_row_vector(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
+    switch (grad_wrt_operand->dtype)
+    {
+        case DTYPE_FLOAT64:
+            tensor2d_add_row_vector_backpropagate_row_vector_f64(ctx, grad_wrt_out, grad_wrt_operand);
+            break;
+        default:
+            break;
+    }
+}
+
+static void tensor2d_add_row_vector_backpropagate_row_vector_f64(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+{
     size_t G_rows = grad_wrt_out->shape[0];
     size_t G_cols = grad_wrt_out->shape[1];
+
+    double *grad_wrt_operand_data = (double *)grad_wrt_operand->data;
+    double *grad_wrt_out_data = (double *)grad_wrt_out->data;
 
     // Iterating by row since vectors are stored in row-major
     for (size_t i = 0; i < G_rows; i++)
     {
         for (size_t j = 0; j < G_cols; j++)
         {
-            grad_wrt_operand->data[j] += grad_wrt_out->data[i * G_cols + j];
+            grad_wrt_operand_data[j] += grad_wrt_out_data[i * G_cols + j];
         }
     }
 }
 
 #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256
-    #define AVX_DOUBLE_NUMBER 4
-    void tensor2d_add_row_vector_unchecked_avx_256(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
+    static void tensor2d_add_row_vector_unchecked_avx_256(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
+    {
+        switch (A->dtype)
+        {
+            case DTYPE_FLOAT64:
+                tensor2d_add_row_vector_unchecked_avx_256_f64(A, v, out);
+                break;
+            default:
+                break;
+        }
+    }
+
+    static void tensor2d_add_row_vector_unchecked_avx_256_f64(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
     {
         size_t rows = A->shape[0];
         size_t cols = A->shape[1];
 
-        double *A_data = A->data;
-        double *v_data = v->data;
-        double *out_data = out->data;
+        double *A_data = (double *)A->data;
+        double *v_data = (double *)v->data;
+        double *out_data = (double *)out->data;
+
+        const size_t PARALLELIZED_ITEMS = sizeof(__m256d) / sizeof(double);
 
         for (size_t i = 0; i < rows; i++)
         {
             size_t row_offset = i * cols;
             size_t j = 0;
 
-            for (; j + AVX_DOUBLE_NUMBER - 1 < cols; j += AVX_DOUBLE_NUMBER)
+            for (; j + PARALLELIZED_ITEMS - 1 < cols; j += PARALLELIZED_ITEMS)
             {
                 __m256d a_vals = _mm256_loadu_pd(&A_data[row_offset + j]);
                 __m256d v_vals = _mm256_loadu_pd(&v_data[j]);
@@ -148,14 +180,26 @@ static void tensor2d_add_row_vector_backpropagate_row_vector(const struct backpr
         }
     }
 #else
-    void tensor2d_add_row_vector_unchecked_scalar(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
+    static void tensor2d_add_row_vector_unchecked_scalar(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
+    {
+        switch (A->dtype)
+        {
+            case DTYPE_FLOAT64:
+                tensor2d_add_row_vector_unchecked_scalar_f64(A, v, out);
+                break;
+            default:
+                break;
+        }
+    }
+
+    static void tensor2d_add_row_vector_unchecked_scalar_f64(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
     {
         size_t rows = A->shape[0];
         size_t cols = A->shape[1];
 
-        double *A_data = A->data;
-        double *v_data = v->data;
-        double *out_data = out->data;
+        double *A_data = (double *)A->data;
+        double *v_data = (double *)v->data;
+        double *out_data = (double *)out->data;
 
         for (size_t i = 0; i < rows; i++)
         {

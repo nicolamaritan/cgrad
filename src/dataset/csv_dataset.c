@@ -59,6 +59,11 @@ static size_t csv_dataset_count_cols(FILE *file);
  */
 static cgrad_error csv_dataset_fill_data(struct csv_dataset *dataset, FILE *file);
 
+static void copy_features_to_inputs(struct tensor *inputs, double *features, const size_t i, const size_t cols);
+static void copy_features_to_inputs_f64(struct tensor *inputs, double *features, const size_t i, const size_t cols);
+static void copy_label_to_targets(struct tensor *targets, double label, size_t i);
+static void copy_label_to_targets_f64(struct tensor *targets, double label, size_t i);
+
 /**
  * @brief Loads a CSV file into a csv_dataset structure.
  *
@@ -158,9 +163,10 @@ cgrad_error csv_dataset_sample_batch(const struct csv_dataset *const dataset, st
         double *features = csv_row + 1;
 
         // Copy features to inputs
-        memcpy(inputs->data + i * (cols - 1), features, (cols - 1) * sizeof(double));
-
-        targets->data[i] = label;
+        copy_features_to_inputs(inputs, features, i, cols);
+        copy_label_to_targets(targets, label, i);
+        // memcpy(inputs->data + i * (cols - 1), features, (cols - 1) * sizeof(double));
+        // targets->data[i] = label;
     }
 
     return NO_ERROR;
@@ -297,4 +303,40 @@ static cgrad_error csv_dataset_fill_data(struct csv_dataset *dataset, FILE *file
     }
 
     return NO_ERROR;
+}
+
+static void copy_features_to_inputs(struct tensor *inputs, double *features, const size_t i, const size_t cols)
+{
+    switch (inputs->dtype)
+    {
+        case DTYPE_FLOAT64:
+            copy_features_to_inputs_f64(inputs, features, i, cols);
+            break;
+        default:
+            break;
+    }
+}
+
+static void copy_features_to_inputs_f64(struct tensor *inputs, double *features, const size_t i, const size_t cols)
+{
+    double *inputs_data = (double *)inputs->data; // Cast is needed for correct pointer arithmetic below
+    memcpy(inputs_data + i * (cols - 1), features, (cols - 1) * sizeof(double));
+}
+
+static void copy_label_to_targets(struct tensor *targets, double label, const size_t i)
+{
+    switch (targets->dtype)
+    {
+        case DTYPE_FLOAT64:
+            copy_label_to_targets_f64(targets, label, i);
+            break;
+        default:
+            break;
+    }
+}
+
+static void copy_label_to_targets_f64(struct tensor *targets, double label, const size_t i)
+{
+    double *targets_data = (double *)targets->data;
+    targets_data[i] = label;
 }

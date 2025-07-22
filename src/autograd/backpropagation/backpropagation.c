@@ -1,6 +1,8 @@
 #include "autograd/backpropagation/backpropagation.h"
 #include "autograd/computational_graph/computational_graph.h"
 #include "autograd/backpropagation/backpropagation_queue.h"
+#include "tensor/tensor_add_inplace.h"
+#include "tensor/tensor_set.h"
 #include "config.h"
 #include <stdio.h>
 #include <string.h>
@@ -93,5 +95,5 @@ static cgrad_error add_target(struct backpropagation_targets* const targets, str
 
 static inline void set_gradient_wrt_itself(struct tensor* const t)
 {
-    tensor2d_set_unchecked(t->grad, 0, 0, 1);
+    tensor2d_set(t->grad, 0, 0, 1.0);
 }

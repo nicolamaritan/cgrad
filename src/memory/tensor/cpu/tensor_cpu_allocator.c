@@ -76,6 +76,7 @@ static struct tensor* tensor_cpu_no_grad_alloc(void *pool, const size_t *const s
     t->data_size = data_size;
     t->shape_size = shape_size;
     t->grad = NULL;
+    t->dtype = DTYPE_FLOAT64;   // TODO allow choosing dtype
 
     return t;
 }
@@ -111,6 +112,7 @@ static struct tensor *tensor_cpu_no_grad_zero_alloc(void *pool, const size_t *co
     t->data_size = data_size;
     t->shape_size = shape_size;
     t->grad = NULL;
+    t->dtype = DTYPE_FLOAT64;   // TODO allow choosing dtype
 
     return t;
 }
