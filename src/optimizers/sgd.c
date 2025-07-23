@@ -1,5 +1,7 @@
 #include "optimizers/sgd.h"
 #include "tensor/tensor_add_inplace.h"
+#include "tensor/tensor_scalar_mult_tensor_sum.h"
+#include "tensor/tensor_axpy.h"
 
 static cgrad_error add_prev_b_t(struct sgd_optimizer *const opt, struct tensor *const prev_grad);
 
@@ -48,50 +50,40 @@ cgrad_error sgd_optimizer_step(struct sgd_optimizer* opt, double lr, double mome
         struct tensor* param = opt->params->params[i];
         struct tensor_allocator *allocator = opt->allocator;
         
-        struct tensor* g_t = tensor_allocator_clone(allocator, param->grad);
         struct tensor* prev_b_t = opt->prev_b_t[i];
-        struct tensor* b_t = tensor_allocator_clone(allocator, prev_b_t);
-        size_t grad_size = g_t->data_size;
-
-        // TODO absolutely remove this
-        double *b_t_data = b_t->data;
-        double *prev_b_t_data = prev_b_t->data;
-        double *g_t_data = g_t->data;
+        struct tensor* b_t = tensor_allocator_no_grad_alloc(allocator, prev_b_t->shape, prev_b_t->shape_size);
 
         if (momentum != 0)
         {
-            // b_t <- momentum * b_t-1 + g_t
-            for (size_t j = 0; j < grad_size; j++)
-            {
-                b_t_data[j] = momentum * prev_b_t_data[j] + g_t_data[j];
-            }
-
             if (nesterov)
             {
+                // b_t <- momentum * b_t-1 + g_t
+                struct tensor* g_t = tensor_allocator_clone(allocator, param->grad);
+                tensor_scalar_mult_tensor_sum(prev_b_t, g_t, momentum, b_t);
+
                 // g_t <- g_t + momentum * b_t
-                for (size_t j = 0; j < grad_size; j++)
-                {
-                    g_t_data[j] += (momentum * b_t_data[j]);
-                }
+                tensor_axpy(b_t, g_t, momentum);
+
+                // SGD update using g_t, i.e.:
+                // param <- param - lr * g_t
+                tensor_axpy(g_t, param, -lr);
+
+                tensor_allocator_free(allocator, g_t);
             }
             else
             {
+                // No need to clone tensor as param->grad is not modified
+                // b_t <- momentum * b_t-1 + g_t
+                tensor_scalar_mult_tensor_sum(prev_b_t, param->grad, momentum, b_t);
+
+                // SGD update using b_t, i.e.:
                 // g_t <- b_t
-                tensor_copy(b_t, g_t);
+                // param <- param - lr * g_t
+                tensor_axpy(b_t, param, -lr);
             }
         }
 
-        // SGD update using g_t
-        // double* g_t_data = g_t->data;
-        for (size_t i = 0; i < grad_size; i++)
-        {
-            g_t_data[i] *= -lr;
-        }
-
-        tensor_add_inplace(param, g_t);
-
         // Free and setup next iteration b_ts
-        tensor_allocator_free(allocator, g_t);
         tensor_allocator_free(allocator, opt->prev_b_t[i]);
         opt->prev_b_t[i] = b_t;
     }
