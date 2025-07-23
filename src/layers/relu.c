@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 #if SIMD_AVX_LEVEL > SIMD_AVX_LEVEL_0
-    #include <immintrin.h>
+#include <immintrin.h>
 #endif
 
 typedef enum relu_layer_operand
@@ -16,16 +16,16 @@ typedef enum relu_layer_operand
 
 static void relu_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static void relu_backpropagate_f64(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
-static void relu_forward_unchecked(const struct tensor *const x, struct tensor *const out);
+static cgrad_error relu_forward_dispatch(const struct tensor *const x, struct tensor *const out);
 #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256
-    static void relu_forward_unchecked_avx_256(const struct tensor* const x, struct tensor* const out);
-    static void relu_forward_unchecked_avx_256_f64(const struct tensor* const x, struct tensor* const out)
+static cgrad_error relu_forward_dispatch_avx_256(const struct tensor *const x, struct tensor *const out);
+static void relu_forward_unchecked_avx_256_f64(const struct tensor *const x, struct tensor *const out)
 #else
-    static void relu_forward_unchecked_scalar(const struct tensor* const x, struct tensor* const out);
-    static void relu_forward_unchecked_scalar_f64(const struct tensor* const x, struct tensor* const out);
+static cgrad_error relu_forward_dispatch_scalar(const struct tensor *const x, struct tensor *const out);
+static void relu_forward_unchecked_scalar_f64(const struct tensor *const x, struct tensor *const out);
 #endif
 
-cgrad_error relu_forward_graph(struct tensor *const x, struct tensor *const out, struct autograd_allocators *ag_allocators)
+    cgrad_error relu_forward_graph(struct tensor *const x, struct tensor *const out, struct autograd_allocators *ag_allocators)
 {
     cgrad_error error = relu_forward(x, out);
     if (error != NO_ERROR)
@@ -37,7 +37,7 @@ cgrad_error relu_forward_graph(struct tensor *const x, struct tensor *const out,
     return error;
 }
 
-cgrad_error relu_forward(const struct tensor* const x, struct tensor* const out)
+cgrad_error relu_forward(const struct tensor *const x, struct tensor *const out)
 {
     if (!x || !out)
     {
@@ -52,38 +52,37 @@ cgrad_error relu_forward(const struct tensor* const x, struct tensor* const out)
         return TENSOR_SHAPE_MISMATCH;
     }
 
-    relu_forward_unchecked(x, out);
-    return NO_ERROR;
+    return relu_forward_dispatch(x, out);
 }
 
-static void relu_backpropagate(const struct backpropagation_context *const ctx, const struct tensor* const grad_wrt_out, struct tensor *grad_wrt_operand)
+static void relu_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
     switch (grad_wrt_operand->dtype)
     {
-        case DTYPE_FLOAT64:
-            relu_backpropagate_f64(ctx, grad_wrt_out, grad_wrt_operand);
-            break;
-        default:
-            break;
+    case DTYPE_FLOAT64:
+        relu_backpropagate_f64(ctx, grad_wrt_out, grad_wrt_operand);
+        break;
+    default:
+        break;
     }
 }
 
-static void relu_backpropagate_f64(const struct backpropagation_context *const ctx, const struct tensor* const grad_wrt_out, struct tensor *grad_wrt_operand)
+static void relu_backpropagate_f64(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
     const struct tensor *const x = ctx->operands[RELU_ONLY_OPERAND];
-    
+
     // Avoid multiple indirections for performance
-    double* x_data = (double *)x->data;
-    double* grad_wrt_operand_data = (double *) grad_wrt_operand->data;
-    double* grad_wrt_out_data = (double *) grad_wrt_out->data;
+    double *x_data = (double *)x->data;
+    double *grad_wrt_operand_data = (double *)grad_wrt_operand->data;
+    double *grad_wrt_out_data = (double *)grad_wrt_out->data;
     size_t grad_wrt_operand_data_size = grad_wrt_operand->data_size;
-    
+
     /*
         Gradient computation of dz/dX.
         dz/dX is the Hadamard Product of grad_wrt_out = dz/drelu(X) and drelu(X)/dX,
         since element (i, j) of relu(X) depends only on element (i, j) of X.
     */
-    
+
     for (size_t i = 0; i < grad_wrt_operand_data_size; i++)
     {
         // Element wise product
@@ -91,72 +90,74 @@ static void relu_backpropagate_f64(const struct backpropagation_context *const c
     }
 }
 
-static void relu_forward_unchecked(const struct tensor *const x, struct tensor *const out)
+static cgrad_error relu_forward_dispatch(const struct tensor *const x, struct tensor *const out)
 {
-    #if SIMD_LEVEL >= 256 
-        relu_forward_unchecked_avx_256(x, out);
-    #else
-        relu_forward_unchecked_scalar(x, out);
-    #endif
+#if SIMD_LEVEL >= SIMD_AVX_LEVEL_256
+    return relu_forward_dispatch_avx_256(x, out);
+#else
+    return relu_forward_dispatch_scalar(x, out);
+#endif
 }
 
-#if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256 
-    static void relu_forward_unchecked_avx_256(const struct tensor* const x, struct tensor* const out)
+#if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256
+static void relu_forward_dispatch_avx_256(const struct tensor *const x, struct tensor *const out)
+{
+    switch (x->dtype)
     {
-        switch(x->dtype)
-        {
-            case DTYPE_FLOAT64:
-                relu_forward_unchecked_avx_256_f64(x, out);
-                break;
-            default:
-                break;
-        }
+    case DTYPE_FLOAT64:
+        relu_forward_unchecked_avx_256_f64(x, out);
+        break;
+    default:
+        break;
+    }
+}
+
+static cgrad_error relu_forward_unchecked_avx_256_f64(const struct tensor *const x, struct tensor *const out)
+{
+    const size_t PARALLELIZED_ITEMS = sizeof(__m256d) / sizeof(double);
+
+    double zeros[PARALLELIZED_ITEMS];
+    memset(zeros, 0, sizeof(zeros));
+    __m256d zeros_vals = _mm256_loadu_pd(zeros);
+
+    double *x_data = (double *)x->data;
+    double *out_data = (double *)out->data;
+
+    size_t i = 0;
+    for (; i + PARALLELIZED_ITEMS - 1 < x->data_size; i += PARALLELIZED_ITEMS)
+    {
+        __m256d x_vals = _mm256_loadu_pd(&x_data[i]);
+        __m256d relu_vals = _mm256_max_pd(zeros_vals, x_vals);
+        _mm256_storeu_pd(&out_data[i], relu_vals);
     }
 
-    static void relu_forward_unchecked_avx_256_f64(const struct tensor* const x, struct tensor* const out)
+    for (; i < x->data_size; i++)
     {
-        const size_t PARALLELIZED_ITEMS = sizeof(__m256d) / sizeof(double);
-
-        double zeros[PARALLELIZED_ITEMS ];
-        memset(zeros, 0, sizeof(zeros));
-        __m256d zeros_vals = _mm256_loadu_pd(zeros);
-
-        double *x_data = (double *)x->data;
-        double *out_data = (double *)out->data;
-
-        size_t i = 0;
-        for (; i + PARALLELIZED_ITEMS - 1 < x->data_size; i += PARALLELIZED_ITEMS)
-        {
-            __m256d x_vals = _mm256_loadu_pd(&x_data[i]);
-            __m256d relu_vals = _mm256_max_pd(zeros_vals, x_vals);
-            _mm256_storeu_pd(&out_data[i], relu_vals);
-        }
-
-        for (; i < x->data_size; i++)
-        {
-            out_data[i] = x_data[i] > 0 ? x_data[i] : 0;
-        }
+        out_data[i] = x_data[i] > 0 ? x_data[i] : 0;
     }
+}
 #else
-    static void relu_forward_unchecked_scalar(const struct tensor* const x, struct tensor* const out)
+static cgrad_error relu_forward_dispatch_scalar(const struct tensor *const x, struct tensor *const out)
+{
+    switch (x->dtype)
     {
-        switch(x->dtype)
-        {
-            case DTYPE_FLOAT64:
-                relu_forward_unchecked_scalar_f64(x, out);
-                break;
-            default:
-                break;
-        }
+    case DTYPE_FLOAT64:
+        relu_forward_unchecked_scalar_f64(x, out);
+        break;
+    default:
+        return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
     }
 
-    static void relu_forward_unchecked_scalar_f64(const struct tensor* const x, struct tensor* const out)
+    return NO_ERROR;
+}
+
+static void relu_forward_unchecked_scalar_f64(const struct tensor *const x, struct tensor *const out)
+{
+    double *x_data = (double *)x->data;
+    double *out_data = (double *)out->data;
+    for (size_t i = 0; i < out->data_size; i++)
     {
-        double *x_data = (double *)x->data;
-        double *out_data = (double *)out->data;
-        for (size_t i = 0; i < out->data_size; i++)
-        {
-            out_data[i] = x_data[i] > 0 ? x_data[i] : 0;
-        }
+        out_data[i] = x_data[i] > 0 ? x_data[i] : 0;
     }
+}
 #endif

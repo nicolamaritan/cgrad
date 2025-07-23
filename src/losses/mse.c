@@ -10,7 +10,7 @@ typedef enum mse_loss_operand
 } mse_loss_operand;
 
 
-static void mse_loss_unchecked(const struct tensor *const y_pred, const struct tensor *const y_target, struct tensor *const z);
+static cgrad_error mse_loss_dispatch(const struct tensor *const y_pred, const struct tensor *const y_target, struct tensor *const z);
 static void mse_loss_unchecked_f64(const struct tensor *const y_pred, const struct tensor *const y_target, struct tensor *const z);
 static void mse_loss_backpropagate_predicted(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static void mse_loss_backpropagate_predicted_f64(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
@@ -36,12 +36,10 @@ cgrad_error mse_loss(const struct tensor *const y_pred, const struct tensor *con
         return TENSOR_SHAPE_MISMATCH;
     }
 
-    mse_loss_unchecked(y_pred, y_target, z);
-
-    return NO_ERROR;
+    return mse_loss_dispatch(y_pred, y_target, z);
 }
 
-static void mse_loss_unchecked(const struct tensor *const y_pred, const struct tensor *const y_target, struct tensor *const z)
+static cgrad_error mse_loss_dispatch(const struct tensor *const y_pred, const struct tensor *const y_target, struct tensor *const z)
 {
     switch (y_pred->dtype)
     {
@@ -49,8 +47,10 @@ static void mse_loss_unchecked(const struct tensor *const y_pred, const struct t
             mse_loss_unchecked_f64(y_pred, y_target, z);
             break;
         default:
-            break;
+            return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
     }
+
+    return NO_ERROR;
 }
 
 static void mse_loss_unchecked_f64(const struct tensor *const y_pred, const struct tensor *const y_target, struct tensor *const z)

@@ -1,7 +1,7 @@
 #include "tensor/tensor_axpy.h"
 #include <cblas.h>
 
-static void tensor_axpy_unchecked(struct tensor *const X, struct tensor *const Y, const double alpha);
+static cgrad_error tensor_axpy_dispatch(struct tensor *const X, struct tensor *const Y, const double alpha);
 static void tensor_axpy_unchecked_f64(struct tensor *const X, struct tensor *const Y, const double alpha);
 
 cgrad_error tensor_axpy(struct tensor *const X, struct tensor *const Y, const double alpha)
@@ -15,11 +15,10 @@ cgrad_error tensor_axpy(struct tensor *const X, struct tensor *const Y, const do
         return TENSOR_DTYPE_MISMATCH;
     }
 
-    tensor_axpy_unchecked(X, Y, alpha);
-    return NO_ERROR;
+    return tensor_axpy_dispatch(X, Y, alpha);
 }
 
-static void tensor_axpy_unchecked(struct tensor *const X, struct tensor *const Y, const double alpha)
+static cgrad_error tensor_axpy_dispatch(struct tensor *const X, struct tensor *const Y, const double alpha)
 {
     switch (X->dtype)
     {
@@ -27,18 +26,20 @@ static void tensor_axpy_unchecked(struct tensor *const X, struct tensor *const Y
         tensor_axpy_unchecked_f64(X, Y, alpha);
         break;
     default:
-        break;
+        return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
     }
+
+    return NO_ERROR;
 }
 
 static void tensor_axpy_unchecked_f64(struct tensor *const X, struct tensor *const Y, const double alpha)
 {
+    const blasint TENSOR_STRIDES = 1;
     cblas_daxpy(
         X->data_size,
         alpha,
         X->data,
-        1,
+        TENSOR_STRIDES,
         Y->data,
-        1
-    );
+        TENSOR_STRIDES);
 }

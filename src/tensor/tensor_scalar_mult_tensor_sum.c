@@ -1,7 +1,7 @@
 #include "tensor/tensor_scalar_mult_tensor_sum.h"
 #include <cblas.h>
 
-static void tensor_scalar_mult_tensor_sum_unchecked(struct tensor *const A, struct tensor *const B, const double alpha, struct tensor *const out);
+static cgrad_error tensor_scalar_mult_tensor_sum_dispatch(struct tensor *const A, struct tensor *const B, const double alpha, struct tensor *const out);
 static void tensor_scalar_mult_tensor_sum_unchecked_f64(struct tensor *const A, struct tensor *const B, const double alpha, struct tensor *const out);
 
 cgrad_error tensor_scalar_mult_tensor_sum(struct tensor *const A, struct tensor *const B, const double alpha, struct tensor *const out)
@@ -19,12 +19,10 @@ cgrad_error tensor_scalar_mult_tensor_sum(struct tensor *const A, struct tensor 
         return TENSOR_DTYPE_MISMATCH;
     }
 
-    tensor_scalar_mult_tensor_sum_unchecked(A, B, alpha, out);
-
-    return NO_ERROR;
+    return tensor_scalar_mult_tensor_sum_dispatch(A, B, alpha, out);
 }
 
-static void tensor_scalar_mult_tensor_sum_unchecked(struct tensor *const A, struct tensor *const B, const double alpha, struct tensor *const out)
+static cgrad_error tensor_scalar_mult_tensor_sum_dispatch(struct tensor *const A, struct tensor *const B, const double alpha, struct tensor *const out)
 {
     switch (A->dtype)
     {
@@ -32,8 +30,10 @@ static void tensor_scalar_mult_tensor_sum_unchecked(struct tensor *const A, stru
         tensor_scalar_mult_tensor_sum_unchecked_f64(A, B, alpha, out);
         break;
     default:
-        break;
+        return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
     }
+
+    return NO_ERROR;
 }
 
 static void tensor_scalar_mult_tensor_sum_unchecked_f64(struct tensor *const A, struct tensor *const B, const double alpha, struct tensor *const out)

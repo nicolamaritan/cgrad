@@ -7,20 +7,22 @@ typedef enum tensor_add_operand
     RHS_TENSOR,
 } tensor_add_operand;
 
-static void tensor_add_unchecked(const struct tensor *const A, const struct tensor *const B, struct tensor *const out);
+static cgrad_error tensor_add_dispatch(const struct tensor *const A, const struct tensor *const B, struct tensor *const out);
 static void tensor_add_unchecked_f64(const struct tensor *const A, const struct tensor *const B, struct tensor *const out);
 static void tensor_add_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
-static void tensor_add_unchecked(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
+static cgrad_error tensor_add_dispatch(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
 {
-    switch(A->dtype)
+    switch (A->dtype)
     {
-        case DTYPE_FLOAT64:
-            tensor_add_unchecked_f64(A, B, out);
-            break;
-        default:
-            break;
+    case DTYPE_FLOAT64:
+        tensor_add_unchecked_f64(A, B, out);
+        break;
+    default:
+        return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
     }
+
+    return NO_ERROR;
 }
 
 static void tensor_add_unchecked_f64(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
@@ -53,9 +55,12 @@ cgrad_error tensor_add(const struct tensor *const A, const struct tensor *const 
     {
         return TENSOR_SHAPE_MISMATCH;
     }
+    if (A->dtype != B->dtype)
+    {
+        return TENSOR_DTYPE_MISMATCH;
+    }
 
-    tensor_add_unchecked(A, B, out);
-    return NO_ERROR;
+    return tensor_add_dispatch(A, B, out);
 }
 
 cgrad_error tensor_add_graph(struct tensor *const A, struct tensor *const B, struct tensor *const out, struct autograd_allocators *allocators)

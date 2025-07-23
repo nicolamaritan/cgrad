@@ -191,7 +191,7 @@ int main(int argc, char **argv)
             zero_grad(&params);
             backward(z, &autograd_allocs);
 
-            sgd_optimizer_step(&opt, lr, momentum, true);
+            sgd_optimizer_step(&opt, lr, momentum, false);
 
             // Clear iteration allocations
             tensor_allocator_free(&tensor_alloc, x);

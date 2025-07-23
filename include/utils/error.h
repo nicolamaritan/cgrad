@@ -19,6 +19,7 @@ typedef enum
     TENSOR_DATA_SIZE_MISMATCH,    /**< Data sizes of tensors do not match. */
     TENSOR_INVALID_DTYPE,
     TENSOR_DTYPE_MISMATCH,
+    TENSOR_OPERATION_DTYPE_NOT_SUPPORTED,
 
     // Model errors
     MODEL_MAX_PARAMS_EXCEEDED,
