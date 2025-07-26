@@ -43,8 +43,7 @@ void *tensor_cpu_pool_tensor_alloc(struct tensor_cpu_pool *pool, const size_t si
         return NULL;
     }
 
-    // TODO decouple dtype of the tensor with size checking
-    if (size * sizeof(double) > MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE)
+    if (size > MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE)
     {
         return NULL;
     }
@@ -61,7 +60,7 @@ void *tensor_cpu_pool_data_alloc(struct tensor_cpu_pool *pool, const size_t size
         return NULL;
     }
 
-    if (size * sizeof(double) > MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE)
+    if (size > MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE)
     {
         return NULL;
     }
@@ -78,13 +77,13 @@ void *tensor_cpu_pool_data_zero_alloc(struct tensor_cpu_pool *pool, const size_t
         return NULL;
     }
 
-    if (size * sizeof(double) > MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE)
+    if (size > MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE)
     {
         return NULL;
     }
 
     void *return_ptr = (void *)pool->data_chunk_head->data;
-    memset(return_ptr, 0, size * sizeof(double));
+    memset(return_ptr, 0, size);
     pool->data_chunk_head = pool->data_chunk_head->next;
     return return_ptr;
 }

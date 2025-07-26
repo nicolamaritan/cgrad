@@ -51,11 +51,11 @@ int main()
 
     size_t x_shape[] = {batch_size, input_dim};
     size_t x_shape_size = 2;
-    struct tensor *x = tensor_allocator_alloc(&t_allocator, x_shape, x_shape_size);
+    struct tensor *x = tensor_allocator_alloc(&t_allocator, x_shape, x_shape_size, DTYPE_FLOAT64);
 
     size_t y_shape[] = {batch_size, 1};
     size_t y_shape_size = 2;
-    struct tensor *y_target = tensor_allocator_alloc(&t_allocator, y_shape, y_shape_size);
+    struct tensor *y_target = tensor_allocator_alloc(&t_allocator, y_shape, y_shape_size, DTYPE_FLOAT64);
     if (!x || !y_target)
     {
         tensor_allocator_free(&t_allocator, x);
@@ -66,10 +66,10 @@ int main()
     build_example_dataset(x, y_target);
 
     // Allocate model
-    struct linear_layer *linear1 = linear_alloc(input_dim, hidden_dim, &t_allocator, &allocators);
+    struct linear_layer *linear1 = linear_alloc(input_dim, hidden_dim, DTYPE_FLOAT64, &t_allocator, &allocators);
     linear_xavier_init(linear1);
 
-    struct linear_layer *linear2 = linear_alloc(hidden_dim, out_dim, &t_allocator, &allocators);
+    struct linear_layer *linear2 = linear_alloc(hidden_dim, out_dim, DTYPE_FLOAT64, &t_allocator, &allocators);
     linear_xavier_init(linear2);
 
     // Setup model params
@@ -96,7 +96,7 @@ int main()
         // ------------- Forward -------------
         size_t h1_shape[] = {batch_size, hidden_dim};
         size_t h1_shape_size = 2;
-        struct tensor *h1 = tensor_allocator_alloc(&t_allocator, h1_shape, h1_shape_size);
+        struct tensor *h1 = tensor_allocator_alloc(&t_allocator, h1_shape, h1_shape_size, DTYPE_FLOAT64);
         if (linear_forward_graph(x, linear1, h1) != NO_ERROR)
         {
             return EXIT_FAILURE;
@@ -104,12 +104,12 @@ int main()
 
         size_t h2_shape[] = {batch_size, hidden_dim};
         size_t h2_shape_size = 2;
-        struct tensor *h2 = tensor_allocator_alloc(&t_allocator, h2_shape, h2_shape_size);
+        struct tensor *h2 = tensor_allocator_alloc(&t_allocator, h2_shape, h2_shape_size, DTYPE_FLOAT64);
         relu_forward_graph(h1, h2, &allocators);
 
         size_t h3_shape[] = {batch_size, out_dim};
         size_t h3_shape_size = 2;
-        struct tensor *h3 = tensor_allocator_alloc(&t_allocator, h3_shape, h3_shape_size);
+        struct tensor *h3 = tensor_allocator_alloc(&t_allocator, h3_shape, h3_shape_size, DTYPE_FLOAT64);
         if (linear_forward_graph(h2, linear2, h3) != NO_ERROR)
         {
             return EXIT_FAILURE;
@@ -117,7 +117,7 @@ int main()
 
         size_t z_shape[] = {1, 1};
         size_t z_shape_size = 2;
-        struct tensor *z = tensor_allocator_alloc(&t_allocator, z_shape, z_shape_size);
+        struct tensor *z = tensor_allocator_alloc(&t_allocator, z_shape, z_shape_size, DTYPE_FLOAT64);
         if (mse_loss_graph(h3, y_target, z, &allocators) != NO_ERROR)
         {
             return EXIT_FAILURE;
