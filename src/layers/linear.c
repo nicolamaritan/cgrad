@@ -2,6 +2,7 @@
 #include "tensor/tensor2d_mult.h"
 #include "tensor/tensor2d_add_row_vector.h"
 #include "tensor/tensor2d_trans.h"
+#include "tensor/tensor_sum.h"
 #include "autograd/computational_graph/computational_graph_link.h"
 #include "utils/random.h"
 #include "utils/simd_support.h"
@@ -26,14 +27,6 @@ static cgrad_error linear_update_computational_graph(struct tensor *const x, str
 static void linear_backpropagate_input(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static void linear_backpropagate_weights(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static void linear_backpropagate_bias(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
-
-#if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256 
-    static void linear_backpropagate_bias_avx_256(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
-    static void linear_backpropagate_bias_avx_256_f64(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
-#else
-    static void linear_backpropagate_bias_scalar(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
-    static void linear_backpropagate_bias_scalar_f64(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
-#endif
 
 struct linear_layer *linear_alloc(const size_t in_dim, const size_t out_dim, struct tensor_allocator *params_allocator, struct autograd_allocators *const ag_allocators)
 {
@@ -168,82 +161,5 @@ static void linear_backpropagate_weights(const struct backpropagation_context *c
 
 static void linear_backpropagate_bias(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
-    #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256 
-        linear_backpropagate_bias_avx_256(ctx, grad_wrt_out, grad_wrt_operand);
-    #else
-        linear_backpropagate_bias_scalar(ctx, grad_wrt_out, grad_wrt_operand);
-    #endif
+    tensor_sum(grad_wrt_out, 0, grad_wrt_operand);
 }
-
-#if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256 
-    static void linear_backpropagate_bias_avx_256(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
-    {
-        switch (grad_wrt_out->dtype)
-        {
-            case DTYPE_FLOAT64:
-                linear_backpropagate_bias_avx_256_f64(ctx, grad_wrt_out, grad_wrt_operand);
-                break;
-            default:
-                break;
-        }
-    }
-
-    static void linear_backpropagate_bias_avx_256_f64(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
-    {
-        const size_t PARALLELIZED_ITEMS = sizeof(__m256d) / sizeof(double);
-
-        size_t rows = grad_wrt_out->shape[0];
-        size_t cols = grad_wrt_out->shape[1];
-        double *grad_wrt_out_data = (double *)grad_wrt_out->data;
-        double *grad_wrt_operand_data = (double *)grad_wrt_operand->data;
-
-        for (size_t i = 0; i < rows; i++)
-        {
-            size_t j = 0;
-            size_t row_offset = i * cols;
-
-            for (; j + PARALLELIZED_ITEMS - 1 < cols; j += PARALLELIZED_ITEMS)
-            {
-                __m256d grad_wrt_operand_vals = _mm256_loadu_pd(&grad_wrt_operand_data[j]);
-                __m256d grad_wrt_out_vals = _mm256_loadu_pd(&grad_wrt_out_data[i * cols + j]);
-                __m256d sum = _mm256_add_pd(grad_wrt_operand_vals, grad_wrt_out_vals);
-                _mm256_storeu_pd(&grad_wrt_operand_data[j], sum);
-            }
-
-            for (; j < cols; j++)
-            {
-                grad_wrt_operand_data[j] += grad_wrt_out_data[row_offset + j];
-            }
-        }
-    }
-#else
-    static void linear_backpropagate_bias_scalar(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
-    {
-        switch (grad_wrt_out->dtype)
-        {
-            case DTYPE_FLOAT64:
-                linear_backpropagate_bias_scalar_f64(ctx, grad_wrt_out, grad_wrt_operand);
-                break;
-            default:
-                break;
-        }
-    }
-
-    static void linear_backpropagate_bias_scalar_f64(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
-    {
-        size_t rows = grad_wrt_out->shape[0];
-        size_t cols = grad_wrt_out->shape[1];
-        double *grad_wrt_out_data = (double *)grad_wrt_out->data;
-        double *grad_wrt_operand_data = (double *)grad_wrt_operand->data;
-
-        // Iterating by row since vectors are stored in row-major
-        for (size_t i = 0; i < rows; i++)
-        {
-            size_t row_offset = i * cols;
-            for (size_t j = 0; j < cols; j++)
-            {
-                grad_wrt_operand_data[j] += grad_wrt_out_data[row_offset + j];
-            }
-        }
-    }
-#endif

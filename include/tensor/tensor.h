@@ -22,12 +22,12 @@ struct tensor
     void *data;        /**< Pointer to the data stored in the tensor. */
     dtype dtype;
     size_t shape[TENSOR_MAX_SHAPE_SIZE];       /**< Shape of the tensor. */
+    size_t stride[TENSOR_MAX_SHAPE_SIZE];
     size_t data_size;    /**< Total number of elements in the tensor. */
     size_t shape_size;   /**< Number of dimensions in the tensor. */
     struct computational_graph_node *node; /**< Pointer to the computational graph node for gradient tracking. */
     struct tensor *grad;        /**< Pointer to the gradient tensor. */
 };
-
 
 // Tensor allocation
 
