@@ -145,6 +145,7 @@ int main(int argc, char **argv)
                 return EXIT_FAILURE;
             }
 
+
             // ------------- Forward -------------
 
             // Linear 1
@@ -155,7 +156,7 @@ int main(int argc, char **argv)
             {
                 return EXIT_FAILURE;
             }
-
+            
             // ReLU 1
             size_t h2_shape[] = {batch_size, hidden_dim};
             size_t h2_shape_size = 2;
@@ -173,6 +174,11 @@ int main(int argc, char **argv)
             {
                 return EXIT_FAILURE;
             }
+            // for (size_t i = 0; i < h3->data_size; i++)
+            // {
+            //     printf("%f, ", ((float *)h3->data)[i]);
+            // }
+            // exit(1);
 
             size_t z_shape[] = {1, 1};
             size_t z_shape_size = 2;
@@ -184,7 +190,7 @@ int main(int argc, char **argv)
 
             if (iteration % OUTPUT_ITERATION_FREQ == 0)
             {
-                double loss;
+                float loss;
                 tensor2d_get(z, 0, 0, &loss);
                 printf("epoch %02ld, iteration %04ld - loss: %f\n", epoch, iteration, loss);
             }

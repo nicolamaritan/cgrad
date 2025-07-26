@@ -331,9 +331,9 @@ static void copy_features_to_inputs_f64(struct tensor *inputs, double *features,
 static void copy_features_to_inputs_f32(struct tensor *inputs, double *features, const size_t i, const size_t cols)
 {
     float *inputs_data = (float *)inputs->data; // Cast is needed for correct pointer arithmetic below
-    for (size_t i = 0; i < cols - 1; i++)
+    for (size_t j = 0; j < cols - 1; j++)
     {
-        inputs_data[i] = features[i];
+        inputs_data[i * (cols - 1) + j] = features[j];
     }
 }
 
