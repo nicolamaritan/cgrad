@@ -1,6 +1,6 @@
 #include "optimizers/sgd.h"
 #include "tensor/tensor_add_inplace.h"
-#include "tensor/tensor_scalar_mult_tensor_sum.h"
+#include "tensor/tensor_scalar_mult_tensor_add.h"
 #include "tensor/tensor_axpy.h"
 
 static cgrad_error add_prev_b_t(struct sgd_optimizer *const opt, struct tensor *const prev_grad);
@@ -59,7 +59,7 @@ cgrad_error sgd_optimizer_step(struct sgd_optimizer* opt, double lr, double mome
             {
                 // b_t <- momentum * b_t-1 + g_t
                 struct tensor* g_t = tensor_allocator_clone(allocator, param->grad);
-                tensor_scalar_mult_tensor_sum(prev_b_t, g_t, momentum, b_t);
+                tensor_scalar_mult_tensor_add(prev_b_t, g_t, momentum, b_t);
 
                 // g_t <- g_t + momentum * b_t
                 tensor_axpy(b_t, g_t, momentum);
@@ -74,7 +74,7 @@ cgrad_error sgd_optimizer_step(struct sgd_optimizer* opt, double lr, double mome
             {
                 // No need to clone tensor as param->grad is not modified
                 // b_t <- momentum * b_t-1 + g_t
-                tensor_scalar_mult_tensor_sum(prev_b_t, param->grad, momentum, b_t);
+                tensor_scalar_mult_tensor_add(prev_b_t, param->grad, momentum, b_t);
 
                 // SGD update using b_t, i.e.:
                 // g_t <- b_t

@@ -1,29 +1,29 @@
 #include "tensor/tensor_axpy.h"
 #include <cblas.h>
 
-static cgrad_error tensor_axpy_dispatch(struct tensor *const X, struct tensor *const Y, const double alpha);
-static void tensor_axpy_unchecked_f64(struct tensor *const X, struct tensor *const Y, const double alpha);
+static cgrad_error tensor_axpy_dispatch(const struct tensor *const x, struct tensor *const y, const double alpha);
+static void tensor_axpy_unchecked_f64(const struct tensor *const x, struct tensor *const y, const double alpha);
 
-cgrad_error tensor_axpy(struct tensor *const X, struct tensor *const Y, const double alpha)
+cgrad_error tensor_axpy(const struct tensor *const x, struct tensor *const y, const double alpha)
 {
-    if (!tensor_same_shape(X, Y))
+    if (!tensor_same_shape(x, y))
     {
         return TENSOR_SHAPE_MISMATCH;
     }
-    if (X->dtype != Y->dtype)
+    if (x->dtype != y->dtype)
     {
         return TENSOR_DTYPE_MISMATCH;
     }
 
-    return tensor_axpy_dispatch(X, Y, alpha);
+    return tensor_axpy_dispatch(x, y, alpha);
 }
 
-static cgrad_error tensor_axpy_dispatch(struct tensor *const X, struct tensor *const Y, const double alpha)
+static cgrad_error tensor_axpy_dispatch(const struct tensor *const x, struct tensor *const y, const double alpha)
 {
-    switch (X->dtype)
+    switch (x->dtype)
     {
     case DTYPE_FLOAT64:
-        tensor_axpy_unchecked_f64(X, Y, alpha);
+        tensor_axpy_unchecked_f64(x, y, alpha);
         break;
     default:
         return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
@@ -32,14 +32,14 @@ static cgrad_error tensor_axpy_dispatch(struct tensor *const X, struct tensor *c
     return NO_ERROR;
 }
 
-static void tensor_axpy_unchecked_f64(struct tensor *const X, struct tensor *const Y, const double alpha)
+static void tensor_axpy_unchecked_f64(const struct tensor *const x, struct tensor *const y, const double alpha)
 {
     const blasint TENSOR_STRIDES = 1;
     cblas_daxpy(
-        X->data_size,
+        x->data_size,
         alpha,
-        X->data,
+        x->data,
         TENSOR_STRIDES,
-        Y->data,
+        y->data,
         TENSOR_STRIDES);
 }

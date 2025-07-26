@@ -1,4 +1,5 @@
 #include "tensor/tensor2d_add_row_vector.h"
+#include "tensor/tensor_sum.h"
 #include "autograd/computational_graph/computational_graph.h"
 #include "autograd/computational_graph/computational_graph_link.h"
 #include "utils/simd_support.h"
@@ -14,30 +15,29 @@ typedef enum tensor2d_add_row_vector_operand
     ROW_VECTOR,
 } tensor2d_add_row_vector_operand;
 
-static cgrad_error tensor2d_add_row_vector_dispatch(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
+static cgrad_error tensor2d_add_row_vector_dispatch(const struct tensor *const t, const struct tensor *const v, struct tensor *out);
 static void tensor2d_add_row_vector_backpropagate_tensor2d(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static void tensor2d_add_row_vector_backpropagate_row_vector(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
-static void tensor2d_add_row_vector_backpropagate_row_vector_f64(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
 #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256
-static cgrad_error tensor2d_add_row_vector_dispatch_avx_256(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
-static void tensor2d_add_row_vector_unchecked_avx_256_f64(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
+static cgrad_error tensor2d_add_row_vector_dispatch_avx_256(const struct tensor *const t, const struct tensor *const v, struct tensor *out);
+static void tensor2d_add_row_vector_unchecked_avx_256_f64(const struct tensor *const t, const struct tensor *const v, struct tensor *out);
 #else
-static cgrad_error tensor2d_add_row_vector_dispatch_scalar(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
-static void tensor2d_add_row_vector_unchecked_scalar_f64(const struct tensor *const A, const struct tensor *const v, struct tensor *out);
+static cgrad_error tensor2d_add_row_vector_dispatch_scalar(const struct tensor *const t, const struct tensor *const v, struct tensor *out);
+static void tensor2d_add_row_vector_unchecked_scalar_f64(const struct tensor *const t, const struct tensor *const v, struct tensor *out);
 #endif
 
-cgrad_error tensor2d_add_row_vector(const struct tensor *const A, const struct tensor *const v, struct tensor *const out)
+cgrad_error tensor2d_add_row_vector(const struct tensor *const t, const struct tensor *const v, struct tensor *const out)
 {
-    if (!A || !v)
+    if (!t || !v)
     {
         return TENSOR_NULL;
     }
-    if (!A->data || !v->data)
+    if (!t->data || !v->data)
     {
         return TENSOR_DATA_NULL;
     }
-    if (A->shape_size != 2 || v->shape_size != 2)
+    if (t->shape_size != 2 || v->shape_size != 2)
     {
         return TENSOR_WRONG_SHAPE;
     }
@@ -45,28 +45,28 @@ cgrad_error tensor2d_add_row_vector(const struct tensor *const A, const struct t
     {
         return TENSOR_WRONG_SHAPE;
     }
-    if (A->shape[1] != v->shape[0])
+    if (t->shape[1] != v->shape[0])
     {
         return TENSOR_SHAPE_MISMATCH;
     }
-    if (A->dtype != v->dtype)
+    if (t->dtype != v->dtype)
     {
         return TENSOR_DTYPE_MISMATCH;
     }
 
-    return tensor2d_add_row_vector_dispatch(A, v, out);
+    return tensor2d_add_row_vector_dispatch(t, v, out);
 }
 
-cgrad_error tensor2d_add_row_vector_graph(struct tensor *const A, struct tensor *const v, struct tensor *const out, struct autograd_allocators *allocators)
+cgrad_error tensor2d_add_row_vector_graph(struct tensor *const t, struct tensor *const v, struct tensor *const out, struct autograd_allocators *allocators)
 {
-    cgrad_error err = tensor2d_add_row_vector(A, v, out);
+    cgrad_error err = tensor2d_add_row_vector(t, v, out);
     if (err != NO_ERROR)
     {
         return err;
     }
 
     // Update computational graph
-    err = add_computational_graph_link(A, TENSOR2D, out, &tensor2d_add_row_vector_backpropagate_tensor2d, allocators);
+    err = add_computational_graph_link(t, TENSOR2D, out, &tensor2d_add_row_vector_backpropagate_tensor2d, allocators);
     if (err != NO_ERROR)
     {
         return err;
@@ -77,12 +77,12 @@ cgrad_error tensor2d_add_row_vector_graph(struct tensor *const A, struct tensor 
     return err;
 }
 
-static cgrad_error tensor2d_add_row_vector_dispatch(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
+static cgrad_error tensor2d_add_row_vector_dispatch(const struct tensor *const t, const struct tensor *const v, struct tensor *out)
 {
 #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256
-    return tensor2d_add_row_vector_dispatch_avx_256(A, v, out);
+    return tensor2d_add_row_vector_dispatch_avx_256(t, v, out);
 #else
-    return tensor2d_add_row_vector_dispatch_scalar(A, v, out);
+    return tensor2d_add_row_vector_dispatch_scalar(t, v, out);
 #endif
 }
 
@@ -93,41 +93,16 @@ static void tensor2d_add_row_vector_backpropagate_tensor2d(const struct backprop
 
 static void tensor2d_add_row_vector_backpropagate_row_vector(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
-    switch (grad_wrt_operand->dtype)
-    {
-    case DTYPE_FLOAT64:
-        tensor2d_add_row_vector_backpropagate_row_vector_f64(ctx, grad_wrt_out, grad_wrt_operand);
-        break;
-    default:
-        break;
-    }
-}
-
-static void tensor2d_add_row_vector_backpropagate_row_vector_f64(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
-{
-    size_t G_rows = grad_wrt_out->shape[0];
-    size_t G_cols = grad_wrt_out->shape[1];
-
-    double *grad_wrt_operand_data = (double *)grad_wrt_operand->data;
-    double *grad_wrt_out_data = (double *)grad_wrt_out->data;
-
-    // Iterating by row since vectors are stored in row-major
-    for (size_t i = 0; i < G_rows; i++)
-    {
-        for (size_t j = 0; j < G_cols; j++)
-        {
-            grad_wrt_operand_data[j] += grad_wrt_out_data[i * G_cols + j];
-        }
-    }
+    tensor_sum(grad_wrt_out, 0, grad_wrt_operand);
 }
 
 #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256
-static cgrad_error tensor2d_add_row_vector_dispatch_avx_256(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
+static cgrad_error tensor2d_add_row_vector_dispatch_avx_256(const struct tensor *const t, const struct tensor *const v, struct tensor *out)
 {
-    switch (A->dtype)
+    switch (t->dtype)
     {
     case DTYPE_FLOAT64:
-        tensor2d_add_row_vector_unchecked_avx_256_f64(A, v, out);
+        tensor2d_add_row_vector_unchecked_avx_256_f64(t, v, out);
     default:
         return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
         break;
@@ -136,12 +111,12 @@ static cgrad_error tensor2d_add_row_vector_dispatch_avx_256(const struct tensor 
     return NO_ERROR;
 }
 
-static void tensor2d_add_row_vector_unchecked_avx_256_f64(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
+static void tensor2d_add_row_vector_unchecked_avx_256_f64(const struct tensor *const t, const struct tensor *const v, struct tensor *out)
 {
-    size_t rows = A->shape[0];
-    size_t cols = A->shape[1];
+    size_t rows = t->shape[0];
+    size_t cols = t->shape[1];
 
-    double *A_data = (double *)A->data;
+    double *t_data = (double *)t->data;
     double *v_data = (double *)v->data;
     double *out_data = (double *)out->data;
 
@@ -154,7 +129,7 @@ static void tensor2d_add_row_vector_unchecked_avx_256_f64(const struct tensor *c
 
         for (; j + PARALLELIZED_ITEMS - 1 < cols; j += PARALLELIZED_ITEMS)
         {
-            __m256d a_vals = _mm256_loadu_pd(&A_data[row_offset + j]);
+            __m256d a_vals = _mm256_loadu_pd(&t_data[row_offset + j]);
             __m256d v_vals = _mm256_loadu_pd(&v_data[j]);
             __m256d sum = _mm256_add_pd(a_vals, v_vals);
             _mm256_storeu_pd(&out_data[row_offset + j], sum);
@@ -162,17 +137,17 @@ static void tensor2d_add_row_vector_unchecked_avx_256_f64(const struct tensor *c
 
         for (; j < cols; j++)
         {
-            out_data[row_offset + j] = A_data[row_offset + j] + v_data[j];
+            out_data[row_offset + j] = t_data[row_offset + j] + v_data[j];
         }
     }
 }
 #else
-static cgrad_error tensor2d_add_row_vector_dispatch_scalar(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
+static cgrad_error tensor2d_add_row_vector_dispatch_scalar(const struct tensor *const t, const struct tensor *const v, struct tensor *out)
 {
-    switch (A->dtype)
+    switch (t->dtype)
     {
     case DTYPE_FLOAT64:
-        tensor2d_add_row_vector_unchecked_scalar_f64(A, v, out);
+        tensor2d_add_row_vector_unchecked_scalar_f64(t, v, out);
         break;
     default:
         return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
@@ -181,12 +156,12 @@ static cgrad_error tensor2d_add_row_vector_dispatch_scalar(const struct tensor *
     return NO_ERROR;
 }
 
-static void tensor2d_add_row_vector_unchecked_scalar_f64(const struct tensor *const A, const struct tensor *const v, struct tensor *out)
+static void tensor2d_add_row_vector_unchecked_scalar_f64(const struct tensor *const t, const struct tensor *const v, struct tensor *out)
 {
-    size_t rows = A->shape[0];
-    size_t cols = A->shape[1];
+    size_t rows = t->shape[0];
+    size_t cols = t->shape[1];
 
-    double *A_data = (double *)A->data;
+    double *t_data = (double *)t->data;
     double *v_data = (double *)v->data;
     double *out_data = (double *)out->data;
 
@@ -196,7 +171,7 @@ static void tensor2d_add_row_vector_unchecked_scalar_f64(const struct tensor *co
 
         for (size_t j = 0; j < cols; j++)
         {
-            out_data[row_offset + j] = A_data[row_offset + j] + v_data[j];
+            out_data[row_offset + j] = t_data[row_offset + j] + v_data[j];
         }
     }
 }

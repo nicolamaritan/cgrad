@@ -4,6 +4,6 @@
 #include "tensor/tensor.h"
 #include "utils/error.h"
 
-cgrad_error tensor_axpy(struct tensor *const X, struct tensor *const Y, const double a);
+cgrad_error tensor_axpy(const struct tensor *const x, struct tensor *const y, const double a);
 
 #endif

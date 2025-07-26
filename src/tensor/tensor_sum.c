@@ -60,8 +60,8 @@ static void tensor_sum_compute(const struct tensor *const t, const size_t axis, 
 static void tensor_sum_reduce_f64(const struct tensor *const t, const size_t axis, struct tensor *const out, const size_t t_ptr, const size_t out_ptr)
 {
     double sum = 0;
-    double *out_data = out->data;
-    double *t_data = t->data;
+    double *restrict out_data = out->data;
+    double *restrict t_data = t->data;
     for (size_t i = 0; i < t->shape[axis]; i++)
     {
         sum += t_data[t_ptr + i * t->stride[axis]];

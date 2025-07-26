@@ -6,7 +6,7 @@
 #include "autograd/computational_graph/computational_graph_link.h"
 #include "autograd/autograd_allocators.h"
 
-cgrad_error tensor_add(const struct tensor *const A, const struct tensor *const B, struct tensor *const out);
-cgrad_error tensor_add_graph(struct tensor *const A, struct tensor *const B, struct tensor *const out, struct autograd_allocators *allocators);
+cgrad_error tensor_add(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
+cgrad_error tensor_add_graph(struct tensor *const x, struct tensor *const y, struct tensor *const out, struct autograd_allocators *allocators);
 
 #endif

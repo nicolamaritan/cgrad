@@ -12,36 +12,36 @@ typedef enum tensor2d_mult_operand
     RHS_TENSOR,
 } tensor2d_mult_operand;
 
-static cgrad_error tensor2d_mult_dispatch(const struct tensor *const A, const struct tensor *const B, struct tensor *const out);
-static void tensor2d_mult_unchecked_f64(const struct tensor *const A, const struct tensor *const B, struct tensor *const out);
+static cgrad_error tensor2d_mult_dispatch(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
+static void tensor2d_mult_unchecked_f64(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
 static void tensor2d_mult_backpropagate_lhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static void tensor2d_mult_backpropagate_rhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
-cgrad_error tensor2d_mult(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
+cgrad_error tensor2d_mult(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
 {
-    if (!A || !B || !out)
+    if (!x || !y || !out)
     {
         return TENSOR_NULL;
     }
-    if (A->shape[1] != B->shape[0])
+    if (x->shape[1] != y->shape[0])
     {
-        return TENSOR_SHAPE_MISMATCH; // Columns of A != rows of B
+        return TENSOR_SHAPE_MISMATCH; // Columns of x != rows of y
     }
-    if (out->shape[0] != A->shape[0] || out->shape[1] != B->shape[1])
+    if (out->shape[0] != x->shape[0] || out->shape[1] != y->shape[1])
     {
         return TENSOR_SHAPE_MISMATCH; // Output shape mismatch
     }
-    if (A->dtype != B->dtype && A->dtype != out->dtype)
+    if (x->dtype != y->dtype && x->dtype != out->dtype)
     {
         return TENSOR_DTYPE_MISMATCH;
     }
 
-    return tensor2d_mult_dispatch(A, B, out);
+    return tensor2d_mult_dispatch(x, y, out);
 }
 
-cgrad_error tensor2d_mult_graph(struct tensor *const A, struct tensor *const B, struct tensor *const out, struct autograd_allocators *allocators)
+cgrad_error tensor2d_mult_graph(struct tensor *const x, struct tensor *const y, struct tensor *const out, struct autograd_allocators *allocators)
 {
-    cgrad_error err = tensor2d_mult(A, B, out);
+    cgrad_error err = tensor2d_mult(x, y, out);
 
     if (err != NO_ERROR)
     {
@@ -49,23 +49,23 @@ cgrad_error tensor2d_mult_graph(struct tensor *const A, struct tensor *const B, 
     }
 
     // Update computational graph
-    err = add_computational_graph_link(A, LHS_TENSOR, out, &tensor2d_mult_backpropagate_lhs, allocators);
+    err = add_computational_graph_link(x, LHS_TENSOR, out, &tensor2d_mult_backpropagate_lhs, allocators);
     if (err != NO_ERROR)
     {
         return err;
     }
 
-    err = add_computational_graph_link(B, RHS_TENSOR, out, &tensor2d_mult_backpropagate_rhs, allocators);
+    err = add_computational_graph_link(y, RHS_TENSOR, out, &tensor2d_mult_backpropagate_rhs, allocators);
 
     return err;
 }
 
-static cgrad_error tensor2d_mult_dispatch(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
+static cgrad_error tensor2d_mult_dispatch(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
 {
-    switch (A->dtype)
+    switch (x->dtype)
     {
     case DTYPE_FLOAT64:
-        tensor2d_mult_unchecked_f64(A, B, out);
+        tensor2d_mult_unchecked_f64(x, y, out);
         break;
     default:
         return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
@@ -74,20 +74,20 @@ static cgrad_error tensor2d_mult_dispatch(const struct tensor *const A, const st
     return NO_ERROR;
 }
 
-static void tensor2d_mult_unchecked_f64(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
+static void tensor2d_mult_unchecked_f64(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
 {
     cblas_dgemm(
         CblasRowMajor,
         CblasNoTrans,
         CblasNoTrans,
-        A->shape[0], // M
-        B->shape[1], // N
-        A->shape[1], // K (must match B->shape[0])
+        x->shape[0], // M
+        y->shape[1], // N
+        x->shape[1], // K (must match y->shape[0])
         1.0,
-        (double *)A->data,
-        A->shape[1], // lda
-        B->data,
-        B->shape[1], // ldb
+        (double *)x->data,
+        x->shape[1], // lda
+        y->data,
+        y->shape[1], // ldb
         0.0,
         (double *)out->data,
         out->shape[1] // ldc

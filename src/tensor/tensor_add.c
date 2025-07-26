@@ -7,16 +7,16 @@ typedef enum tensor_add_operand
     RHS_TENSOR,
 } tensor_add_operand;
 
-static cgrad_error tensor_add_dispatch(const struct tensor *const A, const struct tensor *const B, struct tensor *const out);
-static void tensor_add_unchecked_f64(const struct tensor *const A, const struct tensor *const B, struct tensor *const out);
+static cgrad_error tensor_add_dispatch(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
+static void tensor_add_unchecked_f64(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
 static void tensor_add_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
-static cgrad_error tensor_add_dispatch(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
+static cgrad_error tensor_add_dispatch(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
 {
-    switch (A->dtype)
+    switch (x->dtype)
     {
     case DTYPE_FLOAT64:
-        tensor_add_unchecked_f64(A, B, out);
+        tensor_add_unchecked_f64(x, y, out);
         break;
     default:
         return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
@@ -25,60 +25,60 @@ static cgrad_error tensor_add_dispatch(const struct tensor *const A, const struc
     return NO_ERROR;
 }
 
-static void tensor_add_unchecked_f64(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
+static void tensor_add_unchecked_f64(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
 {
     double *out_data = (double *)out->data;
-    double *A_data = (double *)A->data;
-    double *B_data = (double *)B->data;
+    double *A_data = (double *)x->data;
+    double *B_data = (double *)y->data;
 
-    for (size_t i = 0; i < A->data_size; i++)
+    for (size_t i = 0; i < x->data_size; i++)
     {
         out_data[i] = A_data[i] + B_data[i];
     }
 }
 
-cgrad_error tensor_add(const struct tensor *const A, const struct tensor *const B, struct tensor *const out)
+cgrad_error tensor_add(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
 {
-    if (!A || !B || !out)
+    if (!x || !y || !out)
     {
         return TENSOR_NULL;
     }
-    if (!A->data || !B->data || !out->data)
+    if (!x->data || !y->data || !out->data)
     {
         return TENSOR_DATA_NULL;
     }
-    if (A->data_size != B->data_size || B->data_size != out->data_size)
+    if (x->data_size != y->data_size || y->data_size != out->data_size)
     {
         return TENSOR_DATA_SIZE_MISMATCH;
     }
-    if (!tensor_same_shape(A, B))
+    if (!tensor_same_shape(x, y))
     {
         return TENSOR_SHAPE_MISMATCH;
     }
-    if (A->dtype != B->dtype)
+    if (x->dtype != y->dtype)
     {
         return TENSOR_DTYPE_MISMATCH;
     }
 
-    return tensor_add_dispatch(A, B, out);
+    return tensor_add_dispatch(x, y, out);
 }
 
-cgrad_error tensor_add_graph(struct tensor *const A, struct tensor *const B, struct tensor *const out, struct autograd_allocators *allocators)
+cgrad_error tensor_add_graph(struct tensor *const x, struct tensor *const y, struct tensor *const out, struct autograd_allocators *allocators)
 {
-    cgrad_error err = tensor_add(A, B, out);
+    cgrad_error err = tensor_add(x, y, out);
     if (err != NO_ERROR)
     {
         return err;
     }
 
     // Update computational graph
-    err = add_computational_graph_link(A, LHS_TENSOR, out, &tensor_add_backpropagate, allocators);
+    err = add_computational_graph_link(x, LHS_TENSOR, out, &tensor_add_backpropagate, allocators);
     if (err != NO_ERROR)
     {
         return err;
     }
 
-    err = add_computational_graph_link(B, RHS_TENSOR, out, &tensor_add_backpropagate, allocators);
+    err = add_computational_graph_link(y, RHS_TENSOR, out, &tensor_add_backpropagate, allocators);
 
     return err;
 }
