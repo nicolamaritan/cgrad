@@ -6,6 +6,7 @@ typedef void (*tensor_sum_reduce)(const struct tensor *const t, const size_t axi
 static cgrad_error tensor_sum_dispatch(const struct tensor *const t, const size_t axis, struct tensor *const out);
 static void tensor_sum_compute(const struct tensor *const t, const size_t axis, struct tensor *const out, tensor_sum_reduce reduce);
 static void tensor_sum_reduce_f64(const struct tensor *const t, const size_t axis, struct tensor *const out, const size_t t_ptr, const size_t out_ptr);
+static void tensor_sum_reduce_f32(const struct tensor *const t, const size_t axis, struct tensor *const out, const size_t t_ptr, const size_t out_ptr);
 
 cgrad_error tensor_sum(const struct tensor *const t, const size_t axis, struct tensor *const out)
 {
@@ -23,6 +24,10 @@ static cgrad_error tensor_sum_dispatch(const struct tensor *const t, const size_
     {
     case DTYPE_FLOAT64:
         tensor_sum_compute(t, axis, out, &tensor_sum_reduce_f64);
+        break;
+    case DTYPE_FLOAT32:
+        tensor_sum_compute(t, axis, out, &tensor_sum_reduce_f32);
+        break;
     default:
         return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
     }
@@ -62,6 +67,18 @@ static void tensor_sum_reduce_f64(const struct tensor *const t, const size_t axi
     double sum = 0;
     double *restrict out_data = out->data;
     double *restrict t_data = t->data;
+    for (size_t i = 0; i < t->shape[axis]; i++)
+    {
+        sum += t_data[t_ptr + i * t->stride[axis]];
+    }
+    out_data[out_ptr] = sum;
+}
+
+static void tensor_sum_reduce_f32(const struct tensor *const t, const size_t axis, struct tensor *const out, const size_t t_ptr, const size_t out_ptr)
+{
+    float sum = 0;
+    float *restrict out_data = out->data;
+    float *restrict t_data = t->data;
     for (size_t i = 0; i < t->shape[axis]; i++)
     {
         sum += t_data[t_ptr + i * t->stride[axis]];

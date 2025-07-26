@@ -9,6 +9,7 @@ typedef enum tensor_add_operand
 
 static cgrad_error tensor_add_dispatch(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
 static void tensor_add_unchecked_f64(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
+static void tensor_add_unchecked_f32(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
 static void tensor_add_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
 static cgrad_error tensor_add_dispatch(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
@@ -17,6 +18,9 @@ static cgrad_error tensor_add_dispatch(const struct tensor *const x, const struc
     {
     case DTYPE_FLOAT64:
         tensor_add_unchecked_f64(x, y, out);
+        break;
+    case DTYPE_FLOAT32:
+        tensor_add_unchecked_f32(x, y, out);
         break;
     default:
         return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
@@ -27,9 +31,21 @@ static cgrad_error tensor_add_dispatch(const struct tensor *const x, const struc
 
 static void tensor_add_unchecked_f64(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
 {
-    double *out_data = (double *)out->data;
-    double *A_data = (double *)x->data;
-    double *B_data = (double *)y->data;
+    double *restrict out_data = (double *)out->data;
+    double *restrict A_data = (double *)x->data;
+    double *restrict B_data = (double *)y->data;
+
+    for (size_t i = 0; i < x->data_size; i++)
+    {
+        out_data[i] = A_data[i] + B_data[i];
+    }
+}
+
+static void tensor_add_unchecked_f32(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
+{
+    float *restrict out_data = (float *)out->data;
+    float *restrict A_data = (float *)x->data;
+    float *restrict B_data = (float *)y->data;
 
     for (size_t i = 0; i < x->data_size; i++)
     {

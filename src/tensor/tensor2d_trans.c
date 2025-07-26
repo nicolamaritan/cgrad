@@ -9,6 +9,7 @@ typedef enum tensor2d_trans_operand
 
 static cgrad_error tensor2d_trans_dispatch(const struct tensor *const t, struct tensor *const out);
 static void tensor2d_trans_unchecked_f64(const struct tensor *const t, struct tensor *const out);
+static void tensor2d_trans_unchecked_f32(const struct tensor *const t, struct tensor *const out);
 static void tensor2d_trans_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
 cgrad_error tensor2d_trans(const struct tensor *const t, struct tensor *const out)
@@ -49,6 +50,8 @@ static cgrad_error tensor2d_trans_dispatch(const struct tensor *const t, struct 
     case DTYPE_FLOAT64:
         tensor2d_trans_unchecked_f64(t, out);
         break;
+    case DTYPE_FLOAT32:
+        tensor2d_trans_unchecked_f32(t, out);
     default:
         return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
     }
@@ -58,15 +61,11 @@ static cgrad_error tensor2d_trans_dispatch(const struct tensor *const t, struct 
 
 static void tensor2d_trans_unchecked_f64(const struct tensor *const t, struct tensor *const out)
 {
-    // Extract the shape of t
     size_t rows = t->shape[0];
     size_t cols = t->shape[1];
 
-    double *out_data = (double *)out->data;
-    double *t_data = (double *)t->data;
-
-    out->shape[0] = cols;
-    out->shape[1] = rows;
+    double *restrict out_data = (double *)out->data;
+    double *restrict t_data = (double *)t->data;
 
     // Transpose
     for (size_t i = 0; i < rows; i++)
@@ -74,6 +73,25 @@ static void tensor2d_trans_unchecked_f64(const struct tensor *const t, struct te
         for (size_t j = 0; j < cols; j++)
         {
             out_data[j * rows + i] = t_data[i * cols + j];
+        }
+    }
+}
+
+static void tensor2d_trans_unchecked_f32(const struct tensor *const t, struct tensor *const out)
+{
+    size_t rows = t->shape[0];
+    size_t cols = t->shape[1];
+
+    float *restrict out_data = (float *)out->data;
+    float *restrict t_data = (float *)t->data;
+
+    // Transpose
+    for (size_t i = 0; i < rows; i++)
+    {
+        size_t offset = i * cols;
+        for (size_t j = 0; j < cols; j++)
+        {
+            out_data[j * rows + i] = t_data[offset + j];
         }
     }
 }

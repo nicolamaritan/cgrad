@@ -27,6 +27,8 @@ static cgrad_error linear_update_computational_graph(struct tensor *const x, str
 static void linear_backpropagate_input(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static void linear_backpropagate_weights(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static void linear_backpropagate_bias(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static void linear_xavier_init_f64(struct linear_layer *layer);
+static void linear_xavier_init_f32(struct linear_layer *layer);
 
 struct linear_layer *linear_alloc(const size_t in_dim, const size_t out_dim, const dtype dt, struct tensor_allocator *params_allocator, struct autograd_allocators *const ag_allocators)
 {
@@ -91,13 +93,44 @@ cgrad_error linear_forward(const struct tensor *const x, const struct linear_lay
 
 void linear_xavier_init(struct linear_layer *layer)
 {
-    const double XAVIER_INIT_NUMERATOR = 6.0;
+    switch (layer->weights->dtype)
+    {
+    case DTYPE_FLOAT64:
+        linear_xavier_init_f64(layer);
+        break;
+    case DTYPE_FLOAT32:
+        linear_xavier_init_f32(layer);
+        break;
+    default:
+        break;
+    }
+}
+
+static void linear_xavier_init_f64(struct linear_layer *layer)
+{
     double *data = layer->weights->data;
     size_t in_dim = layer->in_dim;
     size_t out_dim = layer->out_dim;
     size_t data_size = layer->weights->data_size;
 
+    const double XAVIER_INIT_NUMERATOR = 6.0;
     double xavier_init_bound = sqrt(XAVIER_INIT_NUMERATOR / (in_dim + out_dim));
+
+    for (size_t i = 0; i < data_size; i++)
+    {
+        data[i] = sample_uniform(-xavier_init_bound, xavier_init_bound);
+    }
+}
+
+static void linear_xavier_init_f32(struct linear_layer *layer)
+{
+    float *data = layer->weights->data;
+    size_t in_dim = layer->in_dim;
+    size_t out_dim = layer->out_dim;
+    size_t data_size = layer->weights->data_size;
+
+    const float XAVIER_INIT_NUMERATOR = 6.0;
+    float xavier_init_bound = sqrt(XAVIER_INIT_NUMERATOR / (in_dim + out_dim));
 
     for (size_t i = 0; i < data_size; i++)
     {

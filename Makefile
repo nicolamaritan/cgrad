@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS = -Wall -Iinclude -mavx -DENABLE_AVX2 -O3
-DEBUG_CFLAGS = -Wall -Iinclude -mavx -DENABLE_AVX2 -g
+CFLAGS = -Wall -Iinclude -mavx2 -O3
+DEBUG_CFLAGS = -Wall -Iinclude -mavx2 -DENABLE_SIMD_AVX2 -g
 LDFLAGS = -lblas -lm
 
 SRC = $(shell find src -name "*.c" -type f)

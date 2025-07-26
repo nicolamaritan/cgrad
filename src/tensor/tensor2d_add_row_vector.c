@@ -22,9 +22,11 @@ static void tensor2d_add_row_vector_backpropagate_row_vector(const struct backpr
 #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256
 static cgrad_error tensor2d_add_row_vector_dispatch_avx_256(const struct tensor *const t, const struct tensor *const v, struct tensor *out);
 static void tensor2d_add_row_vector_unchecked_avx_256_f64(const struct tensor *const t, const struct tensor *const v, struct tensor *out);
+static void tensor2d_add_row_vector_unchecked_avx_256_f32(const struct tensor *const t, const struct tensor *const v, struct tensor *out);
 #else
 static cgrad_error tensor2d_add_row_vector_dispatch_scalar(const struct tensor *const t, const struct tensor *const v, struct tensor *out);
 static void tensor2d_add_row_vector_unchecked_scalar_f64(const struct tensor *const t, const struct tensor *const v, struct tensor *out);
+static void tensor2d_add_row_vector_unchecked_scalar_f32(const struct tensor *const t, const struct tensor *const v, struct tensor *out);
 #endif
 
 cgrad_error tensor2d_add_row_vector(const struct tensor *const t, const struct tensor *const v, struct tensor *const out)
@@ -103,9 +105,12 @@ static cgrad_error tensor2d_add_row_vector_dispatch_avx_256(const struct tensor 
     {
     case DTYPE_FLOAT64:
         tensor2d_add_row_vector_unchecked_avx_256_f64(t, v, out);
+        break;
+    case DTYPE_FLOAT32:
+        tensor2d_add_row_vector_unchecked_avx_256_f32(t, v, out);
+        break;
     default:
         return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
-        break;
     }
 
     return NO_ERROR;
@@ -141,6 +146,37 @@ static void tensor2d_add_row_vector_unchecked_avx_256_f64(const struct tensor *c
         }
     }
 }
+
+static void tensor2d_add_row_vector_unchecked_avx_256_f32(const struct tensor *const t, const struct tensor *const v, struct tensor *out)
+{
+    size_t rows = t->shape[0];
+    size_t cols = t->shape[1];
+
+    float *t_data = (float *)t->data;
+    float *v_data = (float *)v->data;
+    float *out_data = (float *)out->data;
+
+    const size_t PARALLELIZED_ITEMS = sizeof(__m256) / sizeof(float);
+
+    for (size_t i = 0; i < rows; i++)
+    {
+        size_t row_offset = i * cols;
+        size_t j = 0;
+
+        for (; j + PARALLELIZED_ITEMS - 1 < cols; j += PARALLELIZED_ITEMS)
+        {
+            __m256 a_vals = _mm256_loadu_ps(&t_data[row_offset + j]);
+            __m256 v_vals = _mm256_loadu_ps(&v_data[j]);
+            __m256 sum = _mm256_add_ps(a_vals, v_vals);
+            _mm256_storeu_ps(&out_data[row_offset + j], sum);
+        }
+
+        for (; j < cols; j++)
+        {
+            out_data[row_offset + j] = t_data[row_offset + j] + v_data[j];
+        }
+    }
+}
 #else
 static cgrad_error tensor2d_add_row_vector_dispatch_scalar(const struct tensor *const t, const struct tensor *const v, struct tensor *out)
 {
@@ -148,6 +184,9 @@ static cgrad_error tensor2d_add_row_vector_dispatch_scalar(const struct tensor *
     {
     case DTYPE_FLOAT64:
         tensor2d_add_row_vector_unchecked_scalar_f64(t, v, out);
+        break;
+    case DTYPE_FLOAT32:
+        tensor2d_add_row_vector_unchecked_scalar_f32(t, v, out);
         break;
     default:
         return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
@@ -164,6 +203,26 @@ static void tensor2d_add_row_vector_unchecked_scalar_f64(const struct tensor *co
     double *t_data = (double *)t->data;
     double *v_data = (double *)v->data;
     double *out_data = (double *)out->data;
+
+    for (size_t i = 0; i < rows; i++)
+    {
+        size_t row_offset = i * cols;
+
+        for (size_t j = 0; j < cols; j++)
+        {
+            out_data[row_offset + j] = t_data[row_offset + j] + v_data[j];
+        }
+    }
+}
+
+static void tensor2d_add_row_vector_unchecked_scalar_f32(const struct tensor *const t, const struct tensor *const v, struct tensor *out)
+{
+    size_t rows = t->shape[0];
+    size_t cols = t->shape[1];
+
+    float *t_data = (float *)t->data;
+    float *v_data = (float *)v->data;
+    float *out_data = (float *)out->data;
 
     for (size_t i = 0; i < rows; i++)
     {

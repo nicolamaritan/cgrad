@@ -14,6 +14,7 @@ typedef enum tensor2d_mult_operand
 
 static cgrad_error tensor2d_mult_dispatch(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
 static void tensor2d_mult_unchecked_f64(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
+static void tensor2d_mult_unchecked_f32(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
 static void tensor2d_mult_backpropagate_lhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static void tensor2d_mult_backpropagate_rhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
@@ -67,6 +68,9 @@ static cgrad_error tensor2d_mult_dispatch(const struct tensor *const x, const st
     case DTYPE_FLOAT64:
         tensor2d_mult_unchecked_f64(x, y, out);
         break;
+    case DTYPE_FLOAT32:
+        tensor2d_mult_unchecked_f32(x, y, out);
+        break;
     default:
         return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
     }
@@ -90,6 +94,26 @@ static void tensor2d_mult_unchecked_f64(const struct tensor *const x, const stru
         y->shape[1], // ldb
         0.0,
         (double *)out->data,
+        out->shape[1] // ldc
+    );
+}
+
+static void tensor2d_mult_unchecked_f32(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
+{
+    cblas_sgemm(
+        CblasRowMajor,
+        CblasNoTrans,
+        CblasNoTrans,
+        x->shape[0], // M
+        y->shape[1], // N
+        x->shape[1], // K (must match y->shape[0])
+        1.0,
+        (float *)x->data,
+        x->shape[1], // lda
+        y->data,
+        y->shape[1], // ldb
+        0.0,
+        (float *)out->data,
         out->shape[1] // ldc
     );
 }
