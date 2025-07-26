@@ -48,16 +48,9 @@ static void tensor_sum_compute(const struct tensor *const t, const size_t axis, 
 
         // Compute t_ptr, reduction starting point
         size_t t_ptr = 0;
-        size_t k = 0;
         for (size_t i = 0; i < t->shape_size; i++)
         {
-            if (i == axis)
-            {
-                continue;
-            }
-
-            t_ptr += out_idx[k] * t->stride[i];
-            k++;
+            t_ptr += out_idx[i] * t->stride[i];
         }
 
         reduce(t, axis, out, t_ptr, out_ptr);
