@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Iinclude -mavx2 -O3
+CFLAGS = -Wall -Iinclude -mavx2 -DENABLE_SIMD_AVX2 -DNDEBUG -O3
 DEBUG_CFLAGS = -Wall -Iinclude -mavx2 -DENABLE_SIMD_AVX2 -g
 LDFLAGS = -lblas -lm
 

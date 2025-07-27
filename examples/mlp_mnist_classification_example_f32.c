@@ -174,11 +174,6 @@ int main(int argc, char **argv)
             {
                 return EXIT_FAILURE;
             }
-            // for (size_t i = 0; i < h3->data_size; i++)
-            // {
-            //     printf("%f, ", ((float *)h3->data)[i]);
-            // }
-            // exit(1);
 
             size_t z_shape[] = {1, 1};
             size_t z_shape_size = 2;

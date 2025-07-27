@@ -60,6 +60,13 @@ cgrad_error relu_forward(const struct tensor *const x, struct tensor *const out)
 
 static void relu_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
+
+    /*
+        Gradient computation of dz/dX.
+        dz/dX is the Hadamard Product of grad_wrt_out = dz/drelu(X) and drelu(X)/dX,
+        since element (i, j) of relu(X) depends only on element (i, j) of X.
+    */
+
     switch (grad_wrt_operand->dtype)
     {
     case DTYPE_FLOAT64:
@@ -83,12 +90,6 @@ static void relu_backpropagate_f64(const struct backpropagation_context *const c
     double *grad_wrt_out_data = (double *)grad_wrt_out->data;
     size_t grad_wrt_operand_data_size = grad_wrt_operand->data_size;
 
-    /*
-        Gradient computation of dz/dX.
-        dz/dX is the Hadamard Product of grad_wrt_out = dz/drelu(X) and drelu(X)/dX,
-        since element (i, j) of relu(X) depends only on element (i, j) of X.
-    */
-
     for (size_t i = 0; i < grad_wrt_operand_data_size; i++)
     {
         // Element wise product
@@ -105,12 +106,6 @@ static void relu_backpropagate_f32(const struct backpropagation_context *const c
     float *grad_wrt_operand_data = (float *)grad_wrt_operand->data;
     float *grad_wrt_out_data = (float *)grad_wrt_out->data;
     size_t grad_wrt_operand_data_size = grad_wrt_operand->data_size;
-
-    /*
-        Gradient computation of dz/dX.
-        dz/dX is the Hadamard Product of grad_wrt_out = dz/drelu(X) and drelu(X)/dX,
-        since element (i, j) of relu(X) depends only on element (i, j) of X.
-    */
 
     for (size_t i = 0; i < grad_wrt_operand_data_size; i++)
     {
@@ -166,6 +161,7 @@ static void relu_forward_unchecked_avx_256_f64(const struct tensor *const x, str
         _mm256_storeu_pd(&out_data[i], relu_vals);
     }
 
+    // Handle remaining items
     for (; i < x->data_size; i++)
     {
         out_data[i] = x_data[i] > 0 ? x_data[i] : 0;
@@ -174,7 +170,7 @@ static void relu_forward_unchecked_avx_256_f64(const struct tensor *const x, str
 
 static void relu_forward_unchecked_avx_256_f32(const struct tensor *const x, struct tensor *const out)
 {
-    const size_t PARALLELIZED_ITEMS = sizeof(__m256) / sizeof(double);
+    const size_t PARALLELIZED_ITEMS = sizeof(__m256) / sizeof(float);
 
     float zeros[PARALLELIZED_ITEMS];
     memset(zeros, 0, sizeof(zeros));
@@ -191,6 +187,7 @@ static void relu_forward_unchecked_avx_256_f32(const struct tensor *const x, str
         _mm256_storeu_ps(&out_data[i], relu_vals);
     }
 
+    // Handle remaining items
     for (; i < x->data_size; i++)
     {
         out_data[i] = x_data[i] > 0 ? x_data[i] : 0;
