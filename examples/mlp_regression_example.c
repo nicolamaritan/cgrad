@@ -19,12 +19,14 @@
 // Example dataset build
 void build_example_dataset(struct tensor *x, struct tensor *y_target);
 // Example 2-layer-friendly function: y = tanh(w·x + b)
-double compute_example_y_target(double *x_row, double *weights, double bias, size_t dim);
+float compute_example_y_target(float *x_row, float *weights, float bias, size_t dim);
 
 int main()
 {
     const int SEED = 42;
     init_random_seed(SEED);
+
+    const dtype DTYPE = DTYPE_FLOAT32;
 
     const size_t batch_size = 128;
     const size_t input_dim = 64;
@@ -51,11 +53,11 @@ int main()
 
     size_t x_shape[] = {batch_size, input_dim};
     size_t x_shape_size = 2;
-    struct tensor *x = tensor_allocator_alloc(&t_allocator, x_shape, x_shape_size, DTYPE_FLOAT64);
+    struct tensor *x = tensor_allocator_alloc(&t_allocator, x_shape, x_shape_size, DTYPE);
 
     size_t y_shape[] = {batch_size, 1};
     size_t y_shape_size = 2;
-    struct tensor *y_target = tensor_allocator_alloc(&t_allocator, y_shape, y_shape_size, DTYPE_FLOAT64);
+    struct tensor *y_target = tensor_allocator_alloc(&t_allocator, y_shape, y_shape_size, DTYPE);
     if (!x || !y_target)
     {
         tensor_allocator_free(&t_allocator, x);
@@ -66,10 +68,10 @@ int main()
     build_example_dataset(x, y_target);
 
     // Allocate model
-    struct linear_layer *linear1 = linear_alloc(input_dim, hidden_dim, DTYPE_FLOAT64, &t_allocator, &allocators);
+    struct linear_layer *linear1 = linear_alloc(input_dim, hidden_dim, DTYPE, &t_allocator, &allocators);
     linear_xavier_init(linear1);
 
-    struct linear_layer *linear2 = linear_alloc(hidden_dim, out_dim, DTYPE_FLOAT64, &t_allocator, &allocators);
+    struct linear_layer *linear2 = linear_alloc(hidden_dim, out_dim, DTYPE, &t_allocator, &allocators);
     linear_xavier_init(linear2);
 
     // Setup model params
@@ -96,7 +98,7 @@ int main()
         // ------------- Forward -------------
         size_t h1_shape[] = {batch_size, hidden_dim};
         size_t h1_shape_size = 2;
-        struct tensor *h1 = tensor_allocator_alloc(&t_allocator, h1_shape, h1_shape_size, DTYPE_FLOAT64);
+        struct tensor *h1 = tensor_allocator_alloc(&t_allocator, h1_shape, h1_shape_size, DTYPE);
         if (linear_forward_graph(x, linear1, h1) != NO_ERROR)
         {
             return EXIT_FAILURE;
@@ -104,12 +106,12 @@ int main()
 
         size_t h2_shape[] = {batch_size, hidden_dim};
         size_t h2_shape_size = 2;
-        struct tensor *h2 = tensor_allocator_alloc(&t_allocator, h2_shape, h2_shape_size, DTYPE_FLOAT64);
+        struct tensor *h2 = tensor_allocator_alloc(&t_allocator, h2_shape, h2_shape_size, DTYPE);
         relu_forward_graph(h1, h2, &allocators);
 
         size_t h3_shape[] = {batch_size, out_dim};
         size_t h3_shape_size = 2;
-        struct tensor *h3 = tensor_allocator_alloc(&t_allocator, h3_shape, h3_shape_size, DTYPE_FLOAT64);
+        struct tensor *h3 = tensor_allocator_alloc(&t_allocator, h3_shape, h3_shape_size, DTYPE);
         if (linear_forward_graph(h2, linear2, h3) != NO_ERROR)
         {
             return EXIT_FAILURE;
@@ -117,13 +119,13 @@ int main()
 
         size_t z_shape[] = {1, 1};
         size_t z_shape_size = 2;
-        struct tensor *z = tensor_allocator_alloc(&t_allocator, z_shape, z_shape_size, DTYPE_FLOAT64);
+        struct tensor *z = tensor_allocator_alloc(&t_allocator, z_shape, z_shape_size, DTYPE);
         if (mse_loss_graph(h3, y_target, z, &allocators) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
 
-        double loss;
+        float loss;
         tensor2d_get(z, 0, 0, &loss);
         printf("epoch %ld, loss: %f\n", i, loss);
 
@@ -148,9 +150,9 @@ int main()
     return EXIT_SUCCESS;
 }
 
-double compute_example_y_target(double *x_row, double *weights, double bias, size_t dim)
+float compute_example_y_target(float *x_row, float *weights, float bias, size_t dim)
 {
-    double dot = 0.0;
+    float dot = 0.0;
     for (size_t j = 0; j < dim; j++)
     {
         dot += x_row[j] * weights[j];
@@ -161,28 +163,28 @@ double compute_example_y_target(double *x_row, double *weights, double bias, siz
 void build_example_dataset(struct tensor *x, struct tensor *y_target)
 {
     // Random weights and bias for generating y
-    double lb = -20;
-    double ub = 20;
-    double weights[x->shape[1]];
+    float lb = -20;
+    float ub = 20;
+    float weights[x->shape[1]];
     for (size_t j = 0; j < x->shape[1]; j++)
     {
         weights[j] = sample_uniform(lb, ub);
     }
 
-    double bias = sample_uniform(lb, ub);
+    float bias = sample_uniform(lb, ub);
 
     // Populate x with random values and compute y
     for (size_t i = 0; i < x->shape[0]; i++)
     {
-        double x_row[x->shape[1]];
+        float x_row[x->shape[1]];
         for (size_t j = 0; j < x->shape[1]; j++)
         {
-            double value = sample_uniform(lb, ub);
+            float value = sample_uniform(lb, ub);
             x_row[j] = value;
             tensor2d_set(x, i, j, value);
         }
 
-        double y_value = compute_example_y_target(x_row, weights, bias, x->shape[1]);
+        float y_value = compute_example_y_target(x_row, weights, bias, x->shape[1]);
         tensor2d_set(y_target, i, 0, y_value);
     }
 }
