@@ -1,11 +1,11 @@
 #include "memory/tensor/cpu/tensor_cpu_allocator.h"
 #include <string.h>
 
-static struct tensor *tensor_cpu_alloc(void *pool, const size_t *const shape, const size_t shape_size, const dtype dt);
+static struct tensor *tensor_cpu_alloc(void *pool, const size_t *const shape, const size_t shape_size, const cgrad_dtype dtype);
 
-static struct tensor *tensor_cpu_no_grad_alloc(void *pool, const size_t *const shape, const size_t shape_size, const dtype dt);
+static struct tensor *tensor_cpu_no_grad_alloc(void *pool, const size_t *const shape, const size_t shape_size, const cgrad_dtype dtype);
 
-static struct tensor *tensor_cpu_no_grad_zero_alloc(void *pool, const size_t *const shape, const size_t shape_size, const dtype dt);
+static struct tensor *tensor_cpu_no_grad_zero_alloc(void *pool, const size_t *const shape, const size_t shape_size, const cgrad_dtype dtype);
 
 static void tensor_cpu_free(void *pool, struct tensor *t);
 
@@ -27,19 +27,19 @@ struct tensor_allocator make_tensor_cpu_allocator(struct tensor_cpu_pool *pool)
         .pool = pool};
 }
 
-static struct tensor *tensor_cpu_alloc(void *pool, const size_t *const shape, const size_t shape_size, const dtype dt)
+static struct tensor *tensor_cpu_alloc(void *pool, const size_t *const shape, const size_t shape_size, const cgrad_dtype dtype)
 {
     struct tensor_cpu_pool *cpu_pool = (struct tensor_cpu_pool *)pool;
-    struct tensor *t = tensor_cpu_no_grad_alloc(cpu_pool, shape, shape_size, dt);
+    struct tensor *t = tensor_cpu_no_grad_alloc(cpu_pool, shape, shape_size, dtype);
     if (!t)
     {
         return NULL;
     }
 
     // Allocate gradient only for real value tensors
-    if (dt == DTYPE_FLOAT32 || dt == DTYPE_FLOAT64)
+    if (dtype == DTYPE_FLOAT32 || dtype == DTYPE_FLOAT64)
     {
-        t->grad = tensor_cpu_no_grad_zero_alloc(cpu_pool, shape, shape_size, dt);
+        t->grad = tensor_cpu_no_grad_zero_alloc(cpu_pool, shape, shape_size, dtype);
         if (!t->grad)
         {
             tensor_cpu_free(cpu_pool, t);
@@ -53,7 +53,7 @@ static struct tensor *tensor_cpu_alloc(void *pool, const size_t *const shape, co
     return t;
 }
 
-static struct tensor *tensor_cpu_no_grad_alloc(void *pool, const size_t *const shape, const size_t shape_size, const dtype dt)
+static struct tensor *tensor_cpu_no_grad_alloc(void *pool, const size_t *const shape, const size_t shape_size, const cgrad_dtype dtype)
 {
     // Compute data_size, needed for data allocation
     size_t data_size = 1;
@@ -69,7 +69,7 @@ static struct tensor *tensor_cpu_no_grad_alloc(void *pool, const size_t *const s
         return NULL;
     }
 
-    void *data = tensor_cpu_pool_data_zero_alloc(cpu_pool, data_size * dtype_sizeof(dt));
+    void *data = tensor_cpu_pool_data_zero_alloc(cpu_pool, data_size * dtype_sizeof(dtype));
     if (!data)
     {
         tensor_cpu_pool_tensor_free(cpu_pool, t);
@@ -86,12 +86,12 @@ static struct tensor *tensor_cpu_no_grad_alloc(void *pool, const size_t *const s
     t->data_size = data_size;
     t->shape_size = shape_size;
     t->grad = NULL;
-    t->dtype = dt;
+    t->cgrad_dtype = dtype;
 
     return t;
 }
 
-static struct tensor *tensor_cpu_no_grad_zero_alloc(void *pool, const size_t *const shape, const size_t shape_size, const dtype dt)
+static struct tensor *tensor_cpu_no_grad_zero_alloc(void *pool, const size_t *const shape, const size_t shape_size, const cgrad_dtype dtype)
 {
     // Compute data_size, needed for data allocation
     size_t data_size = 1;
@@ -107,7 +107,7 @@ static struct tensor *tensor_cpu_no_grad_zero_alloc(void *pool, const size_t *co
         return NULL;
     }
 
-    void *data = tensor_cpu_pool_data_zero_alloc(cpu_pool, data_size * dtype_sizeof(dt));
+    void *data = tensor_cpu_pool_data_zero_alloc(cpu_pool, data_size * dtype_sizeof(dtype));
     if (!data)
     {
         tensor_cpu_pool_tensor_free(cpu_pool, t);
@@ -124,7 +124,7 @@ static struct tensor *tensor_cpu_no_grad_zero_alloc(void *pool, const size_t *co
     t->data_size = data_size;
     t->shape_size = shape_size;
     t->grad = NULL;
-    t->dtype = dt;
+    t->cgrad_dtype = dtype;
 
     return t;
 }
@@ -175,7 +175,7 @@ static struct tensor *tensor_cpu_clone(void *pool, const struct tensor *const sr
         return NULL;
     }
 
-    struct tensor *new_tensor = tensor_cpu_alloc(pool, src->shape, src->shape_size, src->dtype);
+    struct tensor *new_tensor = tensor_cpu_alloc(pool, src->shape, src->shape_size, src->cgrad_dtype);
     if (!new_tensor)
     {
         return NULL;

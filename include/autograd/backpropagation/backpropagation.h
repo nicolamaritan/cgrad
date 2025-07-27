@@ -5,7 +5,7 @@
 #include "autograd/autograd_allocators.h"
 #include "memory/tensor/tensor_allocator.h"
 #include "memory/computational_graph/computational_graph_allocator.h"
-#include "utils/error.h"
+#include "error.h"
 #include <stdbool.h>
 
 cgrad_error backward(struct tensor* t, struct autograd_allocators *allocators);

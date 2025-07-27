@@ -1,6 +1,6 @@
 #include "memory/tensor/cpu/tensor_cpu_pool.h"
 #include "tensor/tensor.h"
-#include "utils/error.h"
+#include "error.h"
 #include "config.h"
 #include <stdlib.h>
 #include <stdio.h>

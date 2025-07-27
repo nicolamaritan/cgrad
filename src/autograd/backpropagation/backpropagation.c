@@ -61,7 +61,7 @@ static void build_gradients(struct computational_graph_node *loss_node, struct a
         for (size_t i = 0; i < node->n_children; i++)
         {
             struct computational_graph_node *child_node = node->children[i];
-            struct tensor *gradient = tensor_allocator_no_grad_alloc(allocators->t_allocator, child_node->t->shape, child_node->t->shape_size, loss_node->t->dtype);
+            struct tensor *gradient = tensor_allocator_no_grad_alloc(allocators->t_allocator, child_node->t->shape, child_node->t->shape_size, loss_node->t->cgrad_dtype);
             struct backpropagation_context *ctx = &node->ctx;
             size_t operand = node->children_operands[i];
 

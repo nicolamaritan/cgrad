@@ -1,7 +1,7 @@
 #ifndef TENSOR_POOL_H
 #define TENSOR_POOL_H
 
-#include "utils/error.h"
+#include "error.h"
 #include "tensor/tensor.h"
 #include <stdalign.h>
 

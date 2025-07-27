@@ -14,7 +14,7 @@ static void tensor_add_backpropagate(const struct backpropagation_context *const
 
 static cgrad_error tensor_add_dispatch(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
 {
-    switch (x->dtype)
+    switch (x->cgrad_dtype)
     {
     case DTYPE_FLOAT64:
         tensor_add_unchecked_f64(x, y, out);
@@ -71,7 +71,7 @@ cgrad_error tensor_add(const struct tensor *const x, const struct tensor *const 
     {
         return TENSOR_SHAPE_MISMATCH;
     }
-    if (x->dtype != y->dtype)
+    if (x->cgrad_dtype != y->cgrad_dtype)
     {
         return TENSOR_DTYPE_MISMATCH;
     }

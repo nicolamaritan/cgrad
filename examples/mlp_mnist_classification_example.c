@@ -30,7 +30,7 @@ int main(int argc, char **argv)
     const int SEED = 42;
     init_random_seed(SEED);
 
-    const dtype DTYPE = DTYPE_FLOAT32;
+    const cgrad_dtype DTYPE = DTYPE_FLOAT32;
 
     struct tensor_cpu_pool tensor_pool;
     if (tensor_cpu_pool_init(&tensor_pool) != NO_ERROR)

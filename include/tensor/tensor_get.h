@@ -2,7 +2,7 @@
 #define TENSOR_GET_H
 
 #include "tensor/tensor.h"
-#include "tensor/dtypes.h"
+#include "dtypes.h"
 
 #define tensor2d_get(t, row, col, out) \
     _Generic((out), \

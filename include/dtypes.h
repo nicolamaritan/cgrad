@@ -9,13 +9,13 @@ typedef enum
     DTYPE_FLOAT64,
     DTYPE_FLOAT32,
     DTYPE_INT32,
-} dtype;
+} cgrad_dtype;
 
-static inline size_t dtype_sizeof(dtype dt);
+static inline size_t dtype_sizeof(cgrad_dtype dtype);
 
-static inline size_t dtype_sizeof(dtype dt)
+static inline size_t dtype_sizeof(cgrad_dtype dtype)
 {
-    switch (dt)
+    switch (dtype)
     {
         case DTYPE_FLOAT32:
             return sizeof(float);

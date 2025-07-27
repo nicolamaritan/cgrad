@@ -1,9 +1,9 @@
 #ifndef TENSOR_H
 #define TENSOR_H
 
-#include "tensor/dtypes.h"
+#include "dtypes.h"
 #include "config.h"
-#include "utils/error.h"
+#include "error.h"
 #include <stddef.h>
 #include <stdbool.h>
 
@@ -20,7 +20,7 @@ struct tensor;
 struct tensor
 {
     void *data;        /**< Pointer to the data stored in the tensor. */
-    dtype dtype;
+    cgrad_dtype cgrad_dtype;
     size_t shape[TENSOR_MAX_SHAPE_SIZE];       /**< Shape of the tensor. */
     size_t stride[TENSOR_MAX_SHAPE_SIZE];
     size_t data_size;    /**< Total number of elements in the tensor. */

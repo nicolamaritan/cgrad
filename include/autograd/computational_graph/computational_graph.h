@@ -2,7 +2,7 @@
 #define COMPUTATIONAL_GRAPH_H
 
 #include "autograd/backpropagation/backpropagation_function.h"
-#include "utils/error.h"
+#include "error.h"
 #include "config.h"
 #include <stdbool.h>
 

@@ -1,5 +1,5 @@
 #include "memory/computational_graph/computational_graph_cpu_pool.h"
-#include "utils/error.h"
+#include "error.h"
 #include "config.h"
 #include <stdlib.h>
 #include <stdio.h>

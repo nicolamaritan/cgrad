@@ -3,7 +3,6 @@
 #include "autograd/computational_graph/computational_graph.h"
 #include "autograd/computational_graph/computational_graph_link.h"
 #include "utils/simd_support.h"
-#include <stdlib.h>
 
 #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_0
 #include <immintrin.h>
@@ -51,7 +50,7 @@ cgrad_error tensor2d_add_row_vector(const struct tensor *const t, const struct t
     {
         return TENSOR_SHAPE_MISMATCH;
     }
-    if (t->dtype != v->dtype)
+    if (t->cgrad_dtype != v->cgrad_dtype)
     {
         return TENSOR_DTYPE_MISMATCH;
     }
@@ -101,7 +100,7 @@ static void tensor2d_add_row_vector_backpropagate_row_vector(const struct backpr
 #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256
 static cgrad_error tensor2d_add_row_vector_dispatch_avx_256(const struct tensor *const t, const struct tensor *const v, struct tensor *out)
 {
-    switch (t->dtype)
+    switch (t->cgrad_dtype)
     {
     case DTYPE_FLOAT64:
         tensor2d_add_row_vector_unchecked_avx_256_f64(t, v, out);
@@ -193,7 +192,7 @@ static void tensor2d_add_row_vector_unchecked_avx_256_f32(const struct tensor *c
 #else
 static cgrad_error tensor2d_add_row_vector_dispatch_scalar(const struct tensor *const t, const struct tensor *const v, struct tensor *out)
 {
-    switch (t->dtype)
+    switch (t->cgrad_dtype)
     {
     case DTYPE_FLOAT64:
         tensor2d_add_row_vector_unchecked_scalar_f64(t, v, out);

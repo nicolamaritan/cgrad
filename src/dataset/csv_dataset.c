@@ -309,7 +309,7 @@ static cgrad_error csv_dataset_fill_data(struct csv_dataset *dataset, FILE *file
 
 static void copy_features_to_inputs(struct tensor *inputs, double *features, const size_t i, const size_t cols)
 {
-    switch (inputs->dtype)
+    switch (inputs->cgrad_dtype)
     {
         case DTYPE_FLOAT64:
             copy_features_to_inputs_f64(inputs, features, i, cols);
@@ -339,7 +339,7 @@ static void copy_features_to_inputs_f32(struct tensor *inputs, double *features,
 
 static void copy_label_to_targets(struct tensor *targets, double label, const size_t i)
 {
-    switch (targets->dtype)
+    switch (targets->cgrad_dtype)
     {
         case DTYPE_FLOAT64:
             copy_label_to_targets_f64(targets, label, i);

@@ -1,7 +1,7 @@
 #ifndef INDEXES_PERMUTATION_H
 #define INDEXES_PERMUTATION_H
 
-#include "utils/error.h"
+#include "error.h"
 #include "indexes_batch.h"
 #include <stddef.h>
 #include <string.h>

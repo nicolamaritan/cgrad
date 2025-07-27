@@ -2,7 +2,7 @@
 #define TENSOR_SUM_H
 
 #include "tensor/tensor.h"
-#include "utils/error.h"
+#include "error.h"
 
 #include <stddef.h>
 

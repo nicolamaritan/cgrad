@@ -67,7 +67,7 @@ static void relu_backpropagate(const struct backpropagation_context *const ctx, 
         since element (i, j) of relu(X) depends only on element (i, j) of X.
     */
 
-    switch (grad_wrt_operand->dtype)
+    switch (grad_wrt_operand->cgrad_dtype)
     {
     case DTYPE_FLOAT64:
         relu_backpropagate_f64(ctx, grad_wrt_out, grad_wrt_operand);
@@ -126,7 +126,7 @@ static cgrad_error relu_forward_dispatch(const struct tensor *const x, struct te
 #if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_256
 static cgrad_error relu_forward_dispatch_avx_256(const struct tensor *const x, struct tensor *const out)
 {
-    switch (x->dtype)
+    switch (x->cgrad_dtype)
     {
     case DTYPE_FLOAT64:
         relu_forward_unchecked_avx_256_f64(x, out);
@@ -196,7 +196,7 @@ static void relu_forward_unchecked_avx_256_f32(const struct tensor *const x, str
 #else
 static cgrad_error relu_forward_dispatch_scalar(const struct tensor *const x, struct tensor *const out)
 {
-    switch (x->dtype)
+    switch (x->cgrad_dtype)
     {
     case DTYPE_FLOAT64:
         relu_forward_unchecked_scalar_f64(x, out);

@@ -20,7 +20,7 @@ cgrad_error tensor_sum(const struct tensor *const t, const size_t axis, struct t
 
 static cgrad_error tensor_sum_dispatch(const struct tensor *const t, const size_t axis, struct tensor *const out)
 {
-    switch (t->dtype)
+    switch (t->cgrad_dtype)
     {
     case DTYPE_FLOAT64:
         tensor_sum_compute(t, axis, out, &tensor_sum_reduce_f64);

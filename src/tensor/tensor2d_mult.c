@@ -32,7 +32,7 @@ cgrad_error tensor2d_mult(const struct tensor *const x, const struct tensor *con
     {
         return TENSOR_SHAPE_MISMATCH; // Output shape mismatch
     }
-    if (x->dtype != y->dtype && x->dtype != out->dtype)
+    if (x->cgrad_dtype != y->cgrad_dtype && x->cgrad_dtype != out->cgrad_dtype)
     {
         return TENSOR_DTYPE_MISMATCH;
     }
@@ -63,7 +63,7 @@ cgrad_error tensor2d_mult_graph(struct tensor *const x, struct tensor *const y, 
 
 static cgrad_error tensor2d_mult_dispatch(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
 {
-    switch (x->dtype)
+    switch (x->cgrad_dtype)
     {
     case DTYPE_FLOAT64:
         tensor2d_mult_unchecked_f64(x, y, out);

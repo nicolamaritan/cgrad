@@ -15,7 +15,7 @@ cgrad_error tensor_scalar_mult_tensor_add(struct tensor *const x, struct tensor 
     {
         return TENSOR_SHAPE_MISMATCH;
     }
-    if (x->dtype != y->dtype)
+    if (x->cgrad_dtype != y->cgrad_dtype)
     {
         return TENSOR_DTYPE_MISMATCH;
     }
@@ -25,7 +25,7 @@ cgrad_error tensor_scalar_mult_tensor_add(struct tensor *const x, struct tensor 
 
 static cgrad_error tensor_scalar_mult_tensor_add_dispatch(struct tensor *const x, struct tensor *const y, const double alpha, struct tensor *const out)
 {
-    switch (x->dtype)
+    switch (x->cgrad_dtype)
     {
     case DTYPE_FLOAT64:
         tensor_scalar_mult_tensor_add_unchecked_f64(x, y, alpha, out);

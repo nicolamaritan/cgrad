@@ -2,7 +2,7 @@
 #define BACKPROPAGATION_CONTEXT_H
 
 #include "memory/tensor/tensor_allocator.h"
-#include "utils/error.h"
+#include "error.h"
 #include "config.h"
 #include <string.h>
 #include <stdint.h>

@@ -44,7 +44,7 @@ cgrad_error mse_loss(const struct tensor *const y_pred, const struct tensor *con
 
 static cgrad_error mse_loss_dispatch(const struct tensor *const y_pred, const struct tensor *const y_target, struct tensor *const z)
 {
-    switch (y_pred->dtype)
+    switch (y_pred->cgrad_dtype)
     {
         case DTYPE_FLOAT64:
             mse_loss_unchecked_f64(y_pred, y_target, z);
@@ -111,7 +111,7 @@ cgrad_error mse_loss_graph(struct tensor *const y_pred, struct tensor *const y_t
 
 static void mse_loss_backpropagate_predicted(const struct backpropagation_context *const ctx, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
 {
-    switch (grad_wrt_operand->dtype)
+    switch (grad_wrt_operand->cgrad_dtype)
     {
         case DTYPE_FLOAT64:
             mse_loss_backpropagate_predicted_f64(ctx, grad_wrt_out, grad_wrt_operand);
@@ -158,7 +158,7 @@ static void mse_loss_backpropagate_predicted_f32(const struct backpropagation_co
 
 static void mse_loss_backpropagate_target(const struct backpropagation_context *const ctx, const struct tensor* const grad_wrt_out, struct tensor* grad_wrt_operand)
 {
-    switch (grad_wrt_operand->dtype)
+    switch (grad_wrt_operand->cgrad_dtype)
     {
         case DTYPE_FLOAT64:
             mse_loss_backpropagate_target_f64(ctx, grad_wrt_out, grad_wrt_operand);

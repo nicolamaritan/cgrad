@@ -3,7 +3,7 @@
 
 #include "dataset/indexes_permutation.h"
 #include "tensor/tensor.h"
-#include "utils/error.h"
+#include "error.h"
 #include <stddef.h>
 
 /**

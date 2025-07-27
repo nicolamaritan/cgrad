@@ -2,7 +2,7 @@
 #define COMPUTATIONAL_GRAPH_LINK_H
 
 #include "autograd/autograd_allocators.h"
-#include "utils/error.h"
+#include "error.h"
 
 /**
  * @brief Adds a link between two tensors in the computational graph.

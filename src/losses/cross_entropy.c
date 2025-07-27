@@ -37,7 +37,7 @@ cgrad_error cross_entropy_loss(const struct tensor *const logits, const struct t
 
 static cgrad_error cross_entropy_loss_dispatch(const struct tensor *const logits, const struct tensor *const targets, struct tensor *const loss)
 {
-    switch (logits->dtype)
+    switch (logits->cgrad_dtype)
     {
     case DTYPE_FLOAT64:
         cross_entropy_loss_unchecked_f64(logits, targets, loss);
@@ -130,7 +130,7 @@ cgrad_error cross_entropy_loss_graph(struct tensor *const logits, struct tensor 
 
 static void cross_entropy_loss_backpropagate_predicted(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
-    switch (grad_wrt_operand->dtype)
+    switch (grad_wrt_operand->cgrad_dtype)
     {
     case DTYPE_FLOAT64:
         cross_entropy_loss_backpropagate_predicted_f64(ctx, grad_wrt_out, grad_wrt_operand);

@@ -11,7 +11,7 @@ cgrad_error tensor_axpy(const struct tensor *const x, struct tensor *const y, co
     {
         return TENSOR_SHAPE_MISMATCH;
     }
-    if (x->dtype != y->dtype)
+    if (x->cgrad_dtype != y->cgrad_dtype)
     {
         return TENSOR_DTYPE_MISMATCH;
     }
@@ -21,7 +21,7 @@ cgrad_error tensor_axpy(const struct tensor *const x, struct tensor *const y, co
 
 static cgrad_error tensor_axpy_dispatch(const struct tensor *const x, struct tensor *const y, const double alpha)
 {
-    switch (x->dtype)
+    switch (x->cgrad_dtype)
     {
     case DTYPE_FLOAT64:
         tensor_axpy_unchecked_f64(x, y, alpha);

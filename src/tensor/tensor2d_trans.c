@@ -45,7 +45,7 @@ cgrad_error tensor2d_trans_graph(struct tensor *const t, struct tensor *const ou
 
 static cgrad_error tensor2d_trans_dispatch(const struct tensor *const t, struct tensor *const out)
 {
-    switch (t->dtype)
+    switch (t->cgrad_dtype)
     {
     case DTYPE_FLOAT64:
         tensor2d_trans_unchecked_f64(t, out);
