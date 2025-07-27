@@ -24,7 +24,14 @@ cgrad_error tensor_cpu_pool_init(struct tensor_cpu_pool *pool)
     pool->tensor_chunk_head = (struct tensor_chunk *)pool->tensor_memory;
 
     const size_t DATA_CHUNK_SIZE = sizeof(struct data_chunk) + MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE;
-    pool->data_memory = calloc(MEMORY_TENSOR_POOL_N_CHUNKS, DATA_CHUNK_SIZE);
+
+    /**
+     * Alloc data_memory 32-bytes aligned. Since sizeof(struct data_chunk) = 32, if MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE
+     * is a multiple of 32 bytes, then each data field of each chunk is 32-bytes aligned.
+     */
+    pool->data_memory = aligned_alloc(TENSOR_CPU_POOL_DATA_ALIGNMENT, MEMORY_TENSOR_POOL_N_CHUNKS * DATA_CHUNK_SIZE);
+
+    memset(pool->data_memory, 0, MEMORY_TENSOR_POOL_N_CHUNKS * DATA_CHUNK_SIZE);
     if (!pool->data_memory)
     {
         free(pool->tensor_memory);

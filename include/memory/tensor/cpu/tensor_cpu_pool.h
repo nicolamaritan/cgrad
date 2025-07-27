@@ -5,6 +5,9 @@
 #include "tensor/tensor.h"
 #include <stdalign.h>
 
+// Alignment for aligned SIMD
+#define TENSOR_CPU_POOL_DATA_ALIGNMENT 32
+
 struct tensor_chunk;
 struct tensor_chunk
 {
@@ -16,7 +19,9 @@ struct data_chunk;
 struct data_chunk
 {
     struct data_chunk *next;
-    alignas(max_align_t) char data[];
+
+    // alignas is needed to make sizeof(data_chunk) = 32
+    alignas(TENSOR_CPU_POOL_DATA_ALIGNMENT) char data[];
 };
 
 struct tensor_cpu_pool

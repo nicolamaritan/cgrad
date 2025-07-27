@@ -132,12 +132,21 @@ static void tensor2d_add_row_vector_unchecked_avx_256_f64(const struct tensor *c
         size_t row_offset = i * cols;
         size_t j = 0;
 
-        for (; j + PARALLELIZED_ITEMS - 1 < cols; j += PARALLELIZED_ITEMS)
+        /**
+         * Perform SIMD loop only if memory is 32-byte aligned. Even if the first row of the tensor
+         * is aligned to 32-byte, if the number of columns is not a multiple of 32 bytes, other rows
+         * may not be properly aligned.
+         */
+
+        if (row_offset % sizeof(__m256d) == 0)
         {
-            __m256d a_vals = _mm256_loadu_pd(&t_data[row_offset + j]);
-            __m256d v_vals = _mm256_loadu_pd(&v_data[j]);
-            __m256d sum = _mm256_add_pd(a_vals, v_vals);
-            _mm256_storeu_pd(&out_data[row_offset + j], sum);
+            for (; j + PARALLELIZED_ITEMS - 1 < cols; j += PARALLELIZED_ITEMS)
+            {
+                __m256d a_vals = _mm256_load_pd(&t_data[row_offset + j]);
+                __m256d v_vals = _mm256_load_pd(&v_data[j]);
+                __m256d sum = _mm256_add_pd(a_vals, v_vals);
+                _mm256_store_pd(&out_data[row_offset + j], sum);
+            }
         }
 
         for (; j < cols; j++)
@@ -163,12 +172,16 @@ static void tensor2d_add_row_vector_unchecked_avx_256_f32(const struct tensor *c
         size_t row_offset = i * cols;
         size_t j = 0;
 
-        for (; j + PARALLELIZED_ITEMS - 1 < cols; j += PARALLELIZED_ITEMS)
+        // Same motivation for f64 version
+        if (row_offset % sizeof(__m256) == 0)
         {
-            __m256 a_vals = _mm256_loadu_ps(&t_data[row_offset + j]);
-            __m256 v_vals = _mm256_loadu_ps(&v_data[j]);
-            __m256 sum = _mm256_add_ps(a_vals, v_vals);
-            _mm256_storeu_ps(&out_data[row_offset + j], sum);
+            for (; j + PARALLELIZED_ITEMS - 1 < cols; j += PARALLELIZED_ITEMS)
+            {
+                __m256 a_vals = _mm256_load_ps(&t_data[row_offset + j]);
+                __m256 v_vals = _mm256_load_ps(&v_data[j]);
+                __m256 sum = _mm256_add_ps(a_vals, v_vals);
+                _mm256_store_ps(&out_data[row_offset + j], sum);
+            }
         }
 
         for (; j < cols; j++)

@@ -148,7 +148,7 @@ static void relu_forward_unchecked_avx_256_f64(const struct tensor *const x, str
 
     double zeros[PARALLELIZED_ITEMS];
     memset(zeros, 0, sizeof(zeros));
-    __m256d zeros_vals = _mm256_loadu_pd(zeros);
+    __m256d zeros_vals = _mm256_load_pd(zeros);
 
     double *x_data = (double *)x->data;
     double *out_data = (double *)out->data;
@@ -156,9 +156,9 @@ static void relu_forward_unchecked_avx_256_f64(const struct tensor *const x, str
     size_t i = 0;
     for (; i + PARALLELIZED_ITEMS - 1 < x->data_size; i += PARALLELIZED_ITEMS)
     {
-        __m256d x_vals = _mm256_loadu_pd(&x_data[i]);
+        __m256d x_vals = _mm256_load_pd(&x_data[i]);
         __m256d relu_vals = _mm256_max_pd(zeros_vals, x_vals);
-        _mm256_storeu_pd(&out_data[i], relu_vals);
+        _mm256_store_pd(&out_data[i], relu_vals);
     }
 
     // Handle remaining items
@@ -174,7 +174,7 @@ static void relu_forward_unchecked_avx_256_f32(const struct tensor *const x, str
 
     float zeros[PARALLELIZED_ITEMS];
     memset(zeros, 0, sizeof(zeros));
-    __m256 zeros_vals = _mm256_loadu_ps(zeros);
+    __m256 zeros_vals = _mm256_load_ps(zeros);
 
     float *x_data = (float *)x->data;
     float *out_data = (float *)out->data;
@@ -182,7 +182,7 @@ static void relu_forward_unchecked_avx_256_f32(const struct tensor *const x, str
     size_t i = 0;
     for (; i + PARALLELIZED_ITEMS - 1 < x->data_size; i += PARALLELIZED_ITEMS)
     {
-        __m256 x_vals = _mm256_loadu_ps(&x_data[i]);
+        __m256 x_vals = _mm256_load_ps(&x_data[i]);
         __m256 relu_vals = _mm256_max_ps(zeros_vals, x_vals);
         _mm256_storeu_ps(&out_data[i], relu_vals);
     }
