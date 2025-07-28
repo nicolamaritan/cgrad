@@ -1,9 +1,9 @@
 #include "tensor/tensor_scalar_mult_tensor_add.h"
 #include <cblas.h>
 
-static cgrad_error tensor_scalar_mult_tensor_add_dispatch(struct tensor *const x, struct tensor *const y, const double alpha, struct tensor *const out);
-static void tensor_scalar_mult_tensor_add_unchecked_f64(struct tensor *const x, struct tensor *const y, const double alpha, struct tensor *const out);
-static void tensor_scalar_mult_tensor_add_unchecked_f32(struct tensor *const x, struct tensor *const y, const double alpha, struct tensor *const out);
+static inline cgrad_error tensor_scalar_mult_tensor_add_dispatch(struct tensor *const x, struct tensor *const y, const double alpha, struct tensor *const out);
+static cgrad_error tensor_scalar_mult_tensor_add_f64(struct tensor *const x, struct tensor *const y, const double alpha, struct tensor *const out);
+static cgrad_error tensor_scalar_mult_tensor_add_f32(struct tensor *const x, struct tensor *const y, const double alpha, struct tensor *const out);
 
 cgrad_error tensor_scalar_mult_tensor_add(struct tensor *const x, struct tensor *const y, const double alpha, struct tensor *const out)
 {
@@ -15,7 +15,7 @@ cgrad_error tensor_scalar_mult_tensor_add(struct tensor *const x, struct tensor 
     {
         return TENSOR_SHAPE_MISMATCH;
     }
-    if (x->cgrad_dtype != y->cgrad_dtype)
+    if (x->dtype != y->dtype)
     {
         return TENSOR_DTYPE_MISMATCH;
     }
@@ -23,24 +23,20 @@ cgrad_error tensor_scalar_mult_tensor_add(struct tensor *const x, struct tensor 
     return tensor_scalar_mult_tensor_add_dispatch(x, y, alpha, out);
 }
 
-static cgrad_error tensor_scalar_mult_tensor_add_dispatch(struct tensor *const x, struct tensor *const y, const double alpha, struct tensor *const out)
+static inline cgrad_error tensor_scalar_mult_tensor_add_dispatch(struct tensor *const x, struct tensor *const y, const double alpha, struct tensor *const out)
 {
-    switch (x->cgrad_dtype)
+    switch (x->dtype)
     {
     case DTYPE_FLOAT64:
-        tensor_scalar_mult_tensor_add_unchecked_f64(x, y, alpha, out);
-        break;
+        return tensor_scalar_mult_tensor_add_f64(x, y, alpha, out);
     case DTYPE_FLOAT32:
-        tensor_scalar_mult_tensor_add_unchecked_f32(x, y, alpha, out);
-        break;
+        return tensor_scalar_mult_tensor_add_f32(x, y, alpha, out);
     default:
-        return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
+        return OPERATION_INVALID_TENSOR_DTYPE;
     }
-
-    return NO_ERROR;
 }
 
-static void tensor_scalar_mult_tensor_add_unchecked_f64(struct tensor *const x, struct tensor *const y, const double alpha, struct tensor *const out)
+static cgrad_error tensor_scalar_mult_tensor_add_f64(struct tensor *const x, struct tensor *const y, const double alpha, struct tensor *const out)
 {
     double *x_data = (double *)x->data;
     double *y_data = (double *)y->data;
@@ -50,9 +46,11 @@ static void tensor_scalar_mult_tensor_add_unchecked_f64(struct tensor *const x, 
     {
         out_data[j] = alpha * x_data[j] + y_data[j];
     }
+
+    return NO_ERROR;
 }
 
-static void tensor_scalar_mult_tensor_add_unchecked_f32(struct tensor *const x, struct tensor *const y, const double alpha, struct tensor *const out)
+static cgrad_error tensor_scalar_mult_tensor_add_f32(struct tensor *const x, struct tensor *const y, const double alpha, struct tensor *const out)
 {
     float *x_data = (float *)x->data;
     float *y_data = (float *)y->data;
@@ -62,4 +60,6 @@ static void tensor_scalar_mult_tensor_add_unchecked_f32(struct tensor *const x, 
     {
         out_data[j] = alpha * x_data[j] + y_data[j];
     }
+
+    return NO_ERROR;
 }

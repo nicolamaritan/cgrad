@@ -7,29 +7,25 @@ typedef enum tensor_add_operand
     RHS_TENSOR,
 } tensor_add_operand;
 
-static cgrad_error tensor_add_dispatch(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
-static void tensor_add_unchecked_f64(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
-static void tensor_add_unchecked_f32(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
-static void tensor_add_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static inline cgrad_error tensor_add_dispatch(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
+static cgrad_error tensor_add_f64(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
+static cgrad_error tensor_add_f32(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
+static cgrad_error tensor_add_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
-static cgrad_error tensor_add_dispatch(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
+static inline cgrad_error tensor_add_dispatch(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
 {
-    switch (x->cgrad_dtype)
+    switch (x->dtype)
     {
     case DTYPE_FLOAT64:
-        tensor_add_unchecked_f64(x, y, out);
-        break;
+        return tensor_add_f64(x, y, out);
     case DTYPE_FLOAT32:
-        tensor_add_unchecked_f32(x, y, out);
-        break;
+        return tensor_add_f32(x, y, out);
     default:
-        return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
+        return OPERATION_INVALID_TENSOR_DTYPE;
     }
-
-    return NO_ERROR;
 }
 
-static void tensor_add_unchecked_f64(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
+static cgrad_error tensor_add_f64(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
 {
     double *restrict out_data = (double *)out->data;
     double *restrict A_data = (double *)x->data;
@@ -39,9 +35,11 @@ static void tensor_add_unchecked_f64(const struct tensor *const x, const struct 
     {
         out_data[i] = A_data[i] + B_data[i];
     }
+
+    return NO_ERROR;
 }
 
-static void tensor_add_unchecked_f32(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
+static cgrad_error tensor_add_f32(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
 {
     float *restrict out_data = (float *)out->data;
     float *restrict A_data = (float *)x->data;
@@ -51,6 +49,8 @@ static void tensor_add_unchecked_f32(const struct tensor *const x, const struct 
     {
         out_data[i] = A_data[i] + B_data[i];
     }
+
+    return NO_ERROR;
 }
 
 cgrad_error tensor_add(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
@@ -71,7 +71,7 @@ cgrad_error tensor_add(const struct tensor *const x, const struct tensor *const 
     {
         return TENSOR_SHAPE_MISMATCH;
     }
-    if (x->cgrad_dtype != y->cgrad_dtype)
+    if (x->dtype != y->dtype)
     {
         return TENSOR_DTYPE_MISMATCH;
     }
@@ -99,12 +99,12 @@ cgrad_error tensor_add_graph(struct tensor *const x, struct tensor *const y, str
     return err;
 }
 
-static void tensor_add_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+static cgrad_error tensor_add_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
     /**
      * Given the symmetry of the addition operation, the gradient with respect to both operands is the same.
      * Therefore, we can use the same gradient for both operands.
      * The gradient with respect to both operands is the gradient with respect to the output.
      */
-    tensor_copy(grad_wrt_out, grad_wrt_operand);
+    return tensor_copy(grad_wrt_out, grad_wrt_operand);
 }

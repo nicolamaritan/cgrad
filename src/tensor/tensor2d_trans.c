@@ -8,9 +8,9 @@ typedef enum tensor2d_trans_operand
 } tensor2d_trans_operand;
 
 static cgrad_error tensor2d_trans_dispatch(const struct tensor *const t, struct tensor *const out);
-static void tensor2d_trans_unchecked_f64(const struct tensor *const t, struct tensor *const out);
-static void tensor2d_trans_unchecked_f32(const struct tensor *const t, struct tensor *const out);
-static void tensor2d_trans_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static cgrad_error tensor2d_trans_f64(const struct tensor *const t, struct tensor *const out);
+static cgrad_error tensor2d_trans_f32(const struct tensor *const t, struct tensor *const out);
+static cgrad_error tensor2d_trans_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
 cgrad_error tensor2d_trans(const struct tensor *const t, struct tensor *const out)
 {
@@ -45,21 +45,18 @@ cgrad_error tensor2d_trans_graph(struct tensor *const t, struct tensor *const ou
 
 static cgrad_error tensor2d_trans_dispatch(const struct tensor *const t, struct tensor *const out)
 {
-    switch (t->cgrad_dtype)
+    switch (t->dtype)
     {
     case DTYPE_FLOAT64:
-        tensor2d_trans_unchecked_f64(t, out);
-        break;
+        return tensor2d_trans_f64(t, out);
     case DTYPE_FLOAT32:
-        tensor2d_trans_unchecked_f32(t, out);
+        return tensor2d_trans_f32(t, out);
     default:
-        return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
+        return OPERATION_INVALID_TENSOR_DTYPE;
     }
-
-    return NO_ERROR;
 }
 
-static void tensor2d_trans_unchecked_f64(const struct tensor *const t, struct tensor *const out)
+static cgrad_error tensor2d_trans_f64(const struct tensor *const t, struct tensor *const out)
 {
     size_t rows = t->shape[0];
     size_t cols = t->shape[1];
@@ -75,9 +72,11 @@ static void tensor2d_trans_unchecked_f64(const struct tensor *const t, struct te
             out_data[j * rows + i] = t_data[i * cols + j];
         }
     }
+
+    return NO_ERROR;
 }
 
-static void tensor2d_trans_unchecked_f32(const struct tensor *const t, struct tensor *const out)
+static cgrad_error tensor2d_trans_f32(const struct tensor *const t, struct tensor *const out)
 {
     size_t rows = t->shape[0];
     size_t cols = t->shape[1];
@@ -94,9 +93,11 @@ static void tensor2d_trans_unchecked_f32(const struct tensor *const t, struct te
             out_data[j * rows + i] = t_data[offset + j];
         }
     }
+
+    return NO_ERROR;
 }
 
-static void tensor2d_trans_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+static cgrad_error tensor2d_trans_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
-    tensor2d_trans(grad_wrt_out, grad_wrt_operand);
+    return tensor2d_trans(grad_wrt_out, grad_wrt_operand);
 }

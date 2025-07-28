@@ -20,7 +20,7 @@ cgrad_error tensor_sum(const struct tensor *const t, const size_t axis, struct t
 
 static cgrad_error tensor_sum_dispatch(const struct tensor *const t, const size_t axis, struct tensor *const out)
 {
-    switch (t->cgrad_dtype)
+    switch (t->dtype)
     {
     case DTYPE_FLOAT64:
         tensor_sum_compute(t, axis, out, &tensor_sum_reduce_f64);
@@ -29,7 +29,7 @@ static cgrad_error tensor_sum_dispatch(const struct tensor *const t, const size_
         tensor_sum_compute(t, axis, out, &tensor_sum_reduce_f32);
         break;
     default:
-        return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
+        return OPERATION_INVALID_TENSOR_DTYPE;
     }
 
     return NO_ERROR;

@@ -26,7 +26,7 @@ cgrad_error sgd_optimizer_init(struct sgd_optimizer *opt, struct model_params *c
     for (size_t i = 0; i < params->size; i++)
     {
         struct tensor* param = params->params[i];
-        struct tensor* param_prev_grad = tensor_allocator_no_grad_zero_alloc(allocator, param->shape, param->shape_size, param->cgrad_dtype);
+        struct tensor* param_prev_grad = tensor_allocator_no_grad_zero_alloc(allocator, param->shape, param->shape_size, param->dtype);
 
         cgrad_error err = add_prev_b_t(opt, param_prev_grad);
         if (err != NO_ERROR)
@@ -51,7 +51,7 @@ cgrad_error sgd_optimizer_step(struct sgd_optimizer* opt, double lr, double mome
         struct tensor_allocator *allocator = opt->allocator;
         
         struct tensor* prev_b_t = opt->prev_b_t[i];
-        struct tensor* b_t = tensor_allocator_no_grad_alloc(allocator, prev_b_t->shape, prev_b_t->shape_size, param->cgrad_dtype);
+        struct tensor* b_t = tensor_allocator_no_grad_alloc(allocator, prev_b_t->shape, prev_b_t->shape_size, param->dtype);
 
         if (momentum != 0)
         {

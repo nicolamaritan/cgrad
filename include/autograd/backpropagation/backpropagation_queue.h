@@ -23,7 +23,7 @@ static inline cgrad_error backpropagation_queue_init(struct backpropagation_queu
 {
     if (!queue)
     {
-        return 1;
+        return AUTOGRAD_BACKPROPAGATION_QUEUE_NULL;
     }
 
     queue->front = 0;
@@ -35,9 +35,13 @@ static inline cgrad_error backpropagation_queue_init(struct backpropagation_queu
 
 static inline cgrad_error backpropagation_queue_push(struct backpropagation_queue *queue, struct computational_graph_node *node)
 {
+    if (!queue)
+    {
+        return AUTOGRAD_BACKPROPAGATION_QUEUE_NULL;
+    }
     if (queue->back == AUTOGRAD_MAX_NODES)
     {
-        return 1;
+        return AUTOGRAD_BACKPROPAGATION_QUEUE_FULL;
     }
 
     queue->data[queue->back] = node;
@@ -47,19 +51,34 @@ static inline cgrad_error backpropagation_queue_push(struct backpropagation_queu
 
 static inline cgrad_error backpropagation_queue_peek(struct backpropagation_queue *queue, struct computational_graph_node **out)
 {
+    if (!queue)
+    {
+        return AUTOGRAD_BACKPROPAGATION_QUEUE_NULL;
+    }
+    if (queue->front == queue->back)
+    {
+        return AUTOGRAD_BACKPROPAGATION_QUEUE_EMPTY;
+    }
+
     (*out) = queue->data[queue->front];
     return NO_ERROR;
 }
 
 static inline cgrad_error backpropagation_queue_pop(struct backpropagation_queue *queue, struct computational_graph_node **out)
 {
+    if (!queue)
+    {
+        return AUTOGRAD_BACKPROPAGATION_QUEUE_NULL;
+    }
     if (queue->front == AUTOGRAD_MAX_NODES)
     {
-        return 1;
+        (*out) = NULL;
+        return AUTOGRAD_BACKPROPAGATION_QUEUE_FULL;
     }
     if (queue->front == queue->back)
     {
-        return 1;
+        (*out) = NULL;
+        return AUTOGRAD_BACKPROPAGATION_QUEUE_EMPTY;
     }
 
     (*out) = queue->data[queue->front];
@@ -71,7 +90,7 @@ static inline bool backpropagation_queue_is_empty(struct backpropagation_queue *
 {
     if (!queue)
     {
-        return 1;
+        return true;
     }
 
     return queue->front == queue->back;

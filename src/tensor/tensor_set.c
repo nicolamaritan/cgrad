@@ -4,7 +4,7 @@ static inline cgrad_error tensor2d_set_check(struct tensor *t, size_t row, size_
 
 cgrad_error tensor2d_set_f64(struct tensor *t, size_t row, size_t col, double value)
 {
-    if (t->cgrad_dtype != DTYPE_FLOAT64)
+    if (t->dtype != DTYPE_FLOAT64)
     {
         return TENSOR_INVALID_DTYPE;
     }
@@ -22,7 +22,7 @@ cgrad_error tensor2d_set_f64(struct tensor *t, size_t row, size_t col, double va
 
 cgrad_error tensor2d_set_f32(struct tensor *t, size_t row, size_t col, float value)
 {
-    if (t->cgrad_dtype != DTYPE_FLOAT32)
+    if (t->dtype != DTYPE_FLOAT32)
     {
         return TENSOR_INVALID_DTYPE;
     }
@@ -40,7 +40,7 @@ cgrad_error tensor2d_set_f32(struct tensor *t, size_t row, size_t col, float val
 
 cgrad_error tensor2d_set_i32(struct tensor *t, size_t row, size_t col, int32_t value)
 {
-    if (t->cgrad_dtype != DTYPE_INT32)
+    if (t->dtype != DTYPE_INT32)
     {
         return TENSOR_INVALID_DTYPE;
     }

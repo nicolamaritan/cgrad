@@ -21,7 +21,7 @@ struct linear_layer
 struct linear_layer *linear_alloc(const size_t in_dim, const size_t out_dim, const cgrad_dtype dtype, struct tensor_allocator *params_allocator, struct autograd_allocators *const ag_allocators);
 cgrad_error linear_forward_graph(struct tensor *const x, struct linear_layer *const layer, struct tensor *const out);
 cgrad_error linear_forward(const struct tensor *const x, const struct linear_layer *const layer, struct tensor *const out);
-void linear_xavier_init(struct linear_layer *layer);
+cgrad_error linear_xavier_init(struct linear_layer *layer);
 void linear_free(struct linear_layer *layer);
 
 #endif

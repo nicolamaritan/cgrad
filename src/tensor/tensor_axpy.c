@@ -1,9 +1,9 @@
 #include "tensor/tensor_axpy.h"
 #include <cblas.h>
 
-static cgrad_error tensor_axpy_dispatch(const struct tensor *const x, struct tensor *const y, const double alpha);
-static void tensor_axpy_unchecked_f64(const struct tensor *const x, struct tensor *const y, const double alpha);
-static void tensor_axpy_unchecked_f32(const struct tensor *const x, struct tensor *const y, const double alpha);
+static inline cgrad_error tensor_axpy_dispatch(const struct tensor *const x, struct tensor *const y, const double alpha);
+static cgrad_error tensor_axpy_f64(const struct tensor *const x, struct tensor *const y, const double alpha);
+static cgrad_error tensor_axpy_f32(const struct tensor *const x, struct tensor *const y, const double alpha);
 
 cgrad_error tensor_axpy(const struct tensor *const x, struct tensor *const y, const double alpha)
 {
@@ -11,7 +11,7 @@ cgrad_error tensor_axpy(const struct tensor *const x, struct tensor *const y, co
     {
         return TENSOR_SHAPE_MISMATCH;
     }
-    if (x->cgrad_dtype != y->cgrad_dtype)
+    if (x->dtype != y->dtype)
     {
         return TENSOR_DTYPE_MISMATCH;
     }
@@ -19,24 +19,24 @@ cgrad_error tensor_axpy(const struct tensor *const x, struct tensor *const y, co
     return tensor_axpy_dispatch(x, y, alpha);
 }
 
-static cgrad_error tensor_axpy_dispatch(const struct tensor *const x, struct tensor *const y, const double alpha)
+static inline cgrad_error tensor_axpy_dispatch(const struct tensor *const x, struct tensor *const y, const double alpha)
 {
-    switch (x->cgrad_dtype)
+    switch (x->dtype)
     {
     case DTYPE_FLOAT64:
-        tensor_axpy_unchecked_f64(x, y, alpha);
+        tensor_axpy_f64(x, y, alpha);
         break;
     case DTYPE_FLOAT32:
-        tensor_axpy_unchecked_f32(x, y, alpha);
+        tensor_axpy_f32(x, y, alpha);
         break;
     default:
-        return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
+        return OPERATION_INVALID_TENSOR_DTYPE;
     }
 
     return NO_ERROR;
 }
 
-static void tensor_axpy_unchecked_f64(const struct tensor *const x, struct tensor *const y, const double alpha)
+static cgrad_error tensor_axpy_f64(const struct tensor *const x, struct tensor *const y, const double alpha)
 {
     const blasint TENSOR_STRIDES = 1;
     cblas_daxpy(
@@ -46,9 +46,11 @@ static void tensor_axpy_unchecked_f64(const struct tensor *const x, struct tenso
         TENSOR_STRIDES,
         y->data,
         TENSOR_STRIDES);
+
+    return NO_ERROR;
 }
 
-static void tensor_axpy_unchecked_f32(const struct tensor *const x, struct tensor *const y, const double alpha)
+static cgrad_error tensor_axpy_f32(const struct tensor *const x, struct tensor *const y, const double alpha)
 {
     const blasint TENSOR_STRIDES = 1;
     cblas_saxpy(
@@ -58,4 +60,6 @@ static void tensor_axpy_unchecked_f32(const struct tensor *const x, struct tenso
         TENSOR_STRIDES,
         y->data,
         TENSOR_STRIDES);
+
+    return NO_ERROR;
 }

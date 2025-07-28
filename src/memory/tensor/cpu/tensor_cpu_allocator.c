@@ -86,7 +86,7 @@ static struct tensor *tensor_cpu_no_grad_alloc(void *pool, const size_t *const s
     t->data_size = data_size;
     t->shape_size = shape_size;
     t->grad = NULL;
-    t->cgrad_dtype = dtype;
+    t->dtype = dtype;
 
     return t;
 }
@@ -124,7 +124,7 @@ static struct tensor *tensor_cpu_no_grad_zero_alloc(void *pool, const size_t *co
     t->data_size = data_size;
     t->shape_size = shape_size;
     t->grad = NULL;
-    t->cgrad_dtype = dtype;
+    t->dtype = dtype;
 
     return t;
 }
@@ -175,7 +175,7 @@ static struct tensor *tensor_cpu_clone(void *pool, const struct tensor *const sr
         return NULL;
     }
 
-    struct tensor *new_tensor = tensor_cpu_alloc(pool, src->shape, src->shape_size, src->cgrad_dtype);
+    struct tensor *new_tensor = tensor_cpu_alloc(pool, src->shape, src->shape_size, src->dtype);
     if (!new_tensor)
     {
         return NULL;

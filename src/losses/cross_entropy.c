@@ -12,13 +12,13 @@ typedef enum cross_entropy_loss_operand
 } cross_entropy_loss_operand;
 
 static cgrad_error cross_entropy_loss_dispatch(const struct tensor *const logits, const struct tensor *const targets, struct tensor *const loss);
-static void cross_entropy_loss_unchecked_f64(const struct tensor *const logits, const struct tensor *const targets, struct tensor *const loss);
-static void cross_entropy_loss_unchecked_f32(const struct tensor *const logits, const struct tensor *const targets, struct tensor *const loss);
+static cgrad_error cross_entropy_loss_f64(const struct tensor *const logits, const struct tensor *const targets, struct tensor *const loss);
+static cgrad_error cross_entropy_loss_f32(const struct tensor *const logits, const struct tensor *const targets, struct tensor *const loss);
 static double compute_softmax_normalization_f64(const struct tensor *const logits, const size_t row);
 static float compute_softmax_normalization_f32(const struct tensor *const logits, const size_t row);
-static void cross_entropy_loss_backpropagate_predicted(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
-static void cross_entropy_loss_backpropagate_predicted_f64(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
-static void cross_entropy_loss_backpropagate_predicted_f32(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static cgrad_error cross_entropy_loss_backpropagate_predicted(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static cgrad_error cross_entropy_loss_backpropagate_predicted_f64(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static cgrad_error cross_entropy_loss_backpropagate_predicted_f32(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
 cgrad_error cross_entropy_loss(const struct tensor *const logits, const struct tensor *const targets, struct tensor *const loss)
 {
@@ -37,29 +37,24 @@ cgrad_error cross_entropy_loss(const struct tensor *const logits, const struct t
 
 static cgrad_error cross_entropy_loss_dispatch(const struct tensor *const logits, const struct tensor *const targets, struct tensor *const loss)
 {
-    switch (logits->cgrad_dtype)
+    switch (logits->dtype)
     {
     case DTYPE_FLOAT64:
-        cross_entropy_loss_unchecked_f64(logits, targets, loss);
-        break;
+        return cross_entropy_loss_f64(logits, targets, loss);
     case DTYPE_FLOAT32:
-        cross_entropy_loss_unchecked_f32(logits, targets, loss);
-        break;
+        return cross_entropy_loss_f32(logits, targets, loss);
     default:
-        return TENSOR_OPERATION_DTYPE_NOT_SUPPORTED;
+        return OPERATION_INVALID_TENSOR_DTYPE;
     }
-
-    return NO_ERROR;
 }
 
-static void cross_entropy_loss_unchecked_f64(const struct tensor *const logits, const struct tensor *const targets, struct tensor *const loss)
+static cgrad_error cross_entropy_loss_f64(const struct tensor *const logits, const struct tensor *const targets, struct tensor *const loss)
 {
     double batch_size = logits->shape[0];
     double *loss_data = (double *)loss->data;
     loss_data[0] = 0;
     for (size_t i = 0; i < batch_size; i++)
     {
-        // Should add support for different data integer
         double target_label_double = 0;
         tensor2d_get(targets, i, 0, &target_label_double);
         int target_label = (int)target_label_double;
@@ -77,16 +72,17 @@ static void cross_entropy_loss_unchecked_f64(const struct tensor *const logits, 
         loss_data[0] += (-logit_target_label + log(softmax_normalization));
     }
     loss_data[0] /= batch_size;
+
+    return NO_ERROR;
 }
 
-static void cross_entropy_loss_unchecked_f32(const struct tensor *const logits, const struct tensor *const targets, struct tensor *const loss)
+static cgrad_error cross_entropy_loss_f32(const struct tensor *const logits, const struct tensor *const targets, struct tensor *const loss)
 {
     float batch_size = logits->shape[0];
     float *loss_data = (float *)loss->data;
     loss_data[0] = 0;
     for (size_t i = 0; i < batch_size; i++)
     {
-        // Should add support for different data integer
         float target_label_float = 0;
         tensor2d_get(targets, i, 0, &target_label_float);
         int target_label = (int)target_label_float;
@@ -104,6 +100,8 @@ static void cross_entropy_loss_unchecked_f32(const struct tensor *const logits, 
         loss_data[0] += (-logit_target_label + logf(softmax_normalization));
     }
     loss_data[0] /= batch_size;
+
+    return NO_ERROR;
 }
 
 cgrad_error cross_entropy_loss_graph(struct tensor *const logits, struct tensor *const targets, struct tensor *const loss, struct autograd_allocators *ag_allocators)
@@ -128,22 +126,20 @@ cgrad_error cross_entropy_loss_graph(struct tensor *const logits, struct tensor 
     return NO_ERROR;
 }
 
-static void cross_entropy_loss_backpropagate_predicted(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+static cgrad_error cross_entropy_loss_backpropagate_predicted(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
-    switch (grad_wrt_operand->cgrad_dtype)
+    switch (grad_wrt_operand->dtype)
     {
     case DTYPE_FLOAT64:
-        cross_entropy_loss_backpropagate_predicted_f64(ctx, grad_wrt_out, grad_wrt_operand);
-        break;
+        return cross_entropy_loss_backpropagate_predicted_f64(ctx, grad_wrt_out, grad_wrt_operand);
     case DTYPE_FLOAT32:
-        cross_entropy_loss_backpropagate_predicted_f32(ctx, grad_wrt_out, grad_wrt_operand);
-        break;
+        return cross_entropy_loss_backpropagate_predicted_f32(ctx, grad_wrt_out, grad_wrt_operand);
     default:
-        break;
+        return AUTOGRAD_BACKPROPAGATION_INVALID_TENSOR_DTYPE;
     }
 }
 
-static void cross_entropy_loss_backpropagate_predicted_f64(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+static cgrad_error cross_entropy_loss_backpropagate_predicted_f64(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
     const struct tensor *logits = ctx->operands[CROSS_ENTROPY_PREDICTED];
     const struct tensor *targets = ctx->operands[CROSS_ENTROPY_TARGET];
@@ -171,9 +167,11 @@ static void cross_entropy_loss_backpropagate_predicted_f64(const struct backprop
             grad_wrt_operand_data[i * num_classes + j] = (predicted - target) / batch_size;
         }
     }
+
+    return NO_ERROR;
 }
 
-static void cross_entropy_loss_backpropagate_predicted_f32(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+static cgrad_error cross_entropy_loss_backpropagate_predicted_f32(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
     const struct tensor *logits = ctx->operands[CROSS_ENTROPY_PREDICTED];
     const struct tensor *targets = ctx->operands[CROSS_ENTROPY_TARGET];
@@ -201,6 +199,8 @@ static void cross_entropy_loss_backpropagate_predicted_f32(const struct backprop
             grad_wrt_operand_data[i * num_classes + j] = (predicted - target) / batch_size;
         }
     }
+
+    return NO_ERROR;
 }
 
 static double compute_softmax_normalization_f64(const struct tensor *const logits, const size_t row)

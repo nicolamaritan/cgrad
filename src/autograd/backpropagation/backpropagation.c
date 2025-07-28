@@ -14,9 +14,9 @@ struct backpropagation_targets
     size_t size;
 };
 
-static void build_gradients(struct computational_graph_node *loss_node, struct autograd_allocators *allocators, struct backpropagation_targets *targets);
+static cgrad_error build_gradients(struct computational_graph_node *loss_node, struct autograd_allocators *allocators, struct backpropagation_targets *targets);
 static cgrad_error add_target(struct backpropagation_targets* const targets, struct computational_graph_node* const node);
-static inline void set_gradient_wrt_itself(struct tensor* const t);
+static inline cgrad_error set_gradient_wrt_itself(struct tensor* const t);
 
 cgrad_error backward(struct tensor* t, struct autograd_allocators *allocators)
 {
@@ -32,8 +32,16 @@ cgrad_error backward(struct tensor* t, struct autograd_allocators *allocators)
     struct backpropagation_targets targets;
     targets.size = 0;
 
-    set_gradient_wrt_itself(t);
-    build_gradients(t->node, allocators, &targets);
+    cgrad_error err = NO_ERROR;
+    if ((err = set_gradient_wrt_itself(t)) != NO_ERROR)
+    {
+        return err;
+    }
+
+    if ((err = build_gradients(t->node, allocators, &targets)) != NO_ERROR)
+    {
+        return err;
+    }
 
     for (size_t i = 0; i < targets.size; i++)
     {
@@ -45,42 +53,85 @@ cgrad_error backward(struct tensor* t, struct autograd_allocators *allocators)
     return NO_ERROR;
 }
 
-static void build_gradients(struct computational_graph_node *loss_node, struct autograd_allocators *allocators, struct backpropagation_targets *targets)
+static cgrad_error build_gradients(struct computational_graph_node *loss_node, struct autograd_allocators *allocators, struct backpropagation_targets *targets)
 {
-    struct backpropagation_queue queue;
-    backpropagation_queue_init(&queue);
+    cgrad_error err = NO_ERROR;
 
-    backpropagation_queue_push(&queue, loss_node);
+    struct backpropagation_queue queue;
+    if ((err = backpropagation_queue_init(&queue)) != NO_ERROR)
+    {
+        return err;
+    }
+
+    if ((err = backpropagation_queue_push(&queue, loss_node)) != NO_ERROR)
+    {
+        return err;
+    }
 
     while (!backpropagation_queue_is_empty(&queue))
     {
         struct computational_graph_node *node = NULL;
         backpropagation_queue_pop(&queue, &node);
-        add_target(targets, node);
+        if ((err = add_target(targets, node)) != NO_ERROR)
+        {
+            return err;
+        }
 
         for (size_t i = 0; i < node->n_children; i++)
         {
             struct computational_graph_node *child_node = node->children[i];
-            struct tensor *gradient = tensor_allocator_no_grad_alloc(allocators->t_allocator, child_node->t->shape, child_node->t->shape_size, loss_node->t->cgrad_dtype);
+            struct tensor *gradient = tensor_allocator_no_grad_alloc(allocators->t_allocator, child_node->t->shape, child_node->t->shape_size, loss_node->t->dtype);
+            if (!gradient)
+            {
+                return TENSOR_ALLOCATION_FAILED;
+            }
+
             struct backpropagation_context *ctx = &node->ctx;
             size_t operand = node->children_operands[i];
 
-            node->function[operand](ctx, node->t->grad, gradient);
-            tensor_add_inplace(child_node->t->grad, gradient);
+            if ((err = backpropagation_function_check_input(node->t->grad, gradient)) != NO_ERROR)
+            {
+                return err;
+            }
+
+            if ((err = node->function[operand](ctx, node->t->grad, gradient)) != NO_ERROR)
+            {
+                return err;
+            }
+
+            if ((err = tensor_add_inplace(child_node->t->grad, gradient)) != NO_ERROR)
+            {
+                return err;
+            }
+
             child_node->pushed_gradients_count++;
 
             tensor_allocator_free(allocators->t_allocator, gradient);
 
             if (child_node->pushed_gradients_count == child_node->n_parents)
             {
-                backpropagation_queue_push(&queue, child_node);
+                if ((err = backpropagation_queue_push(&queue, child_node)) != NO_ERROR)
+                {
+                    return err;
+                }
             }
         }
     }
+
+    return NO_ERROR;
 }
 
 static cgrad_error add_target(struct backpropagation_targets* const targets, struct computational_graph_node* const node)
 {
+    if (!targets)
+    {
+        return AUTOGRAD_BACKPROPAGATION_TARGET_NULL;
+    }
+    if (!node)
+    {
+        return AUTOGRAD_BACKPROPAGATION_TARGET_COMP_GRAPH_NODE_NULL;
+    }
+
     size_t const size = targets->size;
     if (size >= AUTOGRAD_MAX_TARGETS)
     {
@@ -93,7 +144,15 @@ static cgrad_error add_target(struct backpropagation_targets* const targets, str
     return NO_ERROR;
 }
 
-static inline void set_gradient_wrt_itself(struct tensor* const t)
+static inline cgrad_error set_gradient_wrt_itself(struct tensor* const t)
 {
-    tensor2d_set(t->grad, 0, 0, 1.0);
+    switch (t->grad->dtype)
+    {
+        case DTYPE_FLOAT64:
+            return tensor2d_set(t->grad, 0, 0, (double)1.0);
+        case DTYPE_FLOAT32:
+            return tensor2d_set(t->grad, 0, 0, (float)1.0);
+        default:
+            return AUTOGRAD_BACKPROPAGATION_INVALID_TENSOR_DTYPE;
+    }
 }
