@@ -20,13 +20,37 @@ For debug builds, run:
 make debug
 ```
 
-## Example 
+## Features
+- Tensor library
+- Dynamic computational graph construction
+- Automatic tensor differentiation via backpropagation
+- Modular operation system with custom backward functions
+- Custom memory management for fast allocations
+- SIMD and BLAS-accelerated computations for performance
 
-Some examples are provided inside the `examples` directory to demonstrate the use of the library. For instance, to train an MLP on the MNIST dataset:
+## Notes
+- Currently supports CPU only - no GPU acceleration yet
 
-1. Build the project using `make` (or `make debug` for debugging).
-2. Execute the MLP example executable:
+## Examples
+
+Some examples are provided inside the `examples` directory to demonstrate the use of the library.
+
+### Regression example
+The `mlp_regression.c` example fits a 2-layers MLP with ReLU activation on the `tanh` of a random linear combination of the inputs.
+
+1. Build the project using `make`.
+2. Execute the example executable:
 
 ```bash
-./examples/mlp_mnist_classification_example.out <mnist_train_dataset_path>
+./examples/mlp_regression.out
+```
+
+### MNIST classification example
+The `mlp_mnist_classification.c` example fits a 2-layers MLP with ReLU activation on a flattened version of the MNIST dataset.
+
+1. Build the project using `make`.
+2. Execute the example executable:
+
+```bash
+./examples/mlp_mnist_classification.out <mnist_train_dataset_path>
 ```
