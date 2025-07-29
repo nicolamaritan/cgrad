@@ -34,21 +34,21 @@ int main()
     const size_t out_dim = 1;
 
     // Memory initialization
-    struct tensor_cpu_pool t_pool;
-    if (tensor_cpu_pool_init(&t_pool) != NO_ERROR)
+    struct tensor_cpu_pool tensor_pool;
+    if (tensor_cpu_pool_init(&tensor_pool) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
 
-    struct computational_graph_cpu_pool cg_pool;
-    if (computational_graph_cpu_pool_init(&cg_pool) != NO_ERROR)
+    struct computational_graph_cpu_pool graph_pool;
+    if (computational_graph_cpu_pool_init(&graph_pool) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
 
     // Allocator initialization
-    struct tensor_allocator t_allocator = make_tensor_cpu_allocator(&t_pool);
-    struct computational_graph_allocator cg_allocator = make_computational_graph_cpu_allocator(&cg_pool);
+    struct tensor_allocator t_allocator = make_tensor_cpu_allocator(&tensor_pool);
+    struct computational_graph_allocator cg_allocator = make_computational_graph_cpu_allocator(&graph_pool);
     struct autograd_allocators allocators = {&t_allocator, &cg_allocator};
 
     size_t x_shape[] = {batch_size, input_dim};
@@ -147,6 +147,8 @@ int main()
     tensor_allocator_free(&t_allocator, y_target);
     linear_free(linear1);
     linear_free(linear2);
+    tensor_cpu_pool_cleanup(&tensor_pool);
+    computational_graph_cpu_pool_cleanup(&graph_pool);
     return EXIT_SUCCESS;
 }
 

@@ -4,6 +4,7 @@
 #include "error.h"
 #include "tensor/tensor.h"
 #include <stdalign.h>
+#include <stdlib.h>
 
 // Alignment for aligned SIMD
 #define TENSOR_CPU_POOL_DATA_ALIGNMENT 32
@@ -38,5 +39,23 @@ void *tensor_cpu_pool_data_alloc(struct tensor_cpu_pool *pool, const size_t size
 void *tensor_cpu_pool_data_zero_alloc(struct tensor_cpu_pool *pool, const size_t size);
 void tensor_cpu_pool_tensor_free(struct tensor_cpu_pool *pool, void *ptr);
 void tensor_cpu_pool_data_free(struct tensor_cpu_pool *pool, void *ptr);
+static inline void tensor_cpu_pool_cleanup(struct tensor_cpu_pool *pool);
+
+static inline void tensor_cpu_pool_cleanup(struct tensor_cpu_pool *pool)
+{
+    if (pool->tensor_memory)
+    {
+        free(pool->tensor_memory);
+        pool->tensor_memory = NULL;
+        pool->tensor_chunk_head = NULL;
+    }
+
+    if (pool->data_memory)
+    {
+        free(pool->data_memory);
+        pool->data_memory = NULL;
+        pool->data_chunk_head = NULL;
+    }
+}
 
 #endif

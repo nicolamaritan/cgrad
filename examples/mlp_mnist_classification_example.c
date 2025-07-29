@@ -227,5 +227,7 @@ int main(int argc, char **argv)
     linear_free(linear1);
     linear_free(linear2);
     indexes_batch_free(ixs_batch);
+    tensor_cpu_pool_cleanup(&tensor_pool);
+    computational_graph_cpu_pool_cleanup(&graph_pool);
     return EXIT_SUCCESS;
 }
