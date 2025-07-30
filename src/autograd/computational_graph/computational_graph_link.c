@@ -38,41 +38,58 @@ cgrad_error add_computational_graph_link(struct tensor *operand, size_t operand_
         return AUTOGRAD_BACKPROPAGATION_FUNCTION_NULL;
     }
 
-    struct computational_graph_node *operand_node = operand->node ? operand->node : computational_graph_allocator_alloc(allocators->cg_allocator, operand, allocators->t_allocator);
-    if (!operand_node)
+    cgrad_error err = NO_ERROR;
+
+    if (!operand->node)
     {
-        return AUTOGRAD_COMPUTATIONAL_GRAPH_NODE_ALLOCATION_ERROR;
+        operand->node = computational_graph_allocator_alloc(allocators->cg_allocator, operand);
+        if (!operand->node)
+        {
+            return AUTOGRAD_COMPUTATIONAL_GRAPH_NODE_ALLOCATION_ERROR;
+        }
+        if ((err = context_init(&operand->node->ctx, allocators->t_allocator)) != NO_ERROR)
+        {
+            return err;
+        }
     }
 
-    struct computational_graph_node *result_node = result->node ? result->node : computational_graph_allocator_alloc(allocators->cg_allocator, result, allocators->t_allocator);
-    if (!result_node)
+    if (!result->node)
     {
-        computational_graph_allocator_free(allocators->cg_allocator, operand_node);
-        return AUTOGRAD_COMPUTATIONAL_GRAPH_NODE_ALLOCATION_ERROR;
+        result->node = computational_graph_allocator_alloc(allocators->cg_allocator, result);
+        if (!result->node)
+        {
+            computational_graph_allocator_free(allocators->cg_allocator, operand->node);
+            return AUTOGRAD_COMPUTATIONAL_GRAPH_NODE_ALLOCATION_ERROR;
+        }
+        if ((err = context_init(&result->node->ctx, allocators->t_allocator)) != NO_ERROR)
+        {
+            return err;
+        }
     }
+
+    struct computational_graph_node *op_node = operand->node;
+    struct computational_graph_node *res_node = result->node;
 
     // Setup connection
-    cgrad_error error = add_parent(operand_node, result_node);
-    if (error != NO_ERROR)
+    if ((err = add_parent(op_node, res_node)) != NO_ERROR)
     {
-        computational_graph_allocator_free(allocators->cg_allocator, operand_node);
-        computational_graph_allocator_free(allocators->cg_allocator, result_node);
-        return error;
+        computational_graph_allocator_free(allocators->cg_allocator, op_node);
+        computational_graph_allocator_free(allocators->cg_allocator, res_node);
+        return err;
     }
 
-    error = add_child(result_node, operand_node, operand_id);
-    if (error != NO_ERROR)
+    if ((err = add_child(res_node, op_node, operand_id)) != NO_ERROR)
     {
-        computational_graph_allocator_free(allocators->cg_allocator, operand_node);
-        computational_graph_allocator_free(allocators->cg_allocator, result_node);
-        return error;
+        computational_graph_allocator_free(allocators->cg_allocator, op_node);
+        computational_graph_allocator_free(allocators->cg_allocator, res_node);
+        return err;
     }
 
     // Setup backpropagation function
-    result_node->function[operand_id] = backprop_function;
+    result->node->function[operand_id] = backprop_function;
 
     // Setup operand in the tensor operands pointer
-    context_set_operand(&result_node->ctx, operand, operand_id);
+    context_set_operand(&res_node->ctx, operand, operand_id);
 
     return NO_ERROR;
 }
