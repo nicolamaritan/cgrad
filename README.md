@@ -1,5 +1,5 @@
-# C-Grad
-C neural network library.
+# CGrad
+Deep Learning library for the C programming language.
 
 ## Dependencies
 - libblas-dev
