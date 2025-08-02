@@ -160,12 +160,8 @@ int main(int argc, char **argv)
 
 
             // ------------- Forward -------------
-
-            // Linear 1
-            size_t h1_shape[] = {batch_size, hidden_dim};
-            size_t h1_shape_size = 2;
-            struct tensor *h1 = tensor_allocator_alloc(&tensor_alloc, h1_shape, h1_shape_size, DTYPE);
-            if (linear_forward_graph(x, linear1, h1) != NO_ERROR)
+            struct tensor *h1 = NULL;
+            if (linear_forward_graph(x, linear1, &h1) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
@@ -180,10 +176,8 @@ int main(int argc, char **argv)
             }
 
             // Linear 2
-            size_t h3_shape[] = {batch_size, num_classes};
-            size_t h3_shape_size = 2;
-            struct tensor *h3 = tensor_allocator_alloc(&tensor_alloc, h3_shape, h3_shape_size, DTYPE);
-            if (linear_forward_graph(h2, linear2, h3) != NO_ERROR)
+            struct tensor *h3 = NULL;
+            if (linear_forward_graph(h2, linear2, &h3) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }

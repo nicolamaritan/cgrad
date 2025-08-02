@@ -66,7 +66,7 @@ struct linear_layer *linear_alloc(const size_t in_dim, const size_t out_dim, con
     return layer;
 }
 
-cgrad_error linear_forward_graph(struct tensor *const x, struct linear_layer *const layer, struct tensor *const out)
+cgrad_error linear_forward_graph(struct tensor *const x, struct linear_layer *const layer, struct tensor **const out)
 {
     // XW+b computation 
     cgrad_error err = linear_forward(x, layer, out);
@@ -75,20 +75,20 @@ cgrad_error linear_forward_graph(struct tensor *const x, struct linear_layer *co
         return err;
     }
 
-    return linear_update_computational_graph(x, layer, out);
+    return linear_update_computational_graph(x, layer, *out);
 }
 
-cgrad_error linear_forward(const struct tensor *const x, const struct linear_layer *const layer, struct tensor *const out)
+cgrad_error linear_forward(const struct tensor *const x, const struct linear_layer *const layer, struct tensor **const out)
 {
     // XW computation 
-    cgrad_error error = tensor2d_mult(x, layer->weights, out);
+    cgrad_error error = tensor2d_mult(x, layer->weights, out, layer->allocs);
     if (error != NO_ERROR)
     {
         return error;
     }
 
     // XW + b computation
-    return tensor2d_add_row_vector(out, layer->biases, out);
+    return tensor2d_add_row_vector(*out, layer->biases, *out);
 }
 
 cgrad_error linear_xavier_init(struct linear_layer *layer)
@@ -198,7 +198,7 @@ static cgrad_error linear_backpropagate_input(const struct backpropagation_conte
     {
         return err;
     }
-    if ((err = tensor2d_mult(grad_wrt_out, rhs_trans, grad_wrt_operand)) != NO_ERROR)
+    if ((err = tensor2d_mult_into(grad_wrt_out, rhs_trans, grad_wrt_operand)) != NO_ERROR)
     {
         return err;
     }
@@ -227,7 +227,7 @@ static cgrad_error linear_backpropagate_weights(const struct backpropagation_con
     {
         return err;
     }
-    if ((err = tensor2d_mult(lhs_trans, grad_wrt_out, grad_wrt_operand)) != NO_ERROR)
+    if ((err = tensor2d_mult_into(lhs_trans, grad_wrt_out, grad_wrt_operand)) != NO_ERROR)
     {
         return err;
     }
