@@ -79,7 +79,7 @@ cgrad_error tensor_add(const struct tensor *const x, const struct tensor *const 
     return tensor_add_dispatch(x, y, out);
 }
 
-cgrad_error tensor_add_graph(struct tensor *const x, struct tensor *const y, struct tensor *const out, struct autograd_allocators *allocators)
+cgrad_error tensor_add_graph(struct tensor *const x, struct tensor *const y, struct tensor *const out, struct allocators *allocs)
 {
     cgrad_error err = tensor_add(x, y, out);
     if (err != NO_ERROR)
@@ -88,13 +88,13 @@ cgrad_error tensor_add_graph(struct tensor *const x, struct tensor *const y, str
     }
 
     // Update computational graph
-    err = add_computational_graph_link(x, LHS_TENSOR, out, &tensor_add_backpropagate, allocators);
+    err = add_computational_graph_link(x, LHS_TENSOR, out, &tensor_add_backpropagate, allocs);
     if (err != NO_ERROR)
     {
         return err;
     }
 
-    err = add_computational_graph_link(y, RHS_TENSOR, out, &tensor_add_backpropagate, allocators);
+    err = add_computational_graph_link(y, RHS_TENSOR, out, &tensor_add_backpropagate, allocs);
 
     return err;
 }

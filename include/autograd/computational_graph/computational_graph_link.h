@@ -1,7 +1,7 @@
 #ifndef COMPUTATIONAL_GRAPH_LINK_H
 #define COMPUTATIONAL_GRAPH_LINK_H
 
-#include "autograd/autograd_allocators.h"
+#include "memory/allocators.h"
 #include "error.h"
 
 /**
@@ -14,6 +14,6 @@
  * @param TODO
  * @return NO_ERROR if successful, otherwise an appropriate error code.
  */
-cgrad_error add_computational_graph_link(struct tensor* operand, size_t operand_id, struct tensor* result, backpropagation_function backprop_function, struct autograd_allocators *allocators);
+cgrad_error add_computational_graph_link(struct tensor* operand, size_t operand_id, struct tensor* result, backpropagation_function backprop_function, struct allocators *allocs);
 
 #endif

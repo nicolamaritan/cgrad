@@ -2,7 +2,7 @@
 #include "layers/relu.h"
 #include "losses/cross_entropy.h"
 #include "autograd/backpropagation/backpropagation.h"
-#include "autograd/autograd_allocators.h"
+#include "memory/allocators.h"
 #include "model/model_params.h"
 #include "tensor/tensor.h"
 #include "tensor/tensor_get.h"
@@ -47,7 +47,7 @@ int main(int argc, char **argv)
     // Allocator initialization
     struct tensor_allocator tensor_alloc = make_tensor_cpu_allocator(&tensor_pool);
     struct computational_graph_allocator graph_alloc = make_computational_graph_cpu_allocator(&graph_pool);
-    struct autograd_allocators autograd_allocs = {&tensor_alloc, &graph_alloc};
+    struct allocators autograd_allocs = {&tensor_alloc, &graph_alloc};
 
     const size_t batch_size = 64;
     const size_t input_dim = 784;

@@ -40,7 +40,7 @@ cgrad_error tensor2d_mult(const struct tensor *const x, const struct tensor *con
     return tensor2d_mult_dispatch(x, y, out);
 }
 
-cgrad_error tensor2d_mult_graph(struct tensor *const x, struct tensor *const y, struct tensor *const out, struct autograd_allocators *allocators)
+cgrad_error tensor2d_mult_graph(struct tensor *const x, struct tensor *const y, struct tensor *const out, struct allocators *allocs)
 {
     cgrad_error err = tensor2d_mult(x, y, out);
 
@@ -50,13 +50,13 @@ cgrad_error tensor2d_mult_graph(struct tensor *const x, struct tensor *const y, 
     }
 
     // Update computational graph
-    err = add_computational_graph_link(x, LHS_TENSOR, out, &tensor2d_mult_backpropagate_lhs, allocators);
+    err = add_computational_graph_link(x, LHS_TENSOR, out, &tensor2d_mult_backpropagate_lhs, allocs);
     if (err != NO_ERROR)
     {
         return err;
     }
 
-    err = add_computational_graph_link(y, RHS_TENSOR, out, &tensor2d_mult_backpropagate_rhs, allocators);
+    err = add_computational_graph_link(y, RHS_TENSOR, out, &tensor2d_mult_backpropagate_rhs, allocs);
 
     return err;
 }

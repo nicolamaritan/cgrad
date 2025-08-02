@@ -13,18 +13,18 @@ struct computational_graph_allocator
     void *pool;
 };
 
-static inline struct computational_graph_node *computational_graph_allocator_alloc(struct computational_graph_allocator *cg_allocator, struct tensor *const t);
+static inline struct computational_graph_node *computational_graph_allocator_alloc(struct computational_graph_allocator *graph_alloc, struct tensor *const t);
 
 static inline void computational_graph_allocator_free(struct computational_graph_allocator *allocator, struct computational_graph_node *ptr);
 
-static inline struct computational_graph_node *computational_graph_allocator_alloc(struct computational_graph_allocator *cg_allocator, struct tensor *const t)
+static inline struct computational_graph_node *computational_graph_allocator_alloc(struct computational_graph_allocator *graph_alloc, struct tensor *const t)
 {
-    return cg_allocator->alloc(cg_allocator->pool, t);
+    return graph_alloc->alloc(graph_alloc->pool, t);
 }
 
-static inline void computational_graph_allocator_free(struct computational_graph_allocator *cg_allocator, struct computational_graph_node *ptr)
+static inline void computational_graph_allocator_free(struct computational_graph_allocator *graph_alloc, struct computational_graph_node *ptr)
 {
-    cg_allocator->free(cg_allocator->pool, ptr);
+    graph_alloc->free(graph_alloc->pool, ptr);
 }
 
 #endif

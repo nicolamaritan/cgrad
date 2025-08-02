@@ -3,9 +3,9 @@
 
 #include "tensor/tensor.h"
 #include "autograd/backpropagation/backpropagation_function.h"
-#include "autograd/autograd_allocators.h"
+#include "memory/allocators.h"
 
-cgrad_error tensor2d_add_row_vector_graph(struct tensor *const t, struct tensor *const v, struct tensor *const out, struct autograd_allocators *allocators);
+cgrad_error tensor2d_add_row_vector_graph(struct tensor *const t, struct tensor *const v, struct tensor *const out, struct allocators *allocs);
 cgrad_error tensor2d_add_row_vector(const struct tensor *const t, const struct tensor *const v, struct tensor *const out);
 
 #endif

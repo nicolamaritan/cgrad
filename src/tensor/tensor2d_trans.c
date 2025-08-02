@@ -30,7 +30,7 @@ cgrad_error tensor2d_trans(const struct tensor *const t, struct tensor *const ou
     return tensor2d_trans_dispatch(t, out);
 }
 
-cgrad_error tensor2d_trans_graph(struct tensor *const t, struct tensor *const out, struct autograd_allocators *allocators)
+cgrad_error tensor2d_trans_graph(struct tensor *const t, struct tensor *const out, struct allocators *allocs)
 {
     cgrad_error err = tensor2d_trans(t, out);
 
@@ -39,7 +39,7 @@ cgrad_error tensor2d_trans_graph(struct tensor *const t, struct tensor *const ou
         return err;
     }
 
-    err = add_computational_graph_link(t, TENSOR2D_TRANS_ONLY_OPERAND, out, &tensor2d_trans_backpropagate, allocators);
+    err = add_computational_graph_link(t, TENSOR2D_TRANS_ONLY_OPERAND, out, &tensor2d_trans_backpropagate, allocs);
     return err;
 }
 

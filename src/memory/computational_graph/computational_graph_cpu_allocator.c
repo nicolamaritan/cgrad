@@ -37,7 +37,7 @@ static struct computational_graph_node *computational_graph_cpu_alloc(void *pool
     // memset(node->parents_operands, 0, sizeof(node->parents_operands));
     memset(node->children_operands, 0, sizeof(node->children_operands));
     memset(node->function, 0, sizeof(node->function));
-    // context_init(&node->ctx, t_allocator); // Pointer is not NULL at this point
+    // context_init(&node->ctx, tensor_alloc); // Pointer is not NULL at this point
 
     return node;
 }

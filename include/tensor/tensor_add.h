@@ -4,9 +4,9 @@
 #include "tensor/tensor.h"
 #include "autograd/backpropagation/backpropagation.h"
 #include "autograd/computational_graph/computational_graph_link.h"
-#include "autograd/autograd_allocators.h"
+#include "memory/allocators.h"
 
 cgrad_error tensor_add(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
-cgrad_error tensor_add_graph(struct tensor *const x, struct tensor *const y, struct tensor *const out, struct autograd_allocators *allocators);
+cgrad_error tensor_add_graph(struct tensor *const x, struct tensor *const y, struct tensor *const out, struct allocators *allocs);
 
 #endif

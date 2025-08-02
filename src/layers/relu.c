@@ -28,7 +28,7 @@ static cgrad_error relu_forward_scalar_f64(const struct tensor *const x, struct 
 static cgrad_error relu_forward_scalar_f32(const struct tensor *const x, struct tensor *const out);
 #endif
 
-    cgrad_error relu_forward_graph(struct tensor *const x, struct tensor *const out, struct autograd_allocators *ag_allocators)
+    cgrad_error relu_forward_graph(struct tensor *const x, struct tensor *const out, struct allocators *allocs)
 {
     cgrad_error error = relu_forward(x, out);
     if (error != NO_ERROR)
@@ -36,7 +36,7 @@ static cgrad_error relu_forward_scalar_f32(const struct tensor *const x, struct 
         return error;
     }
 
-    error = add_computational_graph_link(x, RELU_ONLY_OPERAND, out, &relu_backpropagate, ag_allocators);
+    error = add_computational_graph_link(x, RELU_ONLY_OPERAND, out, &relu_backpropagate, allocs);
     return error;
 }
 

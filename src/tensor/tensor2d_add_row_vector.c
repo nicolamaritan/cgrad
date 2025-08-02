@@ -58,7 +58,7 @@ cgrad_error tensor2d_add_row_vector(const struct tensor *const t, const struct t
     return tensor2d_add_row_vector_dispatch(t, v, out);
 }
 
-cgrad_error tensor2d_add_row_vector_graph(struct tensor *const t, struct tensor *const v, struct tensor *const out, struct autograd_allocators *allocators)
+cgrad_error tensor2d_add_row_vector_graph(struct tensor *const t, struct tensor *const v, struct tensor *const out, struct allocators *allocs)
 {
     cgrad_error err = tensor2d_add_row_vector(t, v, out);
     if (err != NO_ERROR)
@@ -67,13 +67,13 @@ cgrad_error tensor2d_add_row_vector_graph(struct tensor *const t, struct tensor 
     }
 
     // Update computational graph
-    err = add_computational_graph_link(t, TENSOR2D, out, &tensor2d_add_row_vector_backpropagate_tensor2d, allocators);
+    err = add_computational_graph_link(t, TENSOR2D, out, &tensor2d_add_row_vector_backpropagate_tensor2d, allocs);
     if (err != NO_ERROR)
     {
         return err;
     }
 
-    err = add_computational_graph_link(v, ROW_VECTOR, out, &tensor2d_add_row_vector_backpropagate_row_vector, allocators);
+    err = add_computational_graph_link(v, ROW_VECTOR, out, &tensor2d_add_row_vector_backpropagate_row_vector, allocs);
 
     return err;
 }

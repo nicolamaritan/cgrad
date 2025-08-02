@@ -30,7 +30,7 @@ static cgrad_error linear_backpropagate_bias(const struct backpropagation_contex
 static cgrad_error linear_xavier_init_f64(struct linear_layer *layer);
 static cgrad_error linear_xavier_init_f32(struct linear_layer *layer);
 
-struct linear_layer *linear_alloc(const size_t in_dim, const size_t out_dim, const cgrad_dtype dtype, struct tensor_allocator *params_allocator, struct autograd_allocators *const ag_allocators)
+struct linear_layer *linear_alloc(const size_t in_dim, const size_t out_dim, const cgrad_dtype dtype, struct tensor_allocator *params_allocator, struct allocators *const allocs)
 {
     struct linear_layer *layer = (struct linear_layer *)malloc(sizeof(struct linear_layer));
     if (!layer)
@@ -58,7 +58,7 @@ struct linear_layer *linear_alloc(const size_t in_dim, const size_t out_dim, con
     }
 
     layer->params_allocator = params_allocator;
-    layer->ag_allocators = ag_allocators;
+    layer->allocs = allocs;
     layer->in_dim = in_dim;
     layer->out_dim = out_dim;
     layer->weights = weights;
@@ -159,19 +159,19 @@ void linear_free(struct linear_layer *layer)
 
 static cgrad_error linear_update_computational_graph(struct tensor *const x, struct linear_layer *const layer, struct tensor *const out)
 {
-    cgrad_error err = add_computational_graph_link(x, INPUT, out, &linear_backpropagate_input, layer->ag_allocators);
+    cgrad_error err = add_computational_graph_link(x, INPUT, out, &linear_backpropagate_input, layer->allocs);
     if (err != NO_ERROR) 
     {
         return err;
     }
 
-    err = add_computational_graph_link(layer->weights, WEIGHTS, out, &linear_backpropagate_weights, layer->ag_allocators);
+    err = add_computational_graph_link(layer->weights, WEIGHTS, out, &linear_backpropagate_weights, layer->allocs);
     if (err != NO_ERROR) 
     {
         return err;
     }
 
-    return add_computational_graph_link(layer->biases, BIAS, out, &linear_backpropagate_bias, layer->ag_allocators);
+    return add_computational_graph_link(layer->biases, BIAS, out, &linear_backpropagate_bias, layer->allocs);
 }
 
 static cgrad_error linear_backpropagate_input(const struct backpropagation_context* const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
@@ -184,11 +184,11 @@ static cgrad_error linear_backpropagate_input(const struct backpropagation_conte
         return AUTOGRAD_BACKPROPAGATION_CONTEXT_OPERAND_NULL;
     }
 
-    struct tensor_allocator *t_allocator = ctx->owned_allocator;
+    struct tensor_allocator *tensor_alloc = ctx->owned_allocator;
 
     size_t shape[] = {rhs->shape[1], rhs->shape[0]};
     size_t shape_size = 2;
-    struct tensor *rhs_trans = tensor_allocator_no_grad_alloc(t_allocator, shape, shape_size, grad_wrt_out->dtype);
+    struct tensor *rhs_trans = tensor_allocator_no_grad_alloc(tensor_alloc, shape, shape_size, grad_wrt_out->dtype);
     if (!rhs_trans)
     {
         return AUTOGRAD_BACKPROPAGATION_ALLOCATION_FAILED;
@@ -203,7 +203,7 @@ static cgrad_error linear_backpropagate_input(const struct backpropagation_conte
         return err;
     }
 
-    tensor_allocator_no_grad_free(t_allocator, rhs_trans);
+    tensor_allocator_no_grad_free(tensor_alloc, rhs_trans);
 
     return NO_ERROR;
 }
@@ -213,11 +213,11 @@ static cgrad_error linear_backpropagate_weights(const struct backpropagation_con
     cgrad_error err = NO_ERROR;
 
     const struct tensor* lhs = ctx->operands[INPUT];
-    struct tensor_allocator *t_allocator = ctx->owned_allocator;
+    struct tensor_allocator *tensor_alloc = ctx->owned_allocator;
 
     size_t shape[] = {lhs->shape[1], lhs->shape[0]};
     size_t shape_size = 2;
-    struct tensor *lhs_trans = tensor_allocator_no_grad_alloc(t_allocator, shape, shape_size, grad_wrt_out->dtype);
+    struct tensor *lhs_trans = tensor_allocator_no_grad_alloc(tensor_alloc, shape, shape_size, grad_wrt_out->dtype);
     if (!lhs_trans)
     {
         return AUTOGRAD_BACKPROPAGATION_ALLOCATION_FAILED;
@@ -232,7 +232,7 @@ static cgrad_error linear_backpropagate_weights(const struct backpropagation_con
         return err;
     }
 
-    tensor_allocator_no_grad_free(t_allocator, lhs_trans);
+    tensor_allocator_no_grad_free(tensor_alloc, lhs_trans);
 
     return NO_ERROR;
 }
