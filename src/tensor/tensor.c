@@ -239,7 +239,7 @@ cgrad_error tensor2d_copy(const struct tensor *const src, struct tensor *const d
         return TENSOR_SHAPE_MISMATCH;
     }
         
-    memcpy(dest->data, src->data, src->shape[0] * src->shape[1] * sizeof(double));
+    memcpy(dest->data, src->data, src->shape[0] * src->shape[1] * dtype_sizeof(src->dtype));
     return NO_ERROR;
 }
 

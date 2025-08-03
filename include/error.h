@@ -79,8 +79,8 @@ typedef enum
     INVALID_BATCH_SIZE,
 
     // Linear
-    LINEAR_LAYER_NULL,
-    LINEAR_LAYER_INVALID_DTYPE,
+    LINEAR_NULL,
+    LINEAR_INVALID_DTYPE,
     LINEAR_OUT_NULL,
 
 } cgrad_error;
