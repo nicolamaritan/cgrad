@@ -1,5 +1,4 @@
-#include "layers/linear.h"
-#include "layers/linear_out.h"
+#include "layers/linear/linear.h"
 #include "layers/relu.h"
 #include "losses/mse.h"
 #include "autograd/backpropagation/backpropagation.h"

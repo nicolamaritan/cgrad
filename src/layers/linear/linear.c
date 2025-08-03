@@ -1,4 +1,4 @@
-#include "layers/linear.h"
+#include "layers/linear/linear.h"
 #include "tensor/tensor2d_mult.h"
 #include "tensor/tensor2d_add_row_vector.h"
 #include "tensor/tensor2d_trans.h"

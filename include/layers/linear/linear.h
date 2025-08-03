@@ -1,7 +1,7 @@
 #ifndef LINEAR_H
 #define LINEAR_H
 
-#include "layers/linear_out.h"
+#include "layers/linear/linear_out.h"
 #include "tensor/tensor.h"
 #include "memory/tensor/tensor_allocator.h"
 #include "autograd/computational_graph/computational_graph.h"

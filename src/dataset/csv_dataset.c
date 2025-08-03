@@ -66,12 +66,6 @@ static void copy_label_to_targets(struct tensor *targets, double label, size_t i
 static void copy_label_to_targets_f64(struct tensor *targets, double label, size_t i);
 static void copy_label_to_targets_f32(struct tensor *targets, double label, size_t i);
 
-/**
- * @brief Loads a CSV file into a csv_dataset structure.
- *
- * @param csv_path Path to the CSV file.
- * @return Pointer to the allocated csv_dataset, or NULL if allocation failed.
- */
 struct csv_dataset *csv_dataset_alloc(const char *csv_path)
 {
     size_t rows = 0;
@@ -124,15 +118,6 @@ struct csv_dataset *csv_dataset_alloc(const char *csv_path)
     return dataset;
 }
 
-/**
- * @brief Samples a batch of data from the dataset using the provided indexes.
- *
- * @param dataset Pointer to the csv_dataset.
- * @param inputs Tensor to store the input features.
- * @param targets Tensor to store the target labels.
- * @param ix_batch Pointer to the indexes_batch specifying which rows to sample.
- * @return NO_ERROR on success, or an error code on failure.
- */
 cgrad_error csv_dataset_sample_batch(const struct csv_dataset *const dataset, struct tensor **const inputs, struct tensor **const targets, const struct indexes_batch *const ixs_batch, const cgrad_dtype dtype, struct tensor_allocator *const tensor_alloc)
 {
     cgrad_error error;
@@ -178,14 +163,6 @@ cgrad_error csv_dataset_sample_batch(const struct csv_dataset *const dataset, st
     return NO_ERROR;
 }
 
-/**
- * @brief Applies standard scaling (zero mean, unit variance) to the dataset features.
- *
- * The first column (label) is not scaled.
- *
- * @param dataset Pointer to the csv_dataset.
- * @return NO_ERROR on success, or an error code on failure.
- */
 cgrad_error csv_dataset_standard_scale(struct csv_dataset *dataset)
 {
     cgrad_error error;

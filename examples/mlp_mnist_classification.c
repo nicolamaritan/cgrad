@@ -1,4 +1,4 @@
-#include "layers/linear.h"
+#include "layers/linear/linear.h"
 #include "layers/relu.h"
 #include "losses/cross_entropy.h"
 #include "autograd/backpropagation/backpropagation.h"
