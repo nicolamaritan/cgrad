@@ -12,10 +12,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#if SIMD_AVX_LEVEL >= SIMD_AVX_LEVEL_0
-    #include "immintrin.h"
-#endif
-
 typedef enum linear_layer_operand
 {
     INPUT,
