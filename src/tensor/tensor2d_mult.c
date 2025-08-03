@@ -169,7 +169,7 @@ static cgrad_error tensor2d_mult_backpropagate_lhs(const struct backpropagation_
         return AUTOGRAD_BACKPROPAGATION_ALLOCATION_FAILED;
     }
 
-    if ((err = tensor2d_trans(rhs, rhs_trans)) != NO_ERROR)
+    if ((err = tensor2d_trans_into(rhs, rhs_trans)) != NO_ERROR)
     {
         return err;
     }
@@ -203,7 +203,7 @@ static cgrad_error tensor2d_mult_backpropagate_rhs(const struct backpropagation_
         return AUTOGRAD_BACKPROPAGATION_ALLOCATION_FAILED;
     }
 
-    if ((err = tensor2d_trans(lhs, lhs_trans)) != NO_ERROR)
+    if ((err = tensor2d_trans_into(lhs, lhs_trans)) != NO_ERROR)
     {
         return err;
     }
