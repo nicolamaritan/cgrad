@@ -68,14 +68,14 @@ int main(int argc, char **argv)
     }
 
     // Allocate model
-    struct linear_layer *linear1 = linear_alloc(input_dim, hidden_dim, DTYPE, &tensor_alloc, &allocs);
+    struct linear *linear1 = linear_alloc(input_dim, hidden_dim, DTYPE, &tensor_alloc, &allocs);
     if (!linear1)
     {
         return EXIT_FAILURE;
     }
     linear_xavier_init(linear1);
 
-    struct linear_layer *linear2 = linear_alloc(hidden_dim, num_classes, DTYPE, &tensor_alloc, &allocs);
+    struct linear *linear2 = linear_alloc(hidden_dim, num_classes, DTYPE, &tensor_alloc, &allocs);
     if (!linear2)
     {
         return EXIT_FAILURE;
@@ -160,7 +160,7 @@ int main(int argc, char **argv)
 
 
             // ------------- Forward -------------
-            struct linear_layer_out out1 = LINEAR_OUT_INIT;
+            struct linear_out out1 = LINEAR_OUT_INIT;
             if (linear_forward_graph(x, linear1, &out1) != NO_ERROR)
             {
                 return EXIT_FAILURE;
@@ -173,7 +173,7 @@ int main(int argc, char **argv)
                 return EXIT_FAILURE;
             }
 
-            struct linear_layer_out out3 = LINEAR_OUT_INIT;
+            struct linear_out out3 = LINEAR_OUT_INIT;
             if (linear_forward_graph(h2, linear2, &out3) != NO_ERROR)
             {
                 return EXIT_FAILURE;

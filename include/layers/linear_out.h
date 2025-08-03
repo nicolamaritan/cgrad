@@ -4,7 +4,7 @@
 #include "memory/tensor/tensor_allocator.h"
 #include "error.h"
 
-struct linear_layer_out
+struct linear_out
 {
     struct tensor *mult;
     struct tensor *result;
@@ -13,9 +13,9 @@ struct linear_layer_out
 
 #define LINEAR_OUT_INIT {NULL, NULL, NULL}
 
-static inline cgrad_error linear_layer_out_cleanup(struct linear_layer_out *const out);
+static inline cgrad_error linear_layer_out_cleanup(struct linear_out *const out);
 
-static inline cgrad_error linear_layer_out_cleanup(struct linear_layer_out *const out)
+static inline cgrad_error linear_layer_out_cleanup(struct linear_out *const out)
 {
     if (!out)
     {

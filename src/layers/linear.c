@@ -23,16 +23,16 @@ typedef enum linear_layer_operand
     BIAS,
 } linear_layer_operand;
 
-static cgrad_error linear_update_computational_graph(struct tensor *const x, struct linear_layer *const layer, struct tensor *const out);
+static cgrad_error linear_update_computational_graph(struct tensor *const x, struct linear *const layer, struct tensor *const out);
 static cgrad_error linear_backpropagate_input(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static cgrad_error linear_backpropagate_weights(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static cgrad_error linear_backpropagate_bias(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
-static cgrad_error linear_xavier_init_f64(struct linear_layer *layer);
-static cgrad_error linear_xavier_init_f32(struct linear_layer *layer);
+static cgrad_error linear_xavier_init_f64(struct linear *layer);
+static cgrad_error linear_xavier_init_f32(struct linear *layer);
 
-struct linear_layer *linear_alloc(const size_t in_dim, const size_t out_dim, const cgrad_dtype dtype, struct tensor_allocator *params_allocator, struct allocators *const allocs)
+struct linear *linear_alloc(const size_t in_dim, const size_t out_dim, const cgrad_dtype dtype, struct tensor_allocator *params_allocator, struct allocators *const allocs)
 {
-    struct linear_layer *layer = (struct linear_layer *)malloc(sizeof(struct linear_layer));
+    struct linear *layer = (struct linear *)malloc(sizeof(struct linear));
     if (!layer)
     {
         return NULL;
@@ -66,7 +66,7 @@ struct linear_layer *linear_alloc(const size_t in_dim, const size_t out_dim, con
     return layer;
 }
 
-cgrad_error linear_forward_graph(struct tensor *const x, struct linear_layer *const layer, struct linear_layer_out *const out)
+cgrad_error linear_forward_graph(struct tensor *const x, struct linear *const layer, struct linear_out *const out)
 {
     // XW+b computation 
     cgrad_error err = linear_forward(x, layer, out);
@@ -78,7 +78,7 @@ cgrad_error linear_forward_graph(struct tensor *const x, struct linear_layer *co
     return linear_update_computational_graph(x, layer, out->result);
 }
 
-cgrad_error linear_forward(const struct tensor *const x, const struct linear_layer *const layer, struct linear_layer_out *const out)
+cgrad_error linear_forward(const struct tensor *const x, const struct linear *const layer, struct linear_out *const out)
 {
     // Register layer allocator as out allocator
     out->tensor_alloc = layer->allocs->tensor_alloc;
@@ -95,7 +95,7 @@ cgrad_error linear_forward(const struct tensor *const x, const struct linear_lay
     // return tensor2d_add_row_vector_into(out->result, layer->biases, out->result);
 }
 
-cgrad_error linear_xavier_init(struct linear_layer *layer)
+cgrad_error linear_xavier_init(struct linear *layer)
 {
     if (!layer)
     {
@@ -113,7 +113,7 @@ cgrad_error linear_xavier_init(struct linear_layer *layer)
     }
 }
 
-static cgrad_error linear_xavier_init_f64(struct linear_layer *layer)
+static cgrad_error linear_xavier_init_f64(struct linear *layer)
 {
     double *data = layer->weights->data;
     size_t in_dim = layer->in_dim;
@@ -131,7 +131,7 @@ static cgrad_error linear_xavier_init_f64(struct linear_layer *layer)
     return NO_ERROR;
 }
 
-static cgrad_error linear_xavier_init_f32(struct linear_layer *layer)
+static cgrad_error linear_xavier_init_f32(struct linear *layer)
 {
     float *data = layer->weights->data;
     size_t in_dim = layer->in_dim;
@@ -149,7 +149,7 @@ static cgrad_error linear_xavier_init_f32(struct linear_layer *layer)
     return NO_ERROR;
 }
 
-void linear_free(struct linear_layer *layer)
+void linear_free(struct linear *layer)
 {
     if (!layer)
     {
@@ -161,7 +161,7 @@ void linear_free(struct linear_layer *layer)
     free(layer);
 }
 
-static cgrad_error linear_update_computational_graph(struct tensor *const x, struct linear_layer *const layer, struct tensor *const out)
+static cgrad_error linear_update_computational_graph(struct tensor *const x, struct linear *const layer, struct tensor *const out)
 {
     cgrad_error err = add_computational_graph_link(x, INPUT, out, &linear_backpropagate_input, layer->allocs);
     if (err != NO_ERROR) 
