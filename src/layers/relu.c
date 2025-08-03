@@ -28,38 +28,32 @@ static cgrad_error relu_forward_scalar_f64(const struct tensor *const x, struct 
 static cgrad_error relu_forward_scalar_f32(const struct tensor *const x, struct tensor *const out);
 #endif
 
-    cgrad_error relu_forward_graph(struct tensor *const x, struct tensor *const out, struct allocators *allocs)
+    cgrad_error relu_forward_graph(struct tensor *const x, struct tensor **const out, struct allocators *allocs)
 {
-    cgrad_error error = relu_forward(x, out);
+    cgrad_error error = relu_forward(x, out, allocs);
     if (error != NO_ERROR)
     {
         return error;
     }
 
-    error = add_computational_graph_link(x, RELU_ONLY_OPERAND, out, &relu_backpropagate, allocs);
+    error = add_computational_graph_link(x, RELU_ONLY_OPERAND, *out, &relu_backpropagate, allocs);
     return error;
 }
 
-cgrad_error relu_forward(const struct tensor *const x, struct tensor *const out)
+cgrad_error relu_forward(const struct tensor *const x, struct tensor **const out, struct allocators *allocs)
 {
-    if (!x || !out)
+    if (!x)
     {
         return TENSOR_NULL;
     }
-    if (!x->data || !out->data)
+    if (!x->data)
     {
         return TENSOR_DATA_NULL;
     }
-    if (!tensor_same_shape(x, out))
-    {
-        return TENSOR_SHAPE_MISMATCH;
-    }
-    if (x->dtype != out->dtype)
-    {
-        return TENSOR_DTYPE_MISMATCH;
-    }
 
-    return relu_forward_dispatch(x, out);
+    (*out) = tensor_allocator_alloc(allocs->tensor_alloc, x->shape, x->shape_size, x->dtype);
+
+    return relu_forward_dispatch(x, *out);
 }
 
 static cgrad_error relu_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)

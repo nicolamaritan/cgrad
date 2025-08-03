@@ -104,10 +104,8 @@ int main()
         }
         struct tensor *h1 = out1.result;
 
-        size_t h2_shape[] = {batch_size, hidden_dim};
-        size_t h2_shape_size = 2;
-        struct tensor *h2 = tensor_allocator_alloc(&tensor_alloc, h2_shape, h2_shape_size, DTYPE);
-        if (relu_forward_graph(h1, h2, &allocators) != NO_ERROR)
+        struct tensor *h2 = NULL; 
+        if (relu_forward_graph(h1, &h2, &allocators) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
@@ -119,10 +117,8 @@ int main()
         }
         struct tensor *h3 = out3.result;
 
-        size_t z_shape[] = {1, 1};
-        size_t z_shape_size = 2;
-        struct tensor *z = tensor_allocator_alloc(&tensor_alloc, z_shape, z_shape_size, DTYPE);
-        if (mse_loss_graph(h3, y_target, z, &allocators) != NO_ERROR)
+        struct tensor *z = NULL;
+        if (mse_loss_graph(h3, y_target, &z, &allocators) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
@@ -138,8 +134,8 @@ int main()
 
         // Clear iteration allocations
         linear_layer_out_cleanup(&out1);
-        linear_layer_out_cleanup(&out3);
         tensor_allocator_free(&tensor_alloc, h2);
+        linear_layer_out_cleanup(&out3);
         tensor_allocator_free(&tensor_alloc, z);
     }
 

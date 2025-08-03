@@ -167,10 +167,8 @@ int main(int argc, char **argv)
             }
             struct tensor *h1 = out1.result;
 
-            size_t h2_shape[] = {batch_size, hidden_dim};
-            size_t h2_shape_size = 2;
-            struct tensor *h2 = tensor_allocator_alloc(&tensor_alloc, h2_shape, h2_shape_size, DTYPE);
-            if (relu_forward_graph(h1, h2, &allocs) != NO_ERROR)
+            struct tensor *h2 = NULL; 
+            if (relu_forward_graph(h1, &h2, &allocs) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
@@ -182,10 +180,8 @@ int main(int argc, char **argv)
             }
             struct tensor *h3 = out3.result;
 
-            size_t z_shape[] = {1, 1};
-            size_t z_shape_size = 2;
-            struct tensor *z = tensor_allocator_alloc(&tensor_alloc, z_shape, z_shape_size, DTYPE);
-            if (cross_entropy_loss_graph(h3, y, z, &allocs) != NO_ERROR)
+            struct tensor *z = NULL;
+            if (cross_entropy_loss_graph(h3, y, &z, &allocs) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }

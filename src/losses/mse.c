@@ -19,13 +19,13 @@ static cgrad_error mse_loss_backpropagate_target(const struct backpropagation_co
 static cgrad_error mse_loss_backpropagate_target_f64(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static cgrad_error mse_loss_backpropagate_target_f32(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
-cgrad_error mse_loss(const struct tensor *const y_pred, const struct tensor *const y_target, struct tensor *const z)
+cgrad_error mse_loss(const struct tensor *const y_pred, const struct tensor *const y_target, struct tensor **const z, struct allocators *allocs)
 {
-    if (!y_pred || !y_target || !z)
+    if (!y_pred || !y_target)
     {
         return TENSOR_NULL;
     }
-    if (!y_pred->data || !y_target->data || !z->data)
+    if (!y_pred->data || !y_target->data)
     {
         return TENSOR_DATA_NULL;
     }
@@ -38,7 +38,25 @@ cgrad_error mse_loss(const struct tensor *const y_pred, const struct tensor *con
         return TENSOR_SHAPE_MISMATCH;
     }
 
-    return mse_loss_dispatch(y_pred, y_target, z);
+    size_t shape[] = {1, 1};
+    size_t shape_size = 2;
+    (*z) = tensor_allocator_alloc(allocs->tensor_alloc, shape, shape_size, y_pred->dtype);
+
+    return mse_loss_dispatch(y_pred, y_target, *z);
+}
+
+cgrad_error mse_loss_graph(struct tensor *const y_pred, struct tensor *const y_target, struct tensor **const z, struct allocators *allocs)
+{
+    cgrad_error err = mse_loss(y_pred, y_target, z, allocs);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
+    add_computational_graph_link(y_pred, MSE_PREDICTED, *z, &mse_loss_backpropagate_predicted, allocs);
+    add_computational_graph_link(y_target, MSE_TARGET, *z, &mse_loss_backpropagate_target, allocs);
+
+    return NO_ERROR;
 }
 
 static cgrad_error mse_loss_dispatch(const struct tensor *const y_pred, const struct tensor *const y_target, struct tensor *const z)
@@ -90,20 +108,6 @@ static cgrad_error mse_loss_f32(const struct tensor *const y_pred, const struct 
         z_data[0] += (0.5 * difference * difference);
     }
     z_data[0] /= batch_size;
-
-    return NO_ERROR;
-}
-
-cgrad_error mse_loss_graph(struct tensor *const y_pred, struct tensor *const y_target, struct tensor *const z, struct allocators *allocs)
-{
-    cgrad_error err = mse_loss(y_pred, y_target, z);
-    if (err != NO_ERROR)
-    {
-        return err;
-    }
-
-    add_computational_graph_link(y_pred, MSE_PREDICTED, z, &mse_loss_backpropagate_predicted, allocs);
-    add_computational_graph_link(y_target, MSE_TARGET, z, &mse_loss_backpropagate_target, allocs);
 
     return NO_ERROR;
 }
