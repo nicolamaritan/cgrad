@@ -6,12 +6,41 @@ static struct computational_graph_node *computational_graph_cpu_alloc(void *pool
 
 static void computational_graph_cpu_free(void *pool, struct computational_graph_node *node);
 
-struct computational_graph_allocator make_computational_graph_cpu_allocator(struct computational_graph_cpu_pool *pool)
+cgrad_error computational_graph_cpu_allocator_init(struct computational_graph_allocator *const graph_allocator)
 {
-    return (struct computational_graph_allocator){
-        .alloc = computational_graph_cpu_alloc,
-        .free = computational_graph_cpu_free,
-        .pool = pool};
+    if (!graph_allocator)
+    {
+        return COMPUTATIONAL_GRAPH_ALLOCATOR_NULL;
+    }
+
+    struct computational_graph_cpu_pool *graph_pool = calloc(1, sizeof(struct computational_graph_cpu_pool));
+    if (!graph_pool)
+    {
+        return COMPUTATIONAL_GRAPH_POOL_ALLOCATION_FAILED;
+    }
+
+    cgrad_error err = computational_graph_cpu_pool_init(graph_pool);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
+    graph_allocator->alloc = computational_graph_cpu_alloc;
+    graph_allocator->free = computational_graph_cpu_free;
+    graph_allocator->pool = graph_pool;
+
+    return NO_ERROR;
+}
+
+void computational_graph_cpu_allocator_cleanup(struct computational_graph_allocator *const graph_alloc)
+{
+    if (!graph_alloc)
+    {
+        return;
+    }
+
+    computational_graph_cpu_pool_cleanup(graph_alloc->pool);
+    free(graph_alloc->pool);
 }
 
 static struct computational_graph_node *computational_graph_cpu_alloc(void *pool, struct tensor *t)

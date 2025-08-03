@@ -4,6 +4,7 @@
 #include "memory/computational_graph/computational_graph_allocator.h"
 #include "memory/computational_graph/computational_graph_cpu_pool.h"
 
-struct computational_graph_allocator make_computational_graph_cpu_allocator(struct computational_graph_cpu_pool *pool);
+cgrad_error computational_graph_cpu_allocator_init(struct computational_graph_allocator *const graph_allocator);
+void computational_graph_cpu_allocator_cleanup(struct computational_graph_allocator *const graph_alloc);
 
 #endif

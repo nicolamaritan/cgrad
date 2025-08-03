@@ -42,7 +42,9 @@ int main(int argc, char **argv)
     struct tensor_allocator tensor_alloc;
     tensor_cpu_allocator_init(&tensor_alloc);
 
-    struct computational_graph_allocator graph_alloc = make_computational_graph_cpu_allocator(&graph_pool);
+    struct computational_graph_allocator graph_alloc;
+    computational_graph_cpu_allocator_init(&graph_alloc);
+
     struct allocators allocs = {&tensor_alloc, &graph_alloc};
 
     const size_t batch_size = 64;
@@ -202,6 +204,6 @@ int main(int argc, char **argv)
     linear_free(linear2);
     indexes_batch_free(ixs_batch);
     tensor_cpu_allocator_cleanup(&tensor_alloc);
-    computational_graph_cpu_pool_cleanup(&graph_pool);
+    computational_graph_cpu_allocator_cleanup(&graph_alloc);
     return EXIT_SUCCESS;
 }

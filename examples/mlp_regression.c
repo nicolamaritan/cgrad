@@ -33,24 +33,13 @@ int main()
     const size_t hidden_dim = 128;
     const size_t out_dim = 1;
 
-    // Memory initialization
-    struct tensor_cpu_pool tensor_pool;
-    if (tensor_cpu_pool_init(&tensor_pool) != NO_ERROR)
-    {
-        return EXIT_FAILURE;
-    }
-
-    struct computational_graph_cpu_pool graph_pool;
-    if (computational_graph_cpu_pool_init(&graph_pool) != NO_ERROR)
-    {
-        return EXIT_FAILURE;
-    }
-
     // Allocator initialization
     struct tensor_allocator tensor_alloc;
     tensor_cpu_allocator_init(&tensor_alloc);
 
-    struct computational_graph_allocator graph_alloc = make_computational_graph_cpu_allocator(&graph_pool);
+    struct computational_graph_allocator graph_alloc;
+    computational_graph_cpu_allocator_init(&graph_alloc);
+
     struct allocators allocators = {&tensor_alloc, &graph_alloc};
 
     size_t x_shape[] = {batch_size, input_dim};
@@ -146,8 +135,8 @@ int main()
     tensor_allocator_free(&tensor_alloc, y_target);
     linear_free(linear1);
     linear_free(linear2);
-    tensor_cpu_pool_cleanup(&tensor_pool);
-    computational_graph_cpu_pool_cleanup(&graph_pool);
+    tensor_cpu_allocator_cleanup(&tensor_alloc);
+    computational_graph_cpu_allocator_cleanup(&graph_alloc);
     return EXIT_SUCCESS;
 }
 
