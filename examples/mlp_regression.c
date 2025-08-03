@@ -47,7 +47,9 @@ int main()
     }
 
     // Allocator initialization
-    struct tensor_allocator tensor_alloc = make_tensor_cpu_allocator(&tensor_pool);
+    struct tensor_allocator tensor_alloc;
+    tensor_cpu_allocator_init(&tensor_alloc);
+
     struct computational_graph_allocator graph_alloc = make_computational_graph_cpu_allocator(&graph_pool);
     struct allocators allocators = {&tensor_alloc, &graph_alloc};
 

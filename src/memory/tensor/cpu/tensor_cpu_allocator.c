@@ -15,16 +15,45 @@ static struct tensor *tensor_cpu_clone(void *pool, const struct tensor *const sr
 
 static void compute_stride(size_t *const shape, size_t *const stride, size_t const shape_size);
 
-struct tensor_allocator make_tensor_cpu_allocator(struct tensor_cpu_pool *pool)
+cgrad_error tensor_cpu_allocator_init(struct tensor_allocator *const tensor_alloc)
 {
-    return (struct tensor_allocator){
-        .alloc = tensor_cpu_alloc,
-        .no_grad_alloc = tensor_cpu_no_grad_alloc,
-        .no_grad_zero_alloc = tensor_cpu_no_grad_zero_alloc,
-        .free = tensor_cpu_free,
-        .no_grad_free = tensor_cpu_no_grad_free,
-        .clone = tensor_cpu_clone,
-        .pool = pool};
+    if (!tensor_alloc)
+    {
+        return TENSOR_ALLOCATOR_NULL;
+    }
+
+    struct tensor_cpu_pool *tensor_pool = calloc(1, sizeof(struct tensor_cpu_pool));
+    if (!tensor_pool)
+    {
+        return TENSOR_POOL_ALLOCATION_FAILED;
+    }
+
+    cgrad_error err = tensor_cpu_pool_init(tensor_pool);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
+    tensor_alloc->alloc = tensor_cpu_alloc,
+    tensor_alloc->no_grad_alloc = tensor_cpu_no_grad_alloc,
+    tensor_alloc->no_grad_zero_alloc = tensor_cpu_no_grad_zero_alloc,
+    tensor_alloc->free = tensor_cpu_free,
+    tensor_alloc->no_grad_free = tensor_cpu_no_grad_free,
+    tensor_alloc->clone = tensor_cpu_clone,
+    tensor_alloc->pool = tensor_pool;
+
+    return NO_ERROR;
+}
+
+void tensor_cpu_allocator_cleanup(struct tensor_allocator *const tensor_alloc)
+{
+    if (!tensor_alloc)
+    {
+        return;
+    }
+
+    tensor_cpu_pool_cleanup(tensor_alloc->pool);
+    free(tensor_alloc->pool);
 }
 
 static struct tensor *tensor_cpu_alloc(void *pool, const size_t *const shape, const size_t shape_size, const cgrad_dtype dtype)

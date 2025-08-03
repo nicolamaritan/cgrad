@@ -32,6 +32,7 @@ typedef enum
 
     // Allocator
     TENSOR_ALLOCATOR_NULL,
+    TENSOR_POOL_ALLOCATION_FAILED,
     COMPUTATIONAL_GRAPH_ALLOCATOR_NULL,
 
     // Autograd errors
