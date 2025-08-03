@@ -57,6 +57,11 @@ cgrad_error tensor2d_add_row_vector(const struct tensor *const t, const struct t
 
     (*out) = tensor_allocator_alloc(allocs->tensor_alloc, t->shape, t->shape_size, t->dtype);
 
+    if (!(*out))
+    {
+        return TENSOR_ALLOCATION_FAILED;
+    }
+
     return tensor2d_add_row_vector_dispatch(t, v, *out);
 }
 

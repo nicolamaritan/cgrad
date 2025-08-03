@@ -38,9 +38,14 @@ cgrad_error mse_loss(const struct tensor *const y_pred, const struct tensor *con
         return TENSOR_SHAPE_MISMATCH;
     }
 
-    size_t shape[] = {1, 1};
-    size_t shape_size = 2;
+    const size_t shape[] = {1, 1};
+    const size_t shape_size = 2;
     (*z) = tensor_allocator_alloc(allocs->tensor_alloc, shape, shape_size, y_pred->dtype);
+
+    if (!(*z))
+    {
+        return TENSOR_ALLOCATION_FAILED;
+    }
 
     return mse_loss_dispatch(y_pred, y_target, *z);
 }

@@ -24,6 +24,10 @@ cgrad_error tensor2d_mult(const struct tensor *const x, const struct tensor *con
     {
         return TENSOR_NULL;
     }
+    if (!x->data || !y->data)
+    {
+        return TENSOR_DATA_NULL;
+    }
     if (x->shape[1] != y->shape[0])
     {
         return TENSOR_SHAPE_MISMATCH;
@@ -33,9 +37,14 @@ cgrad_error tensor2d_mult(const struct tensor *const x, const struct tensor *con
         return TENSOR_DTYPE_MISMATCH;
     }
 
-    size_t shape[] = {x->shape[0], y->shape[1]};
-    size_t shape_size = 2;
+    const size_t shape[] = {x->shape[0], y->shape[1]};
+    const size_t shape_size = 2;
     (*out) = tensor_allocator_alloc(allocs->tensor_alloc, shape, shape_size, x->dtype);
+
+    if (!(*out))
+    {
+        return TENSOR_ALLOCATION_FAILED;
+    }
 
     return tensor2d_mult_dispatch(x, y, *out);
 }

@@ -41,9 +41,14 @@ cgrad_error cross_entropy_loss(const struct tensor *const logits, const struct t
         return TENSOR_WRONG_SHAPE;
     }
 
-    size_t shape[] = {1, 1};
-    size_t shape_size = 2;
+    const size_t shape[] = {1, 1};
+    const size_t shape_size = 2;
     (*z) = tensor_allocator_alloc(allocs->tensor_alloc, shape, shape_size, logits->dtype);
+
+    if (!(*z))
+    {
+        return TENSOR_ALLOCATION_FAILED;
+    }
 
     return cross_entropy_loss_dispatch(logits, targets, *z);
 }
