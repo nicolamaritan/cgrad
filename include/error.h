@@ -81,6 +81,7 @@ typedef enum
     // Linear
     LINEAR_LAYER_NULL,
     LINEAR_LAYER_INVALID_DTYPE,
+    LINEAR_OUT_NULL,
 
 } cgrad_error;
 

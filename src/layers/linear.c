@@ -66,7 +66,7 @@ struct linear_layer *linear_alloc(const size_t in_dim, const size_t out_dim, con
     return layer;
 }
 
-cgrad_error linear_forward_graph(struct tensor *const x, struct linear_layer *const layer, struct tensor **const out)
+cgrad_error linear_forward_graph(struct tensor *const x, struct linear_layer *const layer, struct linear_layer_out *const out)
 {
     // XW+b computation 
     cgrad_error err = linear_forward(x, layer, out);
@@ -75,20 +75,24 @@ cgrad_error linear_forward_graph(struct tensor *const x, struct linear_layer *co
         return err;
     }
 
-    return linear_update_computational_graph(x, layer, *out);
+    return linear_update_computational_graph(x, layer, out->result);
 }
 
-cgrad_error linear_forward(const struct tensor *const x, const struct linear_layer *const layer, struct tensor **const out)
+cgrad_error linear_forward(const struct tensor *const x, const struct linear_layer *const layer, struct linear_layer_out *const out)
 {
+    // Register layer allocator as out allocator
+    out->tensor_alloc = layer->allocs->tensor_alloc;
+
     // XW computation 
-    cgrad_error error = tensor2d_mult(x, layer->weights, out, layer->allocs);
+    cgrad_error error = tensor2d_mult(x, layer->weights, &out->mult, layer->allocs);
     if (error != NO_ERROR)
     {
         return error;
     }
 
     // XW + b computation
-    return tensor2d_add_row_vector(*out, layer->biases, *out);
+    return tensor2d_add_row_vector(out->mult, layer->biases, &out->result, layer->allocs);
+    // return tensor2d_add_row_vector_into(out->result, layer->biases, out->result);
 }
 
 cgrad_error linear_xavier_init(struct linear_layer *layer)

@@ -1,4 +1,5 @@
 #include "layers/linear.h"
+#include "layers/linear_out.h"
 #include "layers/relu.h"
 #include "losses/mse.h"
 #include "autograd/backpropagation/backpropagation.h"
@@ -96,22 +97,27 @@ int main()
     for (size_t i = 0; i < epochs; i++)
     {
         // ------------- Forward -------------
-        struct tensor *h1 = NULL;
-        if (linear_forward_graph(x, linear1, &h1) != NO_ERROR)
+        struct linear_layer_out out1 = LINEAR_OUT_INIT;
+        if (linear_forward_graph(x, linear1, &out1) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
+        struct tensor *h1 = out1.result;
 
         size_t h2_shape[] = {batch_size, hidden_dim};
         size_t h2_shape_size = 2;
         struct tensor *h2 = tensor_allocator_alloc(&tensor_alloc, h2_shape, h2_shape_size, DTYPE);
-        relu_forward_graph(h1, h2, &allocators);
-
-        struct tensor *h3 = NULL;
-        if (linear_forward_graph(h2, linear2, &h3) != NO_ERROR)
+        if (relu_forward_graph(h1, h2, &allocators) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
+
+        struct linear_layer_out out3 = LINEAR_OUT_INIT;
+        if (linear_forward_graph(h2, linear2, &out3) != NO_ERROR)
+        {
+            return EXIT_FAILURE;
+        }
+        struct tensor *h3 = out3.result;
 
         size_t z_shape[] = {1, 1};
         size_t z_shape_size = 2;
@@ -131,9 +137,9 @@ int main()
         sgd_optimizer_step(&opt, lr, momentum, false);
 
         // Clear iteration allocations
-        tensor_allocator_free(&tensor_alloc, h1);
+        linear_layer_out_cleanup(&out1);
+        linear_layer_out_cleanup(&out3);
         tensor_allocator_free(&tensor_alloc, h2);
-        tensor_allocator_free(&tensor_alloc, h3);
         tensor_allocator_free(&tensor_alloc, z);
     }
 

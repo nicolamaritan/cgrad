@@ -28,7 +28,59 @@ static cgrad_error tensor2d_add_row_vector_scalar_f64(const struct tensor *const
 static cgrad_error tensor2d_add_row_vector_scalar_f32(const struct tensor *const t, const struct tensor *const v, struct tensor *out);
 #endif
 
-cgrad_error tensor2d_add_row_vector(const struct tensor *const t, const struct tensor *const v, struct tensor *const out)
+cgrad_error tensor2d_add_row_vector(const struct tensor *const t, const struct tensor *const v, struct tensor **const out, struct allocators *allocs)
+{
+    if (!t || !v)
+    {
+        return TENSOR_NULL;
+    }
+    if (!t->data || !v->data)
+    {
+        return TENSOR_DATA_NULL;
+    }
+    if (t->shape_size != 2 || v->shape_size != 2)
+    {
+        return TENSOR_WRONG_SHAPE;
+    }
+    if (v->shape[1] != 1)
+    {
+        return TENSOR_WRONG_SHAPE;
+    }
+    if (t->shape[1] != v->shape[0])
+    {
+        return TENSOR_SHAPE_MISMATCH;
+    }
+    if (t->dtype != v->dtype)
+    {
+        return TENSOR_DTYPE_MISMATCH;
+    }
+
+    (*out) = tensor_allocator_alloc(allocs->tensor_alloc, t->shape, t->shape_size, t->dtype);
+
+    return tensor2d_add_row_vector_dispatch(t, v, *out);
+}
+
+cgrad_error tensor2d_add_row_vector_graph(struct tensor *const t, struct tensor *const v, struct tensor **const out, struct allocators *allocs)
+{
+    cgrad_error err = tensor2d_add_row_vector(t, v, out, allocs);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
+    // Update computational graph
+    err = add_computational_graph_link(t, TENSOR2D, *out, &tensor2d_add_row_vector_backpropagate_tensor2d, allocs);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
+    err = add_computational_graph_link(v, ROW_VECTOR, *out, &tensor2d_add_row_vector_backpropagate_row_vector, allocs);
+
+    return err;
+}
+
+cgrad_error tensor2d_add_row_vector_into(const struct tensor *const t, const struct tensor *const v, struct tensor *const out)
 {
     if (!t || !v)
     {
@@ -56,26 +108,6 @@ cgrad_error tensor2d_add_row_vector(const struct tensor *const t, const struct t
     }
 
     return tensor2d_add_row_vector_dispatch(t, v, out);
-}
-
-cgrad_error tensor2d_add_row_vector_graph(struct tensor *const t, struct tensor *const v, struct tensor *const out, struct allocators *allocs)
-{
-    cgrad_error err = tensor2d_add_row_vector(t, v, out);
-    if (err != NO_ERROR)
-    {
-        return err;
-    }
-
-    // Update computational graph
-    err = add_computational_graph_link(t, TENSOR2D, out, &tensor2d_add_row_vector_backpropagate_tensor2d, allocs);
-    if (err != NO_ERROR)
-    {
-        return err;
-    }
-
-    err = add_computational_graph_link(v, ROW_VECTOR, out, &tensor2d_add_row_vector_backpropagate_row_vector, allocs);
-
-    return err;
 }
 
 static inline cgrad_error tensor2d_add_row_vector_dispatch(const struct tensor *const t, const struct tensor *const v, struct tensor *out)

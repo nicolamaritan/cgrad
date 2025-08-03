@@ -47,7 +47,7 @@ int main(int argc, char **argv)
     // Allocator initialization
     struct tensor_allocator tensor_alloc = make_tensor_cpu_allocator(&tensor_pool);
     struct computational_graph_allocator graph_alloc = make_computational_graph_cpu_allocator(&graph_pool);
-    struct allocators autograd_allocs = {&tensor_alloc, &graph_alloc};
+    struct allocators allocs = {&tensor_alloc, &graph_alloc};
 
     const size_t batch_size = 64;
     const size_t input_dim = 784;
@@ -68,14 +68,14 @@ int main(int argc, char **argv)
     }
 
     // Allocate model
-    struct linear_layer *linear1 = linear_alloc(input_dim, hidden_dim, DTYPE, &tensor_alloc, &autograd_allocs);
+    struct linear_layer *linear1 = linear_alloc(input_dim, hidden_dim, DTYPE, &tensor_alloc, &allocs);
     if (!linear1)
     {
         return EXIT_FAILURE;
     }
     linear_xavier_init(linear1);
 
-    struct linear_layer *linear2 = linear_alloc(hidden_dim, num_classes, DTYPE, &tensor_alloc, &autograd_allocs);
+    struct linear_layer *linear2 = linear_alloc(hidden_dim, num_classes, DTYPE, &tensor_alloc, &allocs);
     if (!linear2)
     {
         return EXIT_FAILURE;
@@ -160,32 +160,32 @@ int main(int argc, char **argv)
 
 
             // ------------- Forward -------------
-            struct tensor *h1 = NULL;
-            if (linear_forward_graph(x, linear1, &h1) != NO_ERROR)
+            struct linear_layer_out out1 = LINEAR_OUT_INIT;
+            if (linear_forward_graph(x, linear1, &out1) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
-            
-            // ReLU 1
+            struct tensor *h1 = out1.result;
+
             size_t h2_shape[] = {batch_size, hidden_dim};
             size_t h2_shape_size = 2;
             struct tensor *h2 = tensor_allocator_alloc(&tensor_alloc, h2_shape, h2_shape_size, DTYPE);
-            if (relu_forward_graph(h1, h2, &autograd_allocs) != NO_ERROR)
+            if (relu_forward_graph(h1, h2, &allocs) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
 
-            // Linear 2
-            struct tensor *h3 = NULL;
-            if (linear_forward_graph(h2, linear2, &h3) != NO_ERROR)
+            struct linear_layer_out out3 = LINEAR_OUT_INIT;
+            if (linear_forward_graph(h2, linear2, &out3) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
+            struct tensor *h3 = out3.result;
 
             size_t z_shape[] = {1, 1};
             size_t z_shape_size = 2;
             struct tensor *z = tensor_allocator_alloc(&tensor_alloc, z_shape, z_shape_size, DTYPE);
-            if (cross_entropy_loss_graph(h3, y, z, &autograd_allocs) != NO_ERROR)
+            if (cross_entropy_loss_graph(h3, y, z, &allocs) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
@@ -199,16 +199,16 @@ int main(int argc, char **argv)
 
             // ------------- Backward -------------
             zero_grad(&params);
-            backward(z, &autograd_allocs);
+            backward(z, &allocs);
 
             sgd_optimizer_step(&opt, lr, momentum, false);
 
             // Clear iteration allocations
             tensor_allocator_free(&tensor_alloc, x);
             tensor_allocator_free(&tensor_alloc, y);
-            tensor_allocator_free(&tensor_alloc, h1);
+            linear_layer_out_cleanup(&out1);
             tensor_allocator_free(&tensor_alloc, h2);
-            tensor_allocator_free(&tensor_alloc, h3);
+            linear_layer_out_cleanup(&out3);
             tensor_allocator_free(&tensor_alloc, z);
 
             index_permutation_update(permutation, iter_batch_size);
