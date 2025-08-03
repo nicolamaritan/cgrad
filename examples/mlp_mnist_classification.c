@@ -133,31 +133,19 @@ int main(int argc, char **argv)
             size_t remaining = index_permutation_get_remaining(permutation);
             size_t iter_batch_size = remaining < batch_size ? remaining : batch_size;
 
-            size_t x_shape[] = {batch_size, input_dim};
-            size_t x_shape_size = 2;
-            struct tensor *x = tensor_allocator_alloc(&tensor_alloc, x_shape, x_shape_size, DTYPE);
-
-            size_t y_shape[] = {batch_size, 1};
-            size_t y_shape_size = 2;
-            struct tensor *y = tensor_allocator_alloc(&tensor_alloc, y_shape, y_shape_size, DTYPE);
-
-            if (!x || !y)
-            {
-                return EXIT_FAILURE;
-            }
-
             // Sample batch indeces
             if (indexes_permutation_sample_index_batch(permutation, ixs_batch, iter_batch_size) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
 
+            struct tensor *x = NULL;
+            struct tensor *y = NULL;
             // Sample batch
-            if (csv_dataset_sample_batch(train_set, x, y, ixs_batch) != NO_ERROR)
+            if (csv_dataset_sample_batch(train_set, &x, &y, ixs_batch, DTYPE, &tensor_alloc) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
-
 
             // ------------- Forward -------------
             struct linear_out out1 = LINEAR_OUT_INIT;

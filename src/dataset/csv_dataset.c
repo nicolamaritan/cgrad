@@ -133,17 +133,9 @@ struct csv_dataset *csv_dataset_alloc(const char *csv_path)
  * @param ix_batch Pointer to the indexes_batch specifying which rows to sample.
  * @return NO_ERROR on success, or an error code on failure.
  */
-cgrad_error csv_dataset_sample_batch(const struct csv_dataset *const dataset, struct tensor *const inputs, struct tensor *const targets, const struct indexes_batch *const ixs_batch)
+cgrad_error csv_dataset_sample_batch(const struct csv_dataset *const dataset, struct tensor **const inputs, struct tensor **const targets, const struct indexes_batch *const ixs_batch, const cgrad_dtype dtype, struct tensor_allocator *const tensor_alloc)
 {
     cgrad_error error;
-    if ((error = tensor_check_null(inputs)) != NO_ERROR)
-    {
-        return error;
-    }
-    if ((error = tensor_check_null(targets)) != NO_ERROR)
-    {
-        return error;
-    }
     if ((error = csv_dataset_check_null(dataset) != NO_ERROR))
     {
         return error;
@@ -154,8 +146,22 @@ cgrad_error csv_dataset_sample_batch(const struct csv_dataset *const dataset, st
     }
     
     size_t cols = dataset->cols;
+    
+    size_t inputs_shape[] = {ixs_batch->size, cols - 1};
+    (*inputs) = tensor_allocator_alloc(tensor_alloc, inputs_shape, sizeof(inputs_shape) / sizeof(size_t), dtype);
+    if (!(*inputs))
+    {
+        return TENSOR_ALLOCATION_FAILED;
+    }
 
-    // printf("ix_batch->size: %ld\n", ix_batch->size);
+    const size_t COLUMN_VECTOR_COLS = 1;
+    size_t targets_shape[] = {ixs_batch->size, COLUMN_VECTOR_COLS};
+    (*targets) = tensor_allocator_alloc(tensor_alloc, targets_shape, sizeof(targets_shape) / sizeof(size_t), dtype);
+    if (!(*targets))
+    {
+        return TENSOR_ALLOCATION_FAILED;
+    }
+
     for (size_t i = 0; i < ixs_batch->size; i++)
     {
         size_t row_idx = ixs_batch->indexes[i];
@@ -165,10 +171,8 @@ cgrad_error csv_dataset_sample_batch(const struct csv_dataset *const dataset, st
         double *features = csv_row + 1;
 
         // Copy features to inputs
-        copy_features_to_inputs(inputs, features, i, cols);
-        copy_label_to_targets(targets, label, i);
-        // memcpy(inputs->data + i * (cols - 1), features, (cols - 1) * sizeof(double));
-        // targets->data[i] = label;
+        copy_features_to_inputs(*inputs, features, i, cols);
+        copy_label_to_targets(*targets, label, i);
     }
 
     return NO_ERROR;

@@ -3,6 +3,7 @@
 
 #include "dataset/indexes_permutation.h"
 #include "tensor/tensor.h"
+#include "memory/tensor/tensor_allocator.h"
 #include "error.h"
 #include <stddef.h>
 
@@ -30,13 +31,9 @@ struct csv_dataset *csv_dataset_alloc(const char *csv_path);
 /**
  * @brief Samples a batch of data from the dataset using the provided indexes.
  *
- * @param dataset Pointer to the csv_dataset.
- * @param inputs Tensor to store the input features.
- * @param targets Tensor to store the target labels.
- * @param ix_batch Pointer to the indexes_batch specifying which rows to sample.
- * @return NO_ERROR on success, or an error code on failure.
+ * TODO
  */
-cgrad_error csv_dataset_sample_batch(const struct csv_dataset *const dataset, struct tensor *const inputs, struct tensor *const targets, const struct indexes_batch *const ix_batch);
+cgrad_error csv_dataset_sample_batch(const struct csv_dataset *const dataset, struct tensor **const inputs, struct tensor **const targets, const struct indexes_batch *const ixs_batch, const cgrad_dtype dtype, struct tensor_allocator *const tensor_alloc);
 
 /**
  * @brief Applies standard scaling (zero mean, unit variance) to the dataset features.
