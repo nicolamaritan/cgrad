@@ -1,5 +1,5 @@
-#ifndef AUTOGRAD_CONFIG_H
-#define AUTOGRAD_CONFIG_H
+#ifndef ALLOCATORS_H
+#define ALLOCATORS_H
 
 #include "memory/tensor/tensor_allocator.h"
 #include "memory/computational_graph/computational_graph_allocator.h"
