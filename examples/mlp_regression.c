@@ -92,8 +92,8 @@ int main()
         {
             return EXIT_FAILURE;
         }
-        struct tensor *h1 = out1.result;
 
+        struct tensor *h1 = out1.result;
         struct tensor *h2 = NULL; 
         if (relu_forward(h1, &h2, true, &allocs) != NO_ERROR)
         {
@@ -105,10 +105,10 @@ int main()
         {
             return EXIT_FAILURE;
         }
-        struct tensor *h3 = out3.result;
 
+        struct tensor *h3 = out3.result;
         struct tensor *z = NULL;
-        if (mse_loss_graph(h3, y_target, &z, &allocs) != NO_ERROR)
+        if (mse_loss(h3, y_target, &z, true, &allocs) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }

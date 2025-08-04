@@ -151,8 +151,8 @@ int main(int argc, char **argv)
             {
                 return EXIT_FAILURE;
             }
-            struct tensor *h1 = out1.result;
 
+            struct tensor *h1 = out1.result;
             struct tensor *h2 = NULL; 
             if (relu_forward(h1, &h2, true, &allocs) != NO_ERROR)
             {
@@ -164,10 +164,10 @@ int main(int argc, char **argv)
             {
                 return EXIT_FAILURE;
             }
-            struct tensor *h3 = out3.result;
 
+            struct tensor *h3 = out3.result;
             struct tensor *z = NULL;
-            if (cross_entropy_loss_graph(h3, y, &z, &allocs) != NO_ERROR)
+            if (cross_entropy_loss(h3, y, &z, true, &allocs) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }

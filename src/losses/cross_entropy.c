@@ -11,6 +11,7 @@ typedef enum cross_entropy_loss_operand
     CROSS_ENTROPY_TARGET
 } cross_entropy_loss_operand;
 
+static inline cgrad_error cross_entropy_loss_update_graph(struct tensor *const logits, struct tensor *const targets, struct tensor **const z, struct allocators *const allocs);
 static cgrad_error cross_entropy_loss_dispatch(const struct tensor *const logits, const struct tensor *const targets, struct tensor *const z);
 static cgrad_error cross_entropy_loss_f64(const struct tensor *const logits, const struct tensor *const targets, struct tensor *const z);
 static cgrad_error cross_entropy_loss_f32(const struct tensor *const logits, const struct tensor *const targets, struct tensor *const z);
@@ -20,7 +21,7 @@ static cgrad_error cross_entropy_loss_backpropagate_predicted(const struct backp
 static cgrad_error cross_entropy_loss_backpropagate_predicted_f64(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static cgrad_error cross_entropy_loss_backpropagate_predicted_f32(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
-cgrad_error cross_entropy_loss(const struct tensor *const logits, const struct tensor *const targets, struct tensor **const z, struct tensor_allocator *const tensor_alloc)
+cgrad_error cross_entropy_loss(struct tensor *const logits, struct tensor *const targets, struct tensor **const z, const bool track_grad, struct allocators *const allocs)
 {
     const size_t EXPECTED_SHAPE_SIZE = 2;
     const size_t COLUMN_VECTOR_SECOND_DIM = 1;
@@ -43,36 +44,39 @@ cgrad_error cross_entropy_loss(const struct tensor *const logits, const struct t
 
     const size_t shape[] = {1, 1};
     const size_t shape_size = 2;
-    (*z) = tensor_allocator_alloc(tensor_alloc, shape, shape_size, logits->dtype);
+    (*z) = tensor_allocator_alloc(allocs->tensor_alloc, shape, shape_size, logits->dtype);
 
     if (!(*z))
     {
         return TENSOR_ALLOCATION_FAILED;
     }
 
-    return cross_entropy_loss_dispatch(logits, targets, *z);
-}
-
-cgrad_error cross_entropy_loss_graph(struct tensor *const logits, struct tensor *const targets, struct tensor **const z, struct allocators *const allocs)
-{
-    cgrad_error err = cross_entropy_loss(logits, targets, z, allocs->tensor_alloc);
+    cgrad_error err = cross_entropy_loss_dispatch(logits, targets, *z);
     if (err != NO_ERROR)
     {
         return err;
     }
 
+    if (track_grad)
+    {
+        return cross_entropy_loss_update_graph(logits, targets, z, allocs);
+    }
+
+    return NO_ERROR;
+}
+
+static inline cgrad_error cross_entropy_loss_update_graph(struct tensor *const logits, struct tensor *const targets, struct tensor **const z, struct allocators *const allocs)
+{
     // Setup connections
     // In CrossEntropy, targets are not differentiable, so only the logits node is added. Still, the target tensor is added as operand for backward.
-    err = add_computational_graph_link(logits, CROSS_ENTROPY_PREDICTED, *z, &cross_entropy_loss_backpropagate_predicted, allocs);
+    cgrad_error err = add_computational_graph_link(logits, CROSS_ENTROPY_PREDICTED, *z, &cross_entropy_loss_backpropagate_predicted, allocs);
     if (err != NO_ERROR)
     {
         return err;
     }
 
     // Setup operands manually, as the target was not added to the computational graph as node
-    computational_graph_node_set_context_tensor((*z)->node, targets, CROSS_ENTROPY_TARGET);
-
-    return NO_ERROR;
+    return computational_graph_node_set_context_tensor((*z)->node, targets, CROSS_ENTROPY_TARGET);
 }
 
 static cgrad_error cross_entropy_loss_dispatch(const struct tensor *const logits, const struct tensor *const targets, struct tensor *const z)
