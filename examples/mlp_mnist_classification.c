@@ -147,7 +147,7 @@ int main(int argc, char **argv)
 
             // ------------- Forward -------------
             struct linear_out out1 = LINEAR_OUT_INIT;
-            if (linear_forward_graph(x, linear1, &out1) != NO_ERROR)
+            if (linear_forward(x, linear1, &out1, true) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
@@ -160,7 +160,7 @@ int main(int argc, char **argv)
             }
 
             struct linear_out out3 = LINEAR_OUT_INIT;
-            if (linear_forward_graph(h2, linear2, &out3) != NO_ERROR)
+            if (linear_forward(h2, linear2, &out3, true) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }

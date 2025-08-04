@@ -20,8 +20,7 @@ struct linear
 };
 
 struct linear *linear_alloc(const size_t in_dim, const size_t out_dim, const cgrad_dtype dtype, struct tensor_allocator *params_allocator, struct allocators *const allocs);
-cgrad_error linear_forward(struct tensor *const x, struct linear *const layer, struct linear_out *const out);
-cgrad_error linear_forward_graph(struct tensor *const x, struct linear *const layer, struct linear_out *const out);
+cgrad_error linear_forward(struct tensor *const x, struct linear *const layer, struct linear_out *const out, const bool track_grad);
 cgrad_error linear_xavier_init(struct linear *layer);
 void linear_free(struct linear *layer);
 

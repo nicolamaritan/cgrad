@@ -40,7 +40,7 @@ int main()
     struct computational_graph_allocator graph_alloc;
     computational_graph_cpu_allocator_init(&graph_alloc);
 
-    struct allocators allocators = {&tensor_alloc, &graph_alloc};
+    struct allocators allocs = {&tensor_alloc, &graph_alloc};
 
     size_t x_shape[] = {batch_size, input_dim};
     size_t x_shape_size = 2;
@@ -59,10 +59,10 @@ int main()
     build_example_dataset(x, y_target);
 
     // Allocate model
-    struct linear *linear1 = linear_alloc(input_dim, hidden_dim, DTYPE, &tensor_alloc, &allocators);
+    struct linear *linear1 = linear_alloc(input_dim, hidden_dim, DTYPE, &tensor_alloc, &allocs);
     linear_xavier_init(linear1);
 
-    struct linear *linear2 = linear_alloc(hidden_dim, out_dim, DTYPE, &tensor_alloc, &allocators);
+    struct linear *linear2 = linear_alloc(hidden_dim, out_dim, DTYPE, &tensor_alloc, &allocs);
     linear_xavier_init(linear2);
 
     // Setup model params
@@ -88,27 +88,27 @@ int main()
     {
         // ------------- Forward -------------
         struct linear_out out1 = LINEAR_OUT_INIT;
-        if (linear_forward_graph(x, linear1, &out1) != NO_ERROR)
+        if (linear_forward(x, linear1, &out1, true) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
         struct tensor *h1 = out1.result;
 
         struct tensor *h2 = NULL; 
-        if (relu_forward_graph(h1, &h2, &allocators) != NO_ERROR)
+        if (relu_forward_graph(h1, &h2, &allocs) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
 
         struct linear_out out3 = LINEAR_OUT_INIT;
-        if (linear_forward_graph(h2, linear2, &out3) != NO_ERROR)
+        if (linear_forward(h2, linear2, &out3, true) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
         struct tensor *h3 = out3.result;
 
         struct tensor *z = NULL;
-        if (mse_loss_graph(h3, y_target, &z, &allocators) != NO_ERROR)
+        if (mse_loss_graph(h3, y_target, &z, &allocs) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
@@ -119,7 +119,7 @@ int main()
 
         // ------------- Backward -------------
         zero_grad(&params);
-        backward(z, &allocators);
+        backward(z, &allocs);
         sgd_optimizer_step(&opt, lr, momentum, false);
 
         // Clear iteration allocations

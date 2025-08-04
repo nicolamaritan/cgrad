@@ -31,7 +31,7 @@ cgrad_error add_computational_graph_link(struct tensor *operand, size_t operand_
     }
     if (!allocs)
     {
-        return AUTOGRAD_ALLOCATORS_NULL;
+        return ALLOCATORS_NULL;
     }
     if (!backprop_function)
     {

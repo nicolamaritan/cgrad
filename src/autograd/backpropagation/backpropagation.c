@@ -26,7 +26,7 @@ cgrad_error backward(struct tensor* t, struct allocators *allocs)
     }
     if (!allocs)
     {
-        return AUTOGRAD_ALLOCATORS_NULL;
+        return ALLOCATORS_NULL;
     }
 
     struct backpropagation_targets targets;
