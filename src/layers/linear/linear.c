@@ -73,17 +73,17 @@ cgrad_error linear_forward_graph(struct tensor *const x, struct linear *const la
     out->tensor_alloc = layer->allocs->tensor_alloc;
 
     // XW computation 
-    cgrad_error error = tensor2d_mult_graph(x, layer->weights, &out->mult, layer->allocs);
+    cgrad_error error = tensor2d_mult(x, layer->weights, &out->mult, true, layer->allocs);
     if (error != NO_ERROR)
     {
         return error;
     }
 
     // XW + b computation
-    return tensor2d_add_row_vector_graph(out->mult, layer->biases, &out->result, layer->allocs);
+    return tensor2d_add_row_vector(out->mult, layer->biases, &out->result, true, layer->allocs);
 }
 
-cgrad_error linear_forward(const struct tensor *const x, const struct linear *const layer, struct linear_out *const out)
+cgrad_error linear_forward(struct tensor *const x, struct linear *const layer, struct linear_out *const out)
 {
     if (!layer)
     {
@@ -98,14 +98,14 @@ cgrad_error linear_forward(const struct tensor *const x, const struct linear *co
     out->tensor_alloc = layer->allocs->tensor_alloc;
 
     // XW computation 
-    cgrad_error error = tensor2d_mult(x, layer->weights, &out->mult, layer->allocs->tensor_alloc);
+    cgrad_error error = tensor2d_mult(x, layer->weights, &out->mult, false, layer->allocs);
     if (error != NO_ERROR)
     {
         return error;
     }
 
     // XW + b computation
-    return tensor2d_add_row_vector(out->mult, layer->biases, &out->result, layer->allocs->tensor_alloc);
+    return tensor2d_add_row_vector(out->mult, layer->biases, &out->result, false, layer->allocs);
 }
 
 cgrad_error linear_xavier_init(struct linear *layer)

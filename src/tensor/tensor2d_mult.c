@@ -12,13 +12,14 @@ typedef enum tensor2d_mult_operand
     RHS_TENSOR,
 } tensor2d_mult_operand;
 
+static inline cgrad_error tensor2d_mult_update_graph(struct tensor *const x, struct tensor *const y, struct tensor **const out, struct allocators *const allocs);
 static inline cgrad_error tensor2d_mult_dispatch(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
 static cgrad_error tensor2d_mult_f64(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
 static cgrad_error tensor2d_mult_f32(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
 static cgrad_error tensor2d_mult_backpropagate_lhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static cgrad_error tensor2d_mult_backpropagate_rhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
-cgrad_error tensor2d_mult(const struct tensor *const x, const struct tensor *const y, struct tensor **const out, struct tensor_allocator *const tensor_alloc)
+cgrad_error tensor2d_mult(struct tensor *const x, struct tensor *const y, struct tensor **const out, const bool track_grad, struct allocators *const allocs)
 {
     if (!x || !y)
     {
@@ -39,27 +40,30 @@ cgrad_error tensor2d_mult(const struct tensor *const x, const struct tensor *con
 
     const size_t shape[] = {x->shape[0], y->shape[1]};
     const size_t shape_size = 2;
-    (*out) = tensor_allocator_alloc(tensor_alloc, shape, shape_size, x->dtype);
+    (*out) = tensor_allocator_alloc(allocs->tensor_alloc, shape, shape_size, x->dtype);
 
     if (!(*out))
     {
         return TENSOR_ALLOCATION_FAILED;
     }
 
-    return tensor2d_mult_dispatch(x, y, *out);
-}
-
-cgrad_error tensor2d_mult_graph(struct tensor *const x, struct tensor *const y, struct tensor **const out, struct allocators *const allocs)
-{
-    cgrad_error err = tensor2d_mult(x, y, out, allocs->tensor_alloc);
-
+    cgrad_error err = tensor2d_mult_dispatch(x, y, *out);
     if (err != NO_ERROR)
     {
         return err;
     }
 
-    // Update computational graph
-    err = add_computational_graph_link(x, LHS_TENSOR, *out, &tensor2d_mult_backpropagate_lhs, allocs);
+    if (track_grad)
+    {
+        return tensor2d_mult_update_graph(x, y, out, allocs);
+    }
+
+    return NO_ERROR;
+}
+
+static inline cgrad_error tensor2d_mult_update_graph(struct tensor *const x, struct tensor *const y, struct tensor **const out, struct allocators *const allocs)
+{
+    cgrad_error err = add_computational_graph_link(x, LHS_TENSOR, *out, &tensor2d_mult_backpropagate_lhs, allocs);
     if (err != NO_ERROR)
     {
         return err;
