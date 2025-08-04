@@ -14,6 +14,7 @@ typedef enum relu_layer_operand
     RELU_ONLY_OPERAND,
 } relu_layer_operand;
 
+static inline cgrad_error relu_forward_update_graph(struct tensor *const x, struct tensor **const out, struct allocators *const allocs);
 static cgrad_error relu_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static cgrad_error relu_backpropagate_f64(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static cgrad_error relu_backpropagate_f32(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
@@ -28,19 +29,7 @@ static cgrad_error relu_forward_scalar_f64(const struct tensor *const x, struct 
 static cgrad_error relu_forward_scalar_f32(const struct tensor *const x, struct tensor *const out);
 #endif
 
-    cgrad_error relu_forward_graph(struct tensor *const x, struct tensor **const out, struct allocators *allocs)
-{
-    cgrad_error error = relu_forward(x, out, allocs);
-    if (error != NO_ERROR)
-    {
-        return error;
-    }
-
-    error = add_computational_graph_link(x, RELU_ONLY_OPERAND, *out, &relu_backpropagate, allocs);
-    return error;
-}
-
-cgrad_error relu_forward(const struct tensor *const x, struct tensor **const out, struct allocators *allocs)
+cgrad_error relu_forward(struct tensor *const x, struct tensor **const out, const bool track_grad, struct allocators *const allocs)
 {
     if (!x)
     {
@@ -53,7 +42,22 @@ cgrad_error relu_forward(const struct tensor *const x, struct tensor **const out
 
     (*out) = tensor_allocator_alloc(allocs->tensor_alloc, x->shape, x->shape_size, x->dtype);
 
-    return relu_forward_dispatch(x, *out);
+    cgrad_error err = relu_forward_dispatch(x, *out);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
+    if (track_grad)
+    {
+        return relu_forward_update_graph(x, out, allocs);
+    }
+    return NO_ERROR;
+}
+
+static inline cgrad_error relu_forward_update_graph(struct tensor *const x, struct tensor **const out, struct allocators *const allocs)
+{
+    return add_computational_graph_link(x, RELU_ONLY_OPERAND, *out, &relu_backpropagate, allocs);
 }
 
 static cgrad_error relu_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)

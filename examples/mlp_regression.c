@@ -95,7 +95,7 @@ int main()
         struct tensor *h1 = out1.result;
 
         struct tensor *h2 = NULL; 
-        if (relu_forward_graph(h1, &h2, &allocs) != NO_ERROR)
+        if (relu_forward(h1, &h2, true, &allocs) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
