@@ -98,14 +98,14 @@ cgrad_error linear_forward(const struct tensor *const x, const struct linear *co
     out->tensor_alloc = layer->allocs->tensor_alloc;
 
     // XW computation 
-    cgrad_error error = tensor2d_mult(x, layer->weights, &out->mult, layer->allocs);
+    cgrad_error error = tensor2d_mult(x, layer->weights, &out->mult, layer->allocs->tensor_alloc);
     if (error != NO_ERROR)
     {
         return error;
     }
 
     // XW + b computation
-    return tensor2d_add_row_vector(out->mult, layer->biases, &out->result, layer->allocs);
+    return tensor2d_add_row_vector(out->mult, layer->biases, &out->result, layer->allocs->tensor_alloc);
 }
 
 cgrad_error linear_xavier_init(struct linear *layer)

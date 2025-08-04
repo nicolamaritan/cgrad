@@ -18,7 +18,7 @@ static cgrad_error tensor2d_mult_f32(const struct tensor *const x, const struct 
 static cgrad_error tensor2d_mult_backpropagate_lhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static cgrad_error tensor2d_mult_backpropagate_rhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
-cgrad_error tensor2d_mult(const struct tensor *const x, const struct tensor *const y, struct tensor **const out, struct allocators *allocs)
+cgrad_error tensor2d_mult(const struct tensor *const x, const struct tensor *const y, struct tensor **const out, struct tensor_allocator *const tensor_alloc)
 {
     if (!x || !y)
     {
@@ -39,7 +39,7 @@ cgrad_error tensor2d_mult(const struct tensor *const x, const struct tensor *con
 
     const size_t shape[] = {x->shape[0], y->shape[1]};
     const size_t shape_size = 2;
-    (*out) = tensor_allocator_alloc(allocs->tensor_alloc, shape, shape_size, x->dtype);
+    (*out) = tensor_allocator_alloc(tensor_alloc, shape, shape_size, x->dtype);
 
     if (!(*out))
     {
@@ -49,9 +49,9 @@ cgrad_error tensor2d_mult(const struct tensor *const x, const struct tensor *con
     return tensor2d_mult_dispatch(x, y, *out);
 }
 
-cgrad_error tensor2d_mult_graph(struct tensor *const x, struct tensor *const y, struct tensor **const out, struct allocators *allocs)
+cgrad_error tensor2d_mult_graph(struct tensor *const x, struct tensor *const y, struct tensor **const out, struct allocators *const allocs)
 {
-    cgrad_error err = tensor2d_mult(x, y, out, allocs);
+    cgrad_error err = tensor2d_mult(x, y, out, allocs->tensor_alloc);
 
     if (err != NO_ERROR)
     {

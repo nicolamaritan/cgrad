@@ -28,7 +28,7 @@ static cgrad_error tensor2d_add_row_vector_scalar_f64(const struct tensor *const
 static cgrad_error tensor2d_add_row_vector_scalar_f32(const struct tensor *const t, const struct tensor *const v, struct tensor *out);
 #endif
 
-cgrad_error tensor2d_add_row_vector(const struct tensor *const t, const struct tensor *const v, struct tensor **const out, struct allocators *allocs)
+cgrad_error tensor2d_add_row_vector(const struct tensor *const t, const struct tensor *const v, struct tensor **const out, struct tensor_allocator *const tensor_alloc)
 {
     if (!t || !v)
     {
@@ -55,7 +55,7 @@ cgrad_error tensor2d_add_row_vector(const struct tensor *const t, const struct t
         return TENSOR_DTYPE_MISMATCH;
     }
 
-    (*out) = tensor_allocator_alloc(allocs->tensor_alloc, t->shape, t->shape_size, t->dtype);
+    (*out) = tensor_allocator_alloc(tensor_alloc, t->shape, t->shape_size, t->dtype);
 
     if (!(*out))
     {
@@ -65,9 +65,9 @@ cgrad_error tensor2d_add_row_vector(const struct tensor *const t, const struct t
     return tensor2d_add_row_vector_dispatch(t, v, *out);
 }
 
-cgrad_error tensor2d_add_row_vector_graph(struct tensor *const t, struct tensor *const v, struct tensor **const out, struct allocators *allocs)
+cgrad_error tensor2d_add_row_vector_graph(struct tensor *const t, struct tensor *const v, struct tensor **const out, struct allocators *const allocs)
 {
-    cgrad_error err = tensor2d_add_row_vector(t, v, out, allocs);
+    cgrad_error err = tensor2d_add_row_vector(t, v, out, allocs->tensor_alloc);
     if (err != NO_ERROR)
     {
         return err;

@@ -20,7 +20,7 @@ static cgrad_error cross_entropy_loss_backpropagate_predicted(const struct backp
 static cgrad_error cross_entropy_loss_backpropagate_predicted_f64(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static cgrad_error cross_entropy_loss_backpropagate_predicted_f32(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
-cgrad_error cross_entropy_loss(const struct tensor *const logits, const struct tensor *const targets, struct tensor **const z, struct allocators *allocs)
+cgrad_error cross_entropy_loss(const struct tensor *const logits, const struct tensor *const targets, struct tensor **const z, struct tensor_allocator *const tensor_alloc)
 {
     const size_t EXPECTED_SHAPE_SIZE = 2;
     const size_t COLUMN_VECTOR_SECOND_DIM = 1;
@@ -43,7 +43,7 @@ cgrad_error cross_entropy_loss(const struct tensor *const logits, const struct t
 
     const size_t shape[] = {1, 1};
     const size_t shape_size = 2;
-    (*z) = tensor_allocator_alloc(allocs->tensor_alloc, shape, shape_size, logits->dtype);
+    (*z) = tensor_allocator_alloc(tensor_alloc, shape, shape_size, logits->dtype);
 
     if (!(*z))
     {
@@ -53,9 +53,9 @@ cgrad_error cross_entropy_loss(const struct tensor *const logits, const struct t
     return cross_entropy_loss_dispatch(logits, targets, *z);
 }
 
-cgrad_error cross_entropy_loss_graph(struct tensor *const logits, struct tensor *const targets, struct tensor **const z, struct allocators *allocs)
+cgrad_error cross_entropy_loss_graph(struct tensor *const logits, struct tensor *const targets, struct tensor **const z, struct allocators *const allocs)
 {
-    cgrad_error err = cross_entropy_loss(logits, targets, z, allocs);
+    cgrad_error err = cross_entropy_loss(logits, targets, z, allocs->tensor_alloc);
     if (err != NO_ERROR)
     {
         return err;
