@@ -1,6 +1,6 @@
 #include "model/model_params.h"
 
-void init_model_params(struct model_params *const params)
+void model_params_init(struct model_params *const params)
 {
     params->size = 0;
     memset(params->params, 0, params->size * sizeof(struct tensor *));

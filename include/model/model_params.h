@@ -11,7 +11,7 @@ struct model_params
     size_t size;
 };
 
-void init_model_params(struct model_params *const params);
+void model_params_init(struct model_params *const params);
 cgrad_error add_model_param(struct model_params *const params, struct tensor *const t);
 static inline void zero_grad(struct model_params *const params);
 

@@ -10,4 +10,24 @@ struct allocators
     struct computational_graph_allocator *graph_alloc;
 };
 
+static inline cgrad_error allocators_is_valid(struct allocators *allocs);
+
+static inline cgrad_error allocators_is_valid(struct allocators *allocs)
+{
+    if (!allocs)
+    {
+        return ALLOCATORS_NULL;
+    }
+    if (!allocs->tensor_alloc)
+    {
+        return TENSOR_ALLOCATOR_NULL;
+    }
+    if (!allocs->graph_alloc)
+    {
+        return COMPUTATIONAL_GRAPH_ALLOCATOR_NULL;
+    }
+
+    return NO_ERROR;
+}
+
 #endif

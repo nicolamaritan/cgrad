@@ -66,27 +66,33 @@ int main(int argc, char **argv)
     }
 
     // Allocate model
-    struct linear *linear1 = linear_alloc(input_dim, hidden_dim, DTYPE, &tensor_alloc, &allocs);
-    if (!linear1)
+    struct linear linear1;
+    if (linear_init(&linear1, input_dim, hidden_dim, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
-    linear_xavier_init(linear1);
+    if (linear_xavier_init(&linear1) != NO_ERROR)
+    {
+        return EXIT_FAILURE;
+    }
 
-    struct linear *linear2 = linear_alloc(hidden_dim, num_classes, DTYPE, &tensor_alloc, &allocs);
-    if (!linear2)
+    struct linear linear2;
+    if (linear_init(&linear2, hidden_dim, num_classes, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
-    linear_xavier_init(linear2);
+    if (linear_xavier_init(&linear2) != NO_ERROR)
+    {
+        return EXIT_FAILURE;
+    }
 
     // Setup model params
     struct model_params params;
-    init_model_params(&params);
-    add_model_param(&params, linear1->weights);
-    add_model_param(&params, linear1->biases);
-    add_model_param(&params, linear2->weights);
-    add_model_param(&params, linear2->biases);
+    model_params_init(&params);
+    add_model_param(&params, linear1.weights);
+    add_model_param(&params, linear1.biases);
+    add_model_param(&params, linear2.weights);
+    add_model_param(&params, linear2.biases);
 
     // Setup optimizer
     struct sgd_optimizer opt;
@@ -147,7 +153,7 @@ int main(int argc, char **argv)
 
             // ------------- Forward -------------
             struct linear_out out1 = LINEAR_OUT_INIT;
-            if (linear_forward(x, linear1, &out1, true) != NO_ERROR)
+            if (linear_forward(&linear1, x, &out1, true) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
@@ -160,7 +166,7 @@ int main(int argc, char **argv)
             }
 
             struct linear_out out3 = LINEAR_OUT_INIT;
-            if (linear_forward(h2, linear2, &out3, true) != NO_ERROR)
+            if (linear_forward(&linear2, h2, &out3, true) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
@@ -200,8 +206,8 @@ int main(int argc, char **argv)
 
     // Cleanup
     sgd_optimizer_cleanup(&opt);
-    linear_free(linear1);
-    linear_free(linear2);
+    linear_cleanup(&linear1);
+    linear_cleanup(&linear2);
     indexes_batch_free(ixs_batch);
     tensor_cpu_allocator_cleanup(&tensor_alloc);
     computational_graph_cpu_allocator_cleanup(&graph_alloc);
