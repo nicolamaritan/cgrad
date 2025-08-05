@@ -6,59 +6,59 @@
 #include <cblas.h>
 #include <stdlib.h>
 
-static inline cgrad_error tensor2d_mult_rhs_trans_dispatch(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
-static cgrad_error tensor2d_mult_lhs_trans_f64(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
-static cgrad_error tensor2d_mult_rhs_trans_f32(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
+static inline cgrad_error tensor2d_mult_rhs_trans_dispatch(const struct tensor *const x, const struct tensor *const y_trans, struct tensor *const out);
+static cgrad_error tensor2d_mult_rhs_trans_f64(const struct tensor *const x, const struct tensor *const y_trans, struct tensor *const out);
+static cgrad_error tensor2d_mult_rhs_trans_f32(const struct tensor *const x, const struct tensor *const y_trans, struct tensor *const out);
 
-cgrad_error tensor2d_mult_rhs_trans_into(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
+cgrad_error tensor2d_mult_rhs_trans_into(const struct tensor *const x, const struct tensor *const y_trans, struct tensor *const out)
 {
-    if (!x || !y || !out)
+    if (!x || !y_trans || !out)
     {
         return TENSOR_NULL;
     }
-    if (x->shape[1] != y->shape[1])
+    if (x->shape[1] != y_trans->shape[1])
     {
         return TENSOR_SHAPE_MISMATCH;
     }
-    if (out->shape[0] != x->shape[0] || out->shape[1] != y->shape[0])
+    if (out->shape[0] != x->shape[0] || out->shape[1] != y_trans->shape[0])
     {
         return TENSOR_SHAPE_MISMATCH;
     }
-    if (x->dtype != y->dtype && x->dtype != out->dtype)
+    if (x->dtype != y_trans->dtype && x->dtype != out->dtype)
     {
         return TENSOR_DTYPE_MISMATCH;
     }
 
-    return tensor2d_mult_rhs_trans_dispatch(x, y, out);
+    return tensor2d_mult_rhs_trans_dispatch(x, y_trans, out);
 }
 
-static inline cgrad_error tensor2d_mult_rhs_trans_dispatch(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
+static inline cgrad_error tensor2d_mult_rhs_trans_dispatch(const struct tensor *const x, const struct tensor *const y_trans, struct tensor *const out)
 {
     switch (x->dtype)
     {
     case DTYPE_FLOAT64:
-        return tensor2d_mult_lhs_trans_f64(x, y, out);
+        return tensor2d_mult_rhs_trans_f64(x, y_trans, out);
     case DTYPE_FLOAT32:
-        return tensor2d_mult_rhs_trans_f32(x, y, out);
+        return tensor2d_mult_rhs_trans_f32(x, y_trans, out);
     default:
         return OPERATION_INVALID_TENSOR_DTYPE;
     }
 }
 
-static cgrad_error tensor2d_mult_lhs_trans_f64(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
+static cgrad_error tensor2d_mult_rhs_trans_f64(const struct tensor *const x, const struct tensor *const y_trans, struct tensor *const out)
 {
     cblas_dgemm(
         CblasRowMajor,
         CblasNoTrans,
         CblasTrans,
         x->shape[0], 
-        y->shape[0], 
+        y_trans->shape[0], 
         x->shape[1], 
         1.0,
         (double *)x->data,
         x->shape[1], 
-        y->data,
-        y->shape[0], 
+        y_trans->data,
+        y_trans->shape[0], 
         0.0,
         (double *)out->data,
         out->shape[1]
@@ -67,7 +67,7 @@ static cgrad_error tensor2d_mult_lhs_trans_f64(const struct tensor *const x, con
     return NO_ERROR;
 }
 
-static cgrad_error tensor2d_mult_rhs_trans_f32(const struct tensor *const x, const struct tensor *const y, struct tensor *const out)
+static cgrad_error tensor2d_mult_rhs_trans_f32(const struct tensor *const x, const struct tensor *const y_trans, struct tensor *const out)
 {
     cblas_sgemm(
         CblasRowMajor,
@@ -79,8 +79,8 @@ static cgrad_error tensor2d_mult_rhs_trans_f32(const struct tensor *const x, con
         1.0,
         (float *)x->data,
         x->shape[1],
-        y->data,
-        y->shape[1],
+        y_trans->data,
+        y_trans->shape[1],
         0.0,
         (float *)out->data,
         out->shape[1]
