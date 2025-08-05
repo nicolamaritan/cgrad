@@ -1,5 +1,7 @@
 #include "tensor/tensor.h"
 #include "tensor/tensor2d_mult.h"
+#include "tensor/tensor2d_mult_rhs_trans.h"
+#include "tensor/tensor2d_mult_lhs_trans.h"
 #include "tensor/tensor2d_trans.h"
 #include "autograd/computational_graph/computational_graph.h"
 #include "autograd/computational_graph/computational_graph_link.h"
@@ -147,7 +149,7 @@ static cgrad_error tensor2d_mult_f32(const struct tensor *const x, const struct 
         y->shape[1], // ldb
         0.0,
         (float *)out->data,
-        out->shape[1] // ldc
+        y->shape[1] // ldc
     );
 
     return NO_ERROR;
@@ -155,68 +157,30 @@ static cgrad_error tensor2d_mult_f32(const struct tensor *const x, const struct 
 
 static cgrad_error tensor2d_mult_backpropagate_lhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
-    cgrad_error err = NO_ERROR;
-
     const struct tensor *rhs = ctx->operands[RHS_TENSOR];
     if (!rhs)
     {
         return AUTOGRAD_BACKPROPAGATION_CONTEXT_OPERAND_NULL;
     }
-
-    struct tensor_allocator *tensor_alloc = ctx->owned_allocator;
-
-    size_t shape[] = {rhs->shape[1], rhs->shape[0]};
-    size_t shape_size = 2;
-    struct tensor *rhs_trans = tensor_allocator_no_grad_alloc(tensor_alloc, shape, shape_size, grad_wrt_out->dtype);
-    if (!rhs_trans)
-    {
-        return AUTOGRAD_BACKPROPAGATION_ALLOCATION_FAILED;
-    }
-
-    if ((err = tensor2d_trans_into(rhs, rhs_trans)) != NO_ERROR)
-    {
-        return err;
-    }
-    if ((err = tensor2d_mult_into(grad_wrt_out, rhs_trans, grad_wrt_operand)) != NO_ERROR)
-    {
-        return err;
-    }
-
-    tensor_allocator_no_grad_free(tensor_alloc, rhs_trans);
-
-    return NO_ERROR;
+    
+    /**
+     * If C = A*B, then
+     * dz/dA = dz/dC * B^T, hence the trans
+     */
+    return tensor2d_mult_rhs_trans_into(grad_wrt_out, rhs, grad_wrt_operand);
 }
 
 static cgrad_error tensor2d_mult_backpropagate_rhs(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
-    cgrad_error err = NO_ERROR;
-
     const struct tensor *lhs = ctx->operands[LHS_TENSOR];
     if (!lhs)
     {
         return AUTOGRAD_BACKPROPAGATION_CONTEXT_OPERAND_NULL;
     }
 
-    struct tensor_allocator *tensor_alloc = ctx->owned_allocator;
-
-    size_t shape[] = {lhs->shape[1], lhs->shape[0]};
-    size_t shape_size = 2;
-    struct tensor *lhs_trans = tensor_allocator_no_grad_alloc(tensor_alloc, shape, shape_size, grad_wrt_out->dtype);
-    if (!lhs_trans)
-    {
-        return AUTOGRAD_BACKPROPAGATION_ALLOCATION_FAILED;
-    }
-
-    if ((err = tensor2d_trans_into(lhs, lhs_trans)) != NO_ERROR)
-    {
-        return err;
-    }
-    if ((err = tensor2d_mult_into(lhs_trans, grad_wrt_out, grad_wrt_operand)) != NO_ERROR)
-    {
-        return err;
-    }
-
-    tensor_allocator_no_grad_free(tensor_alloc, lhs_trans);
-
-    return NO_ERROR;
+    /**
+     * If C = A*B, then
+     * dz/dB = A^T * dz/dC, hence the trans
+     */
+    return tensor2d_mult_lhs_trans_into(lhs, grad_wrt_out, grad_wrt_operand);
 }
