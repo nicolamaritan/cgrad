@@ -24,7 +24,8 @@ cgrad_error tensor_copy(const struct tensor *const src, struct tensor *const des
         }
     }
 
-    memcpy(dest->data, src->data, sizeof(double) * src->data_size);
+    dest->dtype = src->dtype;
+    memcpy(dest->data, src->data, dtype_sizeof(src->dtype) * src->data_size);
 
     return NO_ERROR;
 }
