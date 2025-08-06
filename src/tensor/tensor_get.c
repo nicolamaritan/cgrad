@@ -1,4 +1,5 @@
 #include "tensor/tensor_get.h"
+#include "tensor/tensor_helpers.h"
 
 static inline cgrad_error tensor2d_get_check(const struct tensor *t, size_t row, size_t col);
 

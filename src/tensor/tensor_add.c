@@ -1,4 +1,6 @@
 #include "tensor/tensor_add.h"
+#include "tensor/tensor_copy.h"
+#include "tensor/tensor_helpers.h"
 #include "autograd/computational_graph/computational_graph.h"
 
 typedef enum tensor_add_operand

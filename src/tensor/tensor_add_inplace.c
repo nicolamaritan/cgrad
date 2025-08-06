@@ -1,5 +1,6 @@
 #include "tensor/tensor_add_inplace.h"
 #include "tensor/tensor_axpy.h"
+#include "tensor/tensor_helpers.h"
 
 cgrad_error tensor_add_inplace(struct tensor *A, const struct tensor *const B)
 {

@@ -1,5 +1,6 @@
 #include "tensor/tensor2d_add_row_vector.h"
 #include "tensor/tensor_sum.h"
+#include "tensor/tensor_copy.h"
 #include "autograd/computational_graph/computational_graph.h"
 #include "autograd/computational_graph/computational_graph_link.h"
 #include "utils/simd_support.h"
