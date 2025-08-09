@@ -1,7 +1,7 @@
 #include "tensor/tensor_helpers.h"
 #include <stdio.h>
 
-static void print_tensor_recursive_internal(const double *data, const size_t *shape, const size_t dimensions, const size_t offset);
+static void print_tensor_recursive_internal(const float *data, const size_t *shape, const size_t dimensions, const size_t offset);
 
 void print_tensor(const struct tensor *const t)
 {
@@ -19,7 +19,7 @@ void print_tensor(const struct tensor *const t)
     printf("\n");
 }
 
-static void print_tensor_recursive_internal(const double *data, const size_t *shape, const size_t dimensions, const size_t offset)
+static void print_tensor_recursive_internal(const float *data, const size_t *shape, const size_t dimensions, const size_t offset)
 {
     if (dimensions == 1)
     {
