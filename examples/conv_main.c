@@ -33,6 +33,8 @@ int main()
 
     size_t k_shape[] = {2, 3, 2, 2};
     size_t k_shape_size = 4;
+    // size_t k_shape[] = {2, 12};
+    // size_t k_shape_size = 2;
     struct tensor *k = tensor_allocator_alloc(&tensor_alloc, k_shape, k_shape_size, DTYPE);
     float *k_data = (float *)k->data;
     k_data[0] = 1;
@@ -69,7 +71,11 @@ int main()
     struct tensor *out = NULL;
 
     // Run convolution
-    tensor_conv2d(x, k, &out, false, &allocs);
+    cgrad_error err = tensor_conv2d(x, k, &out, false, &allocs);
+    if (err != NO_ERROR)
+    {
+        return EXIT_FAILURE;
+    }
 
     // Print output
     float *out_data = (float *)out->data;

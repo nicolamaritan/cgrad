@@ -34,6 +34,7 @@ typedef uint8_t context_id;
 struct backpropagation_context
 {
     struct tensor *operands[AUTOGRAD_MAX_BACKPROPAGATION_FUNCTION_CONTEXT_SIZE];
+    size_t operands_size_t[AUTOGRAD_MAX_BACKPROPAGATION_FUNCTION_CONTEXT_SIZE];
     struct tensor *owned[AUTOGRAD_MAX_BACKPROPAGATION_FUNCTION_CONTEXT_SIZE];
     size_t n_owned;
     struct tensor_allocator *owned_allocator;
@@ -75,6 +76,11 @@ static inline cgrad_error context_init(struct backpropagation_context *const ctx
 static inline cgrad_error context_set_operand(struct backpropagation_context *const ctx, struct tensor *t, const context_id ctx_id);
 
 /**
+ * TODO add docs
+ */
+static inline cgrad_error context_set_operand_size_t(struct backpropagation_context *const ctx, const size_t op, const context_id ctx_id);
+
+/**
  * @brief Stores a tensor pointer as an owned tensor in the context at the given index.
  *
  * The context takes ownership of the tensor and will deallocate it during cleanup.
@@ -100,7 +106,6 @@ static inline cgrad_error context_set_owned(struct backpropagation_context *cons
  */
 static inline void context_cleanup_owned(struct backpropagation_context *const ctx);
 
-#endif
 
 // --- Function definitions ---
 
@@ -117,6 +122,7 @@ static inline cgrad_error context_init(struct backpropagation_context *const ctx
 
     memset(ctx->operands, 0, sizeof(ctx->operands));
     memset(ctx->owned, 0, sizeof(ctx->owned));
+    memset(ctx->operands_size_t, 0, sizeof(ctx->operands_size_t));
     ctx->n_owned = 0;
     ctx->owned_allocator = autograd_tensor_allocator;
 
@@ -139,6 +145,21 @@ static inline cgrad_error context_set_operand(struct backpropagation_context *co
     }
 
     ctx->operands[ctx_id] = t;
+    return NO_ERROR;
+}
+
+static inline cgrad_error context_set_operand_size_t(struct backpropagation_context *const ctx, const size_t op, const context_id ctx_id)
+{
+    if (!ctx)
+    {
+        return AUTOGRAD_BACKPROPAGATION_CONTEXT_NULL;
+    }
+    if (ctx_id >= AUTOGRAD_MAX_BACKPROPAGATION_FUNCTION_CONTEXT_SIZE)
+    {
+        return AUTOGRAD_INVALID_CONTEXT_ID;
+    }
+
+    ctx->operands_size_t[ctx_id] = op;
     return NO_ERROR;
 }
 
@@ -170,3 +191,5 @@ static inline void context_cleanup_owned(struct backpropagation_context *const c
         tensor_allocator_free(ctx->owned_allocator, ctx->owned[i]);
     }
 }
+
+#endif

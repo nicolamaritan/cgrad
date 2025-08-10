@@ -1,18 +1,25 @@
 #include "tensor/tensor_trans.h"
 
+#include "autograd/backpropagation/backpropagation_context.h"
 #include "autograd/computational_graph/computational_graph.h"
 #include "autograd/computational_graph/computational_graph_link.h"
 
-typedef enum tensor2d_trans_operand
+typedef enum tensor_trans_operand
 {
-    TENSOR2D_TRANS_ONLY_OPERAND,
-} tensor2d_trans_operand;
+    TENSOR,
+} tensor_trans_operand;
 
-// static inline cgrad_error tensor_trans_update_graph(struct tensor *const t, struct tensor **const out, struct allocators *const allocs);
+typedef enum tensor_trans_operand_size_t
+{
+    AXIS_1,
+    AXIS_2
+} tensor_trans_operand_size_t;
+    
+static inline cgrad_error tensor_trans_update_graph(struct tensor *const t, const size_t axis_1, const size_t axis_2, struct tensor **const out, struct allocators *allocs);
 static cgrad_error tensor_trans_dispatch(const struct tensor *const t, const size_t axis_1, const size_t axis_2, struct tensor *const out);
 // static cgrad_error tensor_trans_f64(const struct tensor *const t, struct tensor *const out);
 static cgrad_error tensor_trans_f32(const struct tensor *const t, const size_t axis_1, const size_t axis_2, struct tensor *const out);
-// static cgrad_error tensor_trans_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
+static cgrad_error tensor_trans_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
 cgrad_error tensor_trans(struct tensor *const t, const size_t axis_1, const size_t axis_2, struct tensor **const out, const bool track_grad, struct allocators *const allocs)
 {
@@ -43,42 +50,52 @@ cgrad_error tensor_trans(struct tensor *const t, const size_t axis_1, const size
         return err;
     }
 
-    // if (track_grad)
-    // {
-    //     return tensor_trans_update_graph(t, out, allocs);
-    // }
+    if (track_grad)
+    {
+        return tensor_trans_update_graph(t, axis_1, axis_2, out, allocs);
+    }
 
     return NO_ERROR;
 }
 
-// static inline cgrad_error tensor_trans_update_graph(struct tensor *const t, struct tensor **const out, struct allocators *allocs)
-// {
-//     return add_computational_graph_link(t, TENSOR2D_TRANS_ONLY_OPERAND, *out, &tensor2d_trans_backpropagate, allocs);
-// }
+static inline cgrad_error tensor_trans_update_graph(struct tensor *const t, const size_t axis_1, const size_t axis_2, struct tensor **const out, struct allocators *allocs)
+{
+    cgrad_error err = add_computational_graph_link(t, TENSOR, *out, &tensor_trans_backpropagate, allocs);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
 
-// cgrad_error tensor_trans_into(const struct tensor *const t, struct tensor *const out)
-// {
-//     const size_t EXPECTED_SHAPE_SIZE = 2;
+    err = context_set_operand_size_t(&(*out)->node->ctx, axis_1, AXIS_1);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
 
-//     if (!t || !out)
-//     {
-//         return TENSOR_NULL;
-//     }
-//     if (!t->data || !out->data)
-//     {
-//         return TENSOR_DATA_NULL;
-//     }
-//     if (t->shape_size != EXPECTED_SHAPE_SIZE || out->shape_size != EXPECTED_SHAPE_SIZE)
-//     {
-//         return TENSOR_WRONG_SHAPE;
-//     }
-//     if (t->shape[0] != out->shape[1] || t->shape[1] != out->shape[0])
-//     {
-//         return TENSOR_SHAPE_MISMATCH;
-//     }
+    return context_set_operand_size_t(&(*out)->node->ctx, axis_2, AXIS_2);
+}
 
-//     return tensor_trans_dispatch(t, out);
-// }
+cgrad_error tensor_trans_into(const struct tensor *const t, const size_t axis_1, const size_t axis_2, struct tensor *const out)
+{
+    if (!t || !out)
+    {
+        return TENSOR_NULL;
+    }
+    if (!t->data || !out->data)
+    {
+        return TENSOR_DATA_NULL;
+    }
+    if (t->shape_size != out->shape_size)
+    {
+        return TENSOR_WRONG_SHAPE;
+    }
+    if (t->shape[axis_1] != out->shape[axis_2] || t->shape[axis_2] != out->shape[axis_1])
+    {
+        return TENSOR_SHAPE_MISMATCH;
+    }
+
+    return tensor_trans_dispatch(t, axis_1, axis_2, out);
+}
 
 static cgrad_error tensor_trans_dispatch(const struct tensor *const t, const size_t axis_1, const size_t axis_2, struct tensor *const out)
 {
@@ -159,7 +176,9 @@ static cgrad_error tensor_trans_f32(const struct tensor *const t, const size_t a
     return NO_ERROR;
 }
 
-// static cgrad_error tensor_trans_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
-// {
-//     return tensor2d_trans_into(grad_wrt_out, grad_wrt_operand);
-// }
+static cgrad_error tensor_trans_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
+{
+    const size_t axis_1 = ctx->operands_size_t[AXIS_1];
+    const size_t axis_2 = ctx->operands_size_t[AXIS_2];
+    return tensor_trans_into(grad_wrt_out, axis_1, axis_2, grad_wrt_operand);
+}
