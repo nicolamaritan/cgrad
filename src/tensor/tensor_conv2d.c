@@ -2,6 +2,7 @@
 #include "tensor/tensor2d_mult.h"
 #include "tensor/tensor2d_trans.h"
 #include "tensor/tensor_trans.h"
+#include "tensor/tensor_reshape.h"
 #include "tensor/tensor_im2row.h"
 #include "autograd/computational_graph/computational_graph.h"
 #include "autograd/computational_graph/computational_graph_link.h"
@@ -93,32 +94,13 @@ static inline cgrad_error tensor_conv2d_update_graph(struct tensor *const x, str
 
 static inline cgrad_error tensor_conv2d_dispatch(const struct tensor *const x, const struct tensor *const kernel, struct tensor **const out, struct allocators *const allocs)
 {
-    switch (x->dtype)
-    {
-    // case DTYPE_FLOAT64:
-    // return tensor_conv2d_f64(x, kernel, out);
-    case DTYPE_FLOAT32:
-        return tensor_conv2d_f32(x, kernel, out, allocs);
-    default:
-        return OPERATION_INVALID_TENSOR_DTYPE;
-    }
-}
+    const size_t H_out = x->shape[2] - kernel->shape[2] + 1;
+    const size_t W_out = x->shape[3] - kernel->shape[3] + 1;
 
-// static cgrad_error tensor_conv2d_f64(const struct tensor *const x, const struct tensor *const kernel, struct tensor **const out)
-// {
-
-//     return NO_ERROR;
-// }
-
-static cgrad_error tensor_conv2d_f32(const struct tensor *const x, const struct tensor *const kernel, struct tensor **const out, struct allocators *const allocs)
-{
-    // const size_t H_out = x->shape[2] - kernel->shape[2] + 1;
-    // const size_t W_out = x->shape[3] - kernel->shape[3] + 1;
-
-    // size_t K = kernel->shape[0];
-    // size_t C = kernel->shape[1];
-    // size_t R = kernel->shape[2];
-    // size_t S = kernel->shape[3];
+    size_t K = kernel->shape[0];
+    size_t C = kernel->shape[1];
+    size_t R = kernel->shape[2];
+    size_t S = kernel->shape[3];
 
     bool track_grad = false;
     cgrad_error err = NO_ERROR;
@@ -130,13 +112,14 @@ static cgrad_error tensor_conv2d_f32(const struct tensor *const x, const struct 
         return err;
     }
 
+    struct tensor *reshaped_kernel = NULL;
+    const size_t KERNEL_NEW_SHAPE[] = {K, C * R * S};
+    err = tensor_reshape((struct tensor *)kernel, KERNEL_NEW_SHAPE, 2, &reshaped_kernel, track_grad, allocs);
     // View kernel with data in row major
     // I know cast bad lol. TODO be fixed asap!
-    // ((struct tensor *)kernel)->shape[1] = C * R * S;
-    // ((struct tensor *)kernel)->shape_size = 2;
 
     struct tensor *kernel_trans = NULL;
-    err = tensor2d_trans((struct tensor *)kernel, &kernel_trans, track_grad, allocs);
+    err = tensor2d_trans(reshaped_kernel, &kernel_trans, track_grad, allocs);
     if (err != NO_ERROR)
     {
         return err;
@@ -156,6 +139,86 @@ static cgrad_error tensor_conv2d_f32(const struct tensor *const x, const struct 
         return err;
     }
 
+    struct tensor *out_patches_trans_reshaped = NULL;
+    const size_t OUT_PATCHES_NEW_SHAPE[] = {K, x->shape[0], H_out, W_out};
+    err = tensor_reshape(out_patches_trans, OUT_PATCHES_NEW_SHAPE, 4, &out_patches_trans_reshaped, track_grad, allocs);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
+    err = tensor_trans(out_patches_trans_reshaped, 0, 1, out, track_grad, allocs);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
+    return NO_ERROR;
+}
+
+// static cgrad_error tensor_conv2d_f64(const struct tensor *const x, const struct tensor *const kernel, struct tensor **const out)
+// {
+
+//     return NO_ERROR;
+// }
+
+static cgrad_error tensor_conv2d_f32(const struct tensor *const x, const struct tensor *const kernel, struct tensor **const out, struct allocators *const allocs)
+{
+    const size_t H_out = x->shape[2] - kernel->shape[2] + 1;
+    const size_t W_out = x->shape[3] - kernel->shape[3] + 1;
+
+    size_t K = kernel->shape[0];
+    size_t C = kernel->shape[1];
+    size_t R = kernel->shape[2];
+    size_t S = kernel->shape[3];
+
+    bool track_grad = false;
+    cgrad_error err = NO_ERROR;
+
+    struct tensor *x_patches = NULL;
+    err = tensor_im2row((struct tensor *)x, kernel, &x_patches, track_grad, allocs);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
+    struct tensor *reshaped_kernel = NULL;
+    const size_t KERNEL_NEW_SHAPE[] = {K, C * R * S};
+    err = tensor_reshape((struct tensor *)kernel, KERNEL_NEW_SHAPE, 2, &reshaped_kernel, track_grad, allocs);
+    // View kernel with data in row major
+    // I know cast bad lol. TODO be fixed asap!
+    // ((struct tensor *)kernel)->shape[1] = C * R * S;
+    // ((struct tensor *)kernel)->shape_size = 2;
+
+    struct tensor *kernel_trans = NULL;
+    err = tensor2d_trans(reshaped_kernel, &kernel_trans, track_grad, allocs);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
+    struct tensor *out_patches = NULL;
+    err = tensor2d_mult(x_patches, kernel_trans, &out_patches, track_grad, allocs);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
+    struct tensor *out_patches_trans = NULL;
+    err = tensor2d_trans(out_patches, &out_patches_trans, track_grad, allocs);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
+    struct tensor *out_patches_trans_reshaped = NULL;
+    const size_t OUT_PATCHES_NEW_SHAPE[] = {K, x->shape[0], H_out, W_out};
+    err = tensor_reshape(out_patches_trans, OUT_PATCHES_NEW_SHAPE, 4, &out_patches_trans_reshaped, track_grad, allocs);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
     // out_patches_trans->shape[0] = K;
     // out_patches_trans->shape[1] = x->shape[0];
     // out_patches_trans->shape[2] = H_out;
@@ -167,7 +230,7 @@ static cgrad_error tensor_conv2d_f32(const struct tensor *const x, const struct 
     // out_patches_trans->stride[2] = W_out;
     // out_patches_trans->stride[3] = 1;
 
-    err = tensor_trans(out_patches_trans, 0, 1, out, track_grad, allocs);
+    err = tensor_trans(out_patches_trans_reshaped, 0, 1, out, track_grad, allocs);
     if (err != NO_ERROR)
     {
         return err;
