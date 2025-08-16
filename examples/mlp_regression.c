@@ -28,10 +28,10 @@ int main()
 
     const cgrad_dtype DTYPE = DTYPE_FLOAT32;
 
-    const size_t batch_size = 128;
-    const size_t input_dim = 64;
-    const size_t hidden_dim = 128;
-    const size_t out_dim = 1;
+    const size_t BATCH_SIZE = 128;
+    const size_t INPUT_DIM = 64;
+    const size_t HIDDEN_DIM = 128;
+    const size_t OUT_DIM = 1;
 
     // Allocator initialization
     struct tensor_allocator tensor_alloc;
@@ -45,11 +45,11 @@ int main()
     const size_t INTERMEDIATES_CAPACITY = 20;
     struct tensor_list *intermediates = tensor_list_alloc(INTERMEDIATES_CAPACITY);
 
-    size_t x_shape[] = {batch_size, input_dim};
+    size_t x_shape[] = {BATCH_SIZE, INPUT_DIM};
     size_t x_shape_size = 2;
     struct tensor *x = tensor_allocator_alloc(&tensor_alloc, x_shape, x_shape_size, DTYPE);
 
-    size_t y_shape[] = {batch_size, 1};
+    size_t y_shape[] = {BATCH_SIZE, 1};
     size_t y_shape_size = 2;
     struct tensor *y_target = tensor_allocator_alloc(&tensor_alloc, y_shape, y_shape_size, DTYPE);
     if (!x || !y_target)
@@ -63,7 +63,7 @@ int main()
 
     // Allocate model
     struct linear linear1;
-    if (linear_init(&linear1, input_dim, hidden_dim, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
+    if (linear_init(&linear1, INPUT_DIM, HIDDEN_DIM, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
@@ -73,7 +73,7 @@ int main()
     }
 
     struct linear linear2;
-    if (linear_init(&linear2, hidden_dim, out_dim, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
+    if (linear_init(&linear2, HIDDEN_DIM, OUT_DIM, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }

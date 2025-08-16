@@ -1,14 +1,9 @@
 #include "layers/linear.h"
-#include "layers/conv2d.h"
-#include "layers/relu.h"
 #include "losses/cross_entropy.h"
 #include "autograd/backpropagation/backpropagation.h"
 #include "memory/allocators.h"
 #include "model/model_params.h"
 #include "tensor/tensor.h"
-#include "tensor/tensor2d_mult.h"
-#include "tensor/tensor_reshape.h"
-#include "tensor/tensor_print_shape.h"
 #include "tensor/tensor_get.h"
 #include "optimizers/sgd.h"
 #include "dataset/csv_dataset.h"
@@ -55,6 +50,7 @@ int main(int argc, char **argv)
     struct tensor_list *intermediates = tensor_list_alloc(INTERMEDIATES_CAPACITY);
 
     const size_t BATCH_SIZE = 64;
+    const size_t INPUT_DIM = 784;
     const size_t NUM_CLASSES = 10;
 
     // Can be downloaded from https://www.kaggle.com/datasets/oddrationale/mnist-in-csv
@@ -71,34 +67,8 @@ int main(int argc, char **argv)
     }
 
     // Allocate model
-    struct conv2d conv1;
-    const size_t CONV1_IN_CHANNELS = 1;
-    const size_t CONV1_OUT_CHANNELS = 4;
-    const size_t CONV1_KERNEL_SIZE = 3;
-    if (conv2d_init(&conv1, CONV1_IN_CHANNELS, CONV1_OUT_CHANNELS, CONV1_KERNEL_SIZE, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
-    {
-        return EXIT_FAILURE;
-    }
-    if (conv2d_xavier_init(&conv1) != NO_ERROR)
-    {
-        return EXIT_FAILURE;
-    }
-
-    struct conv2d conv2;
-    const size_t CONV2_OUT_CHANNELS = 4;
-    const size_t CONV2_KERNEL_SIZE = 3;
-    if (conv2d_init(&conv2, CONV1_OUT_CHANNELS, CONV2_OUT_CHANNELS, CONV2_KERNEL_SIZE, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
-    {
-        return EXIT_FAILURE;
-    }
-    if (conv2d_xavier_init(&conv2) != NO_ERROR)
-    {
-        return EXIT_FAILURE;
-    }
-
     struct linear linear1;
-    const size_t LINEAR1_IN = 2304;
-    if (linear_init(&linear1, LINEAR1_IN, NUM_CLASSES, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
+    if (linear_init(&linear1, INPUT_DIM, NUM_CLASSES, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
@@ -107,13 +77,11 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-
     // Setup model params
     struct model_params params;
     model_params_init(&params);
-    add_model_param(&params, conv1.weight);
-    add_model_param(&params, conv2.weight);
     add_model_param(&params, linear1.weights);
+    add_model_param(&params, linear1.biases);
 
     // Setup optimizer
     struct sgd_optimizer opt;
@@ -149,6 +117,12 @@ int main(int argc, char **argv)
         size_t iteration = 0;
         while (!index_permutation_is_terminated(permutation))
         {
+            /***
+             * Compute the effective iteration batch size.
+             * At each iteration, it represents the effective number of samples sampled from the
+             * train set. It handles the case in which we may request to sample 64 samples
+             * but only, for instance, 30 remains.
+             */
             size_t remaining = index_permutation_get_remaining(permutation);
             size_t iter_batch_size = remaining < BATCH_SIZE ? remaining : BATCH_SIZE;
 
@@ -167,47 +141,14 @@ int main(int argc, char **argv)
             }
 
             // ------------- Forward -------------
-            struct tensor *x_reshaped = NULL;
-            size_t img_shape[] = {BATCH_SIZE, 1, 28, 28};
-            size_t img_shape_size = 4;
-            if (tensor_reshape(x, img_shape, img_shape_size, &x_reshaped, true, &allocs) != NO_ERROR)
-            {
-                return EXIT_FAILURE;
-            }
-
             struct tensor *h1 = NULL;
-            if (conv2d_forward(&conv1, x_reshaped, &h1, intermediates, true) != NO_ERROR)
-            {
-                return EXIT_FAILURE;
-            }
-
-            struct tensor *h2 = NULL;
-            if (relu_forward(h1, &h2, true, &allocs) != NO_ERROR)
-            {
-                return EXIT_FAILURE;
-            }
-
-            struct tensor *h3 = NULL;
-            if (conv2d_forward(&conv2, h2, &h3, intermediates, true) != NO_ERROR)
-            {
-                return EXIT_FAILURE;
-            }
-
-            struct tensor *h3_flattened = NULL;
-            size_t h3_flattened_shape[] = {iter_batch_size, 2304};
-            if (tensor_reshape(h3, h3_flattened_shape, 2, &h3_flattened, true, &allocs) != NO_ERROR)
-            {
-                return EXIT_FAILURE;
-            }
-
-            struct tensor *h4 = NULL;
-            if (linear_forward(&linear1, h3_flattened, &h4, intermediates, true) != NO_ERROR)
+            if (linear_forward(&linear1, x, &h1, intermediates, true) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
 
             struct tensor *z = NULL;
-            if (cross_entropy_loss(h4, y, &z, true, &allocs) != NO_ERROR)
+            if (cross_entropy_loss(h1, y, &z, true, &allocs) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
@@ -228,13 +169,8 @@ int main(int argc, char **argv)
             // Clear iteration allocations
             tensor_list_free_all(intermediates, &tensor_alloc);
             tensor_allocator_free(&tensor_alloc, x);
-            tensor_allocator_free(&tensor_alloc, x_reshaped);
             tensor_allocator_free(&tensor_alloc, y);
             tensor_allocator_free(&tensor_alloc, h1);
-            tensor_allocator_free(&tensor_alloc, h2);
-            tensor_allocator_free(&tensor_alloc, h3);
-            tensor_allocator_free(&tensor_alloc, h3_flattened);
-            tensor_allocator_free(&tensor_alloc, h4);
             tensor_allocator_free(&tensor_alloc, z);
 
             index_permutation_update(permutation, iter_batch_size);
@@ -244,8 +180,7 @@ int main(int argc, char **argv)
 
     // Cleanup
     sgd_optimizer_cleanup(&opt);
-    conv2d_cleanup(&conv1);
-    conv2d_cleanup(&conv2);
+    linear_cleanup(&linear1);
     indexes_batch_free(ixs_batch);
     tensor_cpu_allocator_cleanup(&tensor_alloc);
     computational_graph_cpu_allocator_cleanup(&graph_alloc);

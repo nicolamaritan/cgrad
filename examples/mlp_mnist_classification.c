@@ -50,10 +50,10 @@ int main(int argc, char **argv)
     const size_t INTERMEDIATES_CAPACITY = 20;
     struct tensor_list *intermediates = tensor_list_alloc(INTERMEDIATES_CAPACITY);
 
-    const size_t batch_size = 64;
-    const size_t input_dim = 784;
-    const size_t hidden_dim = 512;
-    const size_t num_classes = 10;
+    const size_t BATCH_SIZE = 64;
+    const size_t INPUT_DIM = 784;
+    const size_t HIDDEN_DIM = 512;
+    const size_t NUM_CLASSES = 10;
 
     // Can be downloaded from https://www.kaggle.com/datasets/oddrationale/mnist-in-csv
     struct csv_dataset *train_set = csv_dataset_alloc(argv[1]);
@@ -70,7 +70,7 @@ int main(int argc, char **argv)
 
     // Allocate model
     struct linear linear1;
-    if (linear_init(&linear1, input_dim, hidden_dim, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
+    if (linear_init(&linear1, INPUT_DIM, HIDDEN_DIM, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
     }
 
     struct linear linear2;
-    if (linear_init(&linear2, hidden_dim, num_classes, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
+    if (linear_init(&linear2, HIDDEN_DIM, NUM_CLASSES, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
@@ -108,7 +108,7 @@ int main(int argc, char **argv)
     double momentum = 0.9;
 
     // Setup indexes batch container. In this case, the container's capacity is the batch size.
-    struct indexes_batch *ixs_batch = indexes_batch_alloc(batch_size);
+    struct indexes_batch *ixs_batch = indexes_batch_alloc(BATCH_SIZE);
     if (!ixs_batch)
     {
         return EXIT_FAILURE;
@@ -138,7 +138,7 @@ int main(int argc, char **argv)
              * but only, for instance, 30 remains.
              */
             size_t remaining = index_permutation_get_remaining(permutation);
-            size_t iter_batch_size = remaining < batch_size ? remaining : batch_size;
+            size_t iter_batch_size = remaining < BATCH_SIZE ? remaining : BATCH_SIZE;
 
             // Sample batch indeces
             if (indexes_permutation_sample_index_batch(permutation, ixs_batch, iter_batch_size) != NO_ERROR)
