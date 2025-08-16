@@ -1,7 +1,7 @@
 #include "memory/allocators.h"
 #include "memory/tensor/cpu/tensor_cpu_allocator.h"
 #include "memory/computational_graph/computational_graph_cpu_allocator.h"
-// #include "tensor/tensor_conv2d.h"
+#include "datastructures/tensor_list.h"
 #include "layers/relu.h"
 #include "losses/mse.h"
 #include "autograd/backpropagation/backpropagation.h"
@@ -12,8 +12,7 @@
 #include "tensor/tensor_get.h"
 #include "tensor/tensor_set.h"
 #include "optimizers/sgd.h"
-#include "layers/conv2d/conv2d.h"
-#include "layers/conv2d/conv2d_out.h"
+#include "layers/conv2d.h"
 #include "tensor/tensor_helpers.h"
 #include "tensor/tensor_reshape.h"
 #include "utils/random.h"
@@ -47,6 +46,9 @@ int main()
     struct conv2d conv_1;
     conv2d_init(&conv_1, 3, 2, 2, x->dtype, &tensor_alloc, &allocs);
     conv2d_xavier_init(&conv_1);
+
+    const size_t INTERMEDIATES_CAPACITY = 20;
+    struct tensor_list *intermediates = tensor_list_alloc(INTERMEDIATES_CAPACITY);
 
     // size_t k_shape[] = {2, 3, 2, 2};
     // size_t k_shape_size = 4;
@@ -84,6 +86,7 @@ int main()
 
     // conv_1.weight = k;
 
+
     // Setup model params
     struct model_params params;
     model_params_init(&params);
@@ -117,16 +120,14 @@ int main()
     // Prepare output
     for (size_t epoch = 0; epoch < 100; epoch++)
     {
-        struct conv2d_out conv1_out = CONV2D_OUT_INIT;
-
         // Run convolution
-        cgrad_error err = conv2d_forward(&conv_1, x, &conv1_out, true);
+        struct tensor *h1 = NULL;
+        cgrad_error err = conv2d_forward(&conv_1, x, &h1, intermediates, true);
         if (err != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
 
-        struct tensor *h1 = conv1_out.result;
         struct tensor *flat = NULL;
         size_t shape[] = {h1->shape[0], h1->shape[1] * h1->shape[2] * h1->shape[3]};
         if (tensor_reshape(h1, shape, 2, &flat, true, &allocs) != NO_ERROR)
@@ -153,7 +154,7 @@ int main()
         sgd_optimizer_step(&opt, lr, momentum, false);
 
         // Clear iteration allocations
-        conv2d_layer_out_cleanup(&conv1_out);
+        tensor_list_free_all(intermediates, &tensor_alloc);
         tensor_allocator_free(&tensor_alloc, flat);
         tensor_allocator_free(&tensor_alloc, down_projected);
         tensor_allocator_free(&tensor_alloc, z);

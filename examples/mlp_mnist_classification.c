@@ -47,6 +47,9 @@ int main(int argc, char **argv)
 
     struct allocators allocs = {&tensor_alloc, &graph_alloc};
 
+    const size_t INTERMEDIATES_CAPACITY = 20;
+    struct tensor_list *intermediates = tensor_list_alloc(INTERMEDIATES_CAPACITY);
+
     const size_t batch_size = 64;
     const size_t input_dim = 784;
     const size_t hidden_dim = 512;
@@ -152,26 +155,24 @@ int main(int argc, char **argv)
             }
 
             // ------------- Forward -------------
-            struct linear_out out1 = LINEAR_OUT_INIT;
-            if (linear_forward(&linear1, x, &out1, true) != NO_ERROR)
+            struct tensor *h1 = NULL;
+            if (linear_forward(&linear1, x, &h1, intermediates, true) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
 
-            struct tensor *h1 = out1.result;
-            struct tensor *h2 = NULL; 
+            struct tensor *h2 = NULL;
             if (relu_forward(h1, &h2, true, &allocs) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
 
-            struct linear_out out3 = LINEAR_OUT_INIT;
-            if (linear_forward(&linear2, h2, &out3, true) != NO_ERROR)
+            struct tensor *h3 = NULL;
+            if (linear_forward(&linear2, h2, &h3, intermediates, true) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
 
-            struct tensor *h3 = out3.result;
             struct tensor *z = NULL;
             if (cross_entropy_loss(h3, y, &z, true, &allocs) != NO_ERROR)
             {
@@ -192,12 +193,14 @@ int main(int argc, char **argv)
             sgd_optimizer_step(&opt, lr, momentum, false);
 
             // Clear iteration allocations
+            tensor_list_free_all(intermediates, &tensor_alloc);
             tensor_allocator_free(&tensor_alloc, x);
             tensor_allocator_free(&tensor_alloc, y);
-            linear_layer_out_cleanup(&out1);
+            tensor_allocator_free(&tensor_alloc, h1);
             tensor_allocator_free(&tensor_alloc, h2);
-            linear_layer_out_cleanup(&out3);
+            tensor_allocator_free(&tensor_alloc, h3);
             tensor_allocator_free(&tensor_alloc, z);
+            intermediates->size = 0;
 
             index_permutation_update(permutation, iter_batch_size);
             iteration++;

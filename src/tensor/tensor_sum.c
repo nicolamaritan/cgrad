@@ -1,5 +1,7 @@
 #include "tensor/tensor_sum.h"
 #include "string.h"
+#include <stdio.h>
+#include <assert.h>
 
 typedef void (*tensor_sum_reduce)(const struct tensor *const t, const size_t axis, struct tensor *const out, const size_t t_ptr, const size_t out_ptr);
 
@@ -13,6 +15,17 @@ cgrad_error tensor_sum(const struct tensor *const t, const size_t axis, struct t
     if (!t || !out)
     {
         return TENSOR_NULL;
+    }
+    if (out->shape[axis] != 1)
+    {
+        return TENSOR_SHAPE_MISMATCH;
+    }
+    for (size_t i = 0; i < t->shape_size; i++)
+    {
+        if (i != axis && t->shape[i] != out->shape[i])
+        {
+            return TENSOR_SHAPE_MISMATCH;
+        }
     }
 
     return tensor_sum_dispatch(t, axis, out);
@@ -82,6 +95,9 @@ static void tensor_sum_reduce_f32(const struct tensor *const t, const size_t axi
     for (size_t i = 0; i < t->shape[axis]; i++)
     {
         sum += t_data[t_ptr + i * t->stride[axis]];
+        // printf("%ld\n%ld\n\n", t_ptr + i * t->stride[axis], t->data_size);
+        assert(t_ptr + i * t->stride[axis] < t->data_size);
     }
     out_data[out_ptr] = sum;
+    assert(out_ptr < out->data_size);
 }

@@ -206,7 +206,7 @@ static cgrad_error relu_forward_avx_256_f32(const struct tensor *const x, struct
 #else
 static cgrad_error relu_forward_scalar(const struct tensor *const x, struct tensor *const out)
 {
-    switch (x->cgrad_dtype)
+    switch (x->dtype)
     {
     case DTYPE_FLOAT64:
         return relu_forward_scalar_f64(x, out);

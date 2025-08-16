@@ -44,7 +44,8 @@ cgrad_error linear_init(struct linear *const layer, const size_t in_dim, const s
         return TENSOR_ALLOCATION_FAILED;
     }
 
-    size_t biases_shape[] = {out_dim, 1};
+    // size_t biases_shape[] = {out_dim, 1};
+    size_t biases_shape[] = {1, out_dim};
     size_t biases_shape_size = 2;
     struct tensor *biases = tensor_allocator_alloc(params_allocator, biases_shape, biases_shape_size, dtype);
     if (!biases)
@@ -64,7 +65,7 @@ cgrad_error linear_init(struct linear *const layer, const size_t in_dim, const s
     return NO_ERROR;
 }
 
-cgrad_error linear_forward(struct linear *const layer, struct tensor *const x, struct linear_out *const out, const bool track_grad)
+cgrad_error linear_forward(struct linear *const layer, struct tensor *const x, struct tensor **const out, struct tensor_list *const intermediates, const bool track_grad)
 {
     if (!layer)
     {
@@ -75,18 +76,22 @@ cgrad_error linear_forward(struct linear *const layer, struct tensor *const x, s
         return LINEAR_OUT_NULL;
     }
 
-    // Register layer allocator as out allocator
-    out->tensor_alloc = layer->allocs->tensor_alloc;
-
     // XW computation 
-    cgrad_error error = tensor2d_mult(x, layer->weights, &out->mult, track_grad, layer->allocs);
-    if (error != NO_ERROR)
+    struct tensor *mult = NULL;
+    cgrad_error err = tensor2d_mult(x, layer->weights, &mult, track_grad, layer->allocs);
+    if (err != NO_ERROR)
     {
-        return error;
+        return err;
     }
 
     // XW + b computation
-    return tensor2d_add_row_vector(out->mult, layer->biases, &out->result, track_grad, layer->allocs);
+    err = tensor2d_add_row_vector(mult, layer->biases, out, track_grad, layer->allocs);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
+    return tensor_list_add(intermediates, mult);
 }
 
 cgrad_error linear_xavier_init(struct linear *const layer)

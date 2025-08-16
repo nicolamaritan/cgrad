@@ -1,4 +1,4 @@
-#include "layers/conv2d/conv2d.h"
+#include "layers/conv2d.h"
 #include "tensor/tensor.h"
 #include "tensor/tensor2d_mult.h"
 #include "tensor/tensor2d_trans.h"
@@ -30,7 +30,7 @@ cgrad_error conv2d_init(struct conv2d *const layer, const size_t in_channels, co
     return NO_ERROR;
 }
 
-cgrad_error conv2d_forward(struct conv2d *const layer, struct tensor *const x, struct conv2d_out *const out, const bool track_grad)
+cgrad_error conv2d_forward(struct conv2d *const layer, struct tensor *const x, struct tensor **const out, struct tensor_list *const intermediates, const bool track_grad)
 {
     struct tensor *kernel = layer->weight;
 
@@ -44,47 +44,57 @@ cgrad_error conv2d_forward(struct conv2d *const layer, struct tensor *const x, s
 
     cgrad_error err = NO_ERROR;
 
-    err = tensor_im2row((struct tensor *)x, kernel, &out->x_patches, track_grad, layer->allocs);
+    struct tensor *x_patches = NULL;
+    err = tensor_im2row((struct tensor *)x, kernel, &x_patches, track_grad, layer->allocs);
     if (err != NO_ERROR)
     {
         return err;
     }
 
     const size_t KERNEL_NEW_SHAPE[] = {K, C * R * S};
-    err = tensor_reshape(kernel, KERNEL_NEW_SHAPE, 2, &out->reshaped_kernel, track_grad, layer->allocs);
+    struct tensor *reshaped_kernel = NULL;
+    err = tensor_reshape(kernel, KERNEL_NEW_SHAPE, 2, &reshaped_kernel, track_grad, layer->allocs);
 
-    err = tensor2d_trans(out->reshaped_kernel, &out->kernel_trans, track_grad, layer->allocs);
+    struct tensor *kernel_trans = NULL;
+    err = tensor2d_trans(reshaped_kernel, &kernel_trans, track_grad, layer->allocs);
     if (err != NO_ERROR)
     {
         return err;
     }
 
-    err = tensor2d_mult(out->x_patches, out->kernel_trans, &out->out_patches, track_grad, layer->allocs);
+    struct tensor *out_patches = NULL;
+    err = tensor2d_mult(x_patches, kernel_trans, &out_patches, track_grad, layer->allocs);
     if (err != NO_ERROR)
     {
         return err;
     }
 
-    err = tensor2d_trans(out->out_patches, &out->out_patches_trans, track_grad, layer->allocs);
+    struct tensor *out_patches_trans = NULL;
+    err = tensor2d_trans(out_patches, &out_patches_trans, track_grad, layer->allocs);
     if (err != NO_ERROR)
     {
         return err;
     }
 
+    struct tensor *out_patches_trans_reshaped = NULL;
     const size_t OUT_PATCHES_NEW_SHAPE[] = {K, x->shape[0], H_out, W_out};
-    err = tensor_reshape(out->out_patches_trans, OUT_PATCHES_NEW_SHAPE, 4, &out->out_patches_trans_reshaped, track_grad, layer->allocs);
+    err = tensor_reshape(out_patches_trans, OUT_PATCHES_NEW_SHAPE, 4, &out_patches_trans_reshaped, track_grad, layer->allocs);
     if (err != NO_ERROR)
     {
         return err;
     }
 
-    err = tensor_trans(out->out_patches_trans_reshaped, 0, 1, &out->result, track_grad, layer->allocs);
+    err = tensor_trans(out_patches_trans_reshaped, 0, 1, out, track_grad, layer->allocs);
     if (err != NO_ERROR)
     {
         return err;
     }
-
-    out->tensor_alloc = layer->allocs->tensor_alloc;
+    tensor_list_add(intermediates, x_patches);
+    tensor_list_add(intermediates, reshaped_kernel);
+    tensor_list_add(intermediates, kernel_trans);
+    tensor_list_add(intermediates, out_patches);
+    tensor_list_add(intermediates, out_patches_trans);
+    tensor_list_add(intermediates, out_patches_trans_reshaped);
 
     return NO_ERROR;
 }

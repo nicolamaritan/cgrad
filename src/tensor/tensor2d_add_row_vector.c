@@ -1,6 +1,7 @@
 #include "tensor/tensor2d_add_row_vector.h"
 #include "tensor/tensor_sum.h"
 #include "tensor/tensor_copy.h"
+#include "tensor/tensor_print_shape.h"
 #include "autograd/computational_graph/computational_graph.h"
 #include "autograd/computational_graph/computational_graph_link.h"
 #include "utils/simd_support.h"
@@ -44,11 +45,11 @@ cgrad_error tensor2d_add_row_vector(struct tensor *const t, struct tensor *const
     {
         return TENSOR_WRONG_SHAPE;
     }
-    if (v->shape[1] != 1)
+    if (v->shape[0] != 1)
     {
         return TENSOR_WRONG_SHAPE;
     }
-    if (t->shape[1] != v->shape[0])
+    if (t->shape[1] != v->shape[1])
     {
         return TENSOR_SHAPE_MISMATCH;
     }
@@ -105,11 +106,11 @@ cgrad_error tensor2d_add_row_vector_into(const struct tensor *const t, const str
     {
         return TENSOR_WRONG_SHAPE;
     }
-    if (v->shape[1] != 1)
+    if (v->shape[0] != 1)
     {
         return TENSOR_WRONG_SHAPE;
     }
-    if (t->shape[1] != v->shape[0])
+    if (t->shape[1] != v->shape[1])
     {
         return TENSOR_SHAPE_MISMATCH;
     }
@@ -143,6 +144,8 @@ static cgrad_error tensor2d_add_row_vector_backpropagate_tensor2d(const struct b
 
 static cgrad_error tensor2d_add_row_vector_backpropagate_row_vector(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand)
 {
+    // tensor_print_shape(grad_wrt_out);
+    // tensor_print_shape(grad_wrt_operand);
     cgrad_error err = tensor_sum(grad_wrt_out, 0, grad_wrt_operand);
     if (err != NO_ERROR)
     {
@@ -247,7 +250,7 @@ static cgrad_error tensor2d_add_row_vector_avx_256_f32(const struct tensor *cons
 #else
 static cgrad_error tensor2d_add_row_vector_dispatch_scalar(const struct tensor *const t, const struct tensor *const v, struct tensor *out)
 {
-    switch (t->cgrad_dtype)
+    switch (t->dtype)
     {
     case DTYPE_FLOAT64:
         return tensor2d_add_row_vector_scalar_f64(t, v, out);

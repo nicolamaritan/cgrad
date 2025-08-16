@@ -42,6 +42,9 @@ int main()
 
     struct allocators allocs = {&tensor_alloc, &graph_alloc};
 
+    const size_t INTERMEDIATES_CAPACITY = 20;
+    struct tensor_list *intermediates = tensor_list_alloc(INTERMEDIATES_CAPACITY);
+
     size_t x_shape[] = {batch_size, input_dim};
     size_t x_shape_size = 2;
     struct tensor *x = tensor_allocator_alloc(&tensor_alloc, x_shape, x_shape_size, DTYPE);
@@ -101,26 +104,24 @@ int main()
     for (size_t i = 0; i < epochs; i++)
     {
         // ------------- Forward -------------
-        struct linear_out out1 = LINEAR_OUT_INIT;
-        if (linear_forward(&linear1, x, &out1, true) != NO_ERROR)
+        struct tensor *h1 = NULL;
+        if (linear_forward(&linear1, x, &h1, intermediates, true) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
 
-        struct tensor *h1 = out1.result;
         struct tensor *h2 = NULL; 
         if (relu_forward(h1, &h2, true, &allocs) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
 
-        struct linear_out out3 = LINEAR_OUT_INIT;
-        if (linear_forward(&linear2, h2, &out3, true) != NO_ERROR)
+        struct tensor *h3 = NULL;
+        if (linear_forward(&linear2, h2, &h3, intermediates, true) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
 
-        struct tensor *h3 = out3.result;
         struct tensor *z = NULL;
         if (mse_loss(h3, y_target, &z, true, &allocs) != NO_ERROR)
         {
@@ -137,9 +138,8 @@ int main()
         sgd_optimizer_step(&opt, lr, momentum, false);
 
         // Clear iteration allocations
-        linear_layer_out_cleanup(&out1);
+        tensor_list_free_all(intermediates, &tensor_alloc);
         tensor_allocator_free(&tensor_alloc, h2);
-        linear_layer_out_cleanup(&out3);
         tensor_allocator_free(&tensor_alloc, z);
     }
 
