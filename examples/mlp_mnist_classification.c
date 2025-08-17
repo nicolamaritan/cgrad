@@ -70,7 +70,7 @@ int main(int argc, char **argv)
 
     // Allocate model
     struct linear linear1;
-    if (linear_init(&linear1, INPUT_DIM, HIDDEN_DIM, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
+    if (linear_init(&linear1, INPUT_DIM, HIDDEN_DIM, DTYPE, &allocs) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
     }
 
     struct linear linear2;
-    if (linear_init(&linear2, HIDDEN_DIM, NUM_CLASSES, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
+    if (linear_init(&linear2, HIDDEN_DIM, NUM_CLASSES, DTYPE, &allocs) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }

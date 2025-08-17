@@ -20,7 +20,7 @@ static inline cgrad_error tensor_norm_dispatch(const struct tensor *const t, dou
         case DTYPE_FLOAT32:
             return tensor_norm_f32(t, out);
         default:
-            return 1;
+            return OPERATION_INVALID_TENSOR_DTYPE;
     }
 }
 

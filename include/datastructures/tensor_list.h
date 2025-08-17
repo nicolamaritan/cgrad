@@ -42,15 +42,15 @@ static inline cgrad_error tensor_list_add(struct tensor_list *const list, struct
 {
     if (!list)
     {
-        return 1;
+        return TENSOR_LIST_NULL;
     }
     if (!t)
     {
-        return 1;
+        return TENSOR_NULL;
     }
     if (list->size == list->capacity)
     {
-        return 1;
+        return TENSOR_LIST_FULL;
     }
 
     list->data[list->size++] = t;

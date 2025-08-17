@@ -75,7 +75,7 @@ int main(int argc, char **argv)
     const size_t CONV1_IN_CHANNELS = 1;
     const size_t CONV1_OUT_CHANNELS = 4;
     const size_t CONV1_KERNEL_SIZE = 3;
-    if (conv2d_init(&conv1, CONV1_IN_CHANNELS, CONV1_OUT_CHANNELS, CONV1_KERNEL_SIZE, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
+    if (conv2d_init(&conv1, CONV1_IN_CHANNELS, CONV1_OUT_CHANNELS, CONV1_KERNEL_SIZE, DTYPE, &allocs) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
@@ -87,7 +87,7 @@ int main(int argc, char **argv)
     struct conv2d conv2;
     const size_t CONV2_OUT_CHANNELS = 4;
     const size_t CONV2_KERNEL_SIZE = 3;
-    if (conv2d_init(&conv2, CONV1_OUT_CHANNELS, CONV2_OUT_CHANNELS, CONV2_KERNEL_SIZE, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
+    if (conv2d_init(&conv2, CONV1_OUT_CHANNELS, CONV2_OUT_CHANNELS, CONV2_KERNEL_SIZE, DTYPE, &allocs) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
 
     struct linear linear1;
     const size_t LINEAR1_IN = 2304;
-    if (linear_init(&linear1, LINEAR1_IN, NUM_CLASSES, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
+    if (linear_init(&linear1, LINEAR1_IN, NUM_CLASSES, DTYPE, &allocs) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }

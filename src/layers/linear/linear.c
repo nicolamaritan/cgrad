@@ -22,7 +22,7 @@ typedef enum linear_layer_operand
 static cgrad_error linear_xavier_init_f64(struct linear *const layer);
 static cgrad_error linear_xavier_init_f32(struct linear *const layer);
 
-cgrad_error linear_init(struct linear *const layer, const size_t in_dim, const size_t out_dim, const cgrad_dtype dtype, struct tensor_allocator *const params_allocator, struct allocators *const allocs)
+cgrad_error linear_init(struct linear *const layer, const size_t in_dim, const size_t out_dim, const cgrad_dtype dtype, struct allocators *const allocs)
 {
     if (!layer)
     {
@@ -37,7 +37,7 @@ cgrad_error linear_init(struct linear *const layer, const size_t in_dim, const s
 
     size_t weights_shape[] = {in_dim, out_dim};
     size_t weights_shape_size = 2;
-    struct tensor *weights = tensor_allocator_alloc(params_allocator, weights_shape, weights_shape_size, dtype);
+    struct tensor *weights = tensor_allocator_alloc(allocs->tensor_alloc, weights_shape, weights_shape_size, dtype);
     if (!weights)
     {
         free(layer);
@@ -47,15 +47,14 @@ cgrad_error linear_init(struct linear *const layer, const size_t in_dim, const s
     // size_t biases_shape[] = {out_dim, 1};
     size_t biases_shape[] = {1, out_dim};
     size_t biases_shape_size = 2;
-    struct tensor *biases = tensor_allocator_alloc(params_allocator, biases_shape, biases_shape_size, dtype);
+    struct tensor *biases = tensor_allocator_alloc(allocs->tensor_alloc, biases_shape, biases_shape_size, dtype);
     if (!biases)
     {
         free(layer);
-        tensor_allocator_free(params_allocator, weights);
+        tensor_allocator_free(allocs->tensor_alloc, weights);
         return TENSOR_ALLOCATION_FAILED;
     }
 
-    layer->params_allocator = params_allocator;
     layer->allocs = allocs;
     layer->in_dim = in_dim;
     layer->out_dim = out_dim;
@@ -74,6 +73,10 @@ cgrad_error linear_forward(struct linear *const layer, struct tensor *const x, s
     if (!out)
     {
         return LINEAR_OUT_NULL;
+    }
+    if (!intermediates)
+    {
+        return INTERMEDIATES_TENSOR_LIST_NULL;
     }
 
     // XW computation 
@@ -155,6 +158,6 @@ void linear_cleanup(struct linear *const layer)
         return;
     }
 
-    tensor_allocator_free(layer->params_allocator, layer->weights);
-    tensor_allocator_free(layer->params_allocator, layer->biases);
+    tensor_allocator_free(layer->allocs->tensor_alloc, layer->weights);
+    tensor_allocator_free(layer->allocs->tensor_alloc, layer->biases);
 }

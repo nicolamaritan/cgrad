@@ -15,23 +15,55 @@
 static cgrad_error conv2d_xavier_init_f64(struct conv2d *const layer);
 static cgrad_error conv2d_xavier_init_f32(struct conv2d *const layer);
 
-cgrad_error conv2d_init(struct conv2d *const layer, const size_t in_channels, const size_t out_channels, const size_t kernel_size, const cgrad_dtype dtype, struct tensor_allocator *const params_allocator, struct allocators *const allocs)
+cgrad_error conv2d_init(struct conv2d *const layer, const size_t in_channels, const size_t out_channels, const size_t kernel_size, const cgrad_dtype dtype, struct allocators *const allocs)
 {
+    if (!layer)
+    {
+        return CONV2D_NULL;
+    }
+
+    cgrad_error err = allocators_is_valid(allocs);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
     size_t shape[] = {out_channels, in_channels, kernel_size, kernel_size};
-    struct tensor *weight = tensor_allocator_alloc(allocs->tensor_alloc, shape, 4, dtype);
+    size_t shape_size = 4;
+    struct tensor *weight = tensor_allocator_alloc(allocs->tensor_alloc, shape, shape_size, dtype);
+    if (!weight)
+    {
+        return TENSOR_ALLOCATION_FAILED;
+    }
 
     layer->weight = weight;
     layer->in_channels = in_channels;
     layer->out_channels = out_channels;
     layer->kernel_size = kernel_size;
     layer->allocs = allocs;
-    layer->params_allocator = allocs->tensor_alloc;
 
     return NO_ERROR;
 }
 
 cgrad_error conv2d_forward(struct conv2d *const layer, struct tensor *const x, struct tensor **const out, struct tensor_list *const intermediates, const bool track_grad)
 {
+    if (!layer)
+    {
+        return CONV2D_NULL;
+    }
+    if (!x)
+    {
+        return TENSOR_NULL;
+    }
+    if (!out)
+    {
+        return OUTPUT_NULL;
+    }
+    if (!intermediates)
+    {
+        return INTERMEDIATES_TENSOR_LIST_NULL;
+    }
+
     struct tensor *kernel = layer->weight;
 
     const size_t H_out = x->shape[2] - kernel->shape[2] + 1;
@@ -54,6 +86,10 @@ cgrad_error conv2d_forward(struct conv2d *const layer, struct tensor *const x, s
     const size_t KERNEL_NEW_SHAPE[] = {K, C * R * S};
     struct tensor *reshaped_kernel = NULL;
     err = tensor_reshape(kernel, KERNEL_NEW_SHAPE, 2, &reshaped_kernel, track_grad, layer->allocs);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
 
     struct tensor *kernel_trans = NULL;
     err = tensor2d_trans(reshaped_kernel, &kernel_trans, track_grad, layer->allocs);
@@ -89,12 +125,42 @@ cgrad_error conv2d_forward(struct conv2d *const layer, struct tensor *const x, s
     {
         return err;
     }
-    tensor_list_add(intermediates, x_patches);
-    tensor_list_add(intermediates, reshaped_kernel);
-    tensor_list_add(intermediates, kernel_trans);
-    tensor_list_add(intermediates, out_patches);
-    tensor_list_add(intermediates, out_patches_trans);
-    tensor_list_add(intermediates, out_patches_trans_reshaped);
+
+    err = tensor_list_add(intermediates, x_patches);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
+    err = tensor_list_add(intermediates, reshaped_kernel);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
+    err = tensor_list_add(intermediates, kernel_trans);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
+    err = tensor_list_add(intermediates, out_patches);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
+    err = tensor_list_add(intermediates, out_patches_trans);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
+
+    err = tensor_list_add(intermediates, out_patches_trans_reshaped);
+    if (err != NO_ERROR)
+    {
+        return err;
+    }
 
     return NO_ERROR;
 }
@@ -103,8 +169,7 @@ cgrad_error conv2d_xavier_init(struct conv2d *const layer)
 {
     if (!layer)
     {
-        // return LINEAR_NULL;
-        return 1;
+        return CONV2D_NULL;
     }
 
     switch (layer->weight->dtype)
@@ -155,6 +220,5 @@ void conv2d_cleanup(struct conv2d *const layer)
         return;
     }
 
-    // tensor_allocator_free(layer->params_allocator, layer->weights);
-    // tensor_allocator_free(layer->params_allocator, layer->biases);
+    tensor_allocator_free(layer->allocs->tensor_alloc, layer->weight);
 }

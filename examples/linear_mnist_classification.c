@@ -68,7 +68,7 @@ int main(int argc, char **argv)
 
     // Allocate model
     struct linear linear1;
-    if (linear_init(&linear1, INPUT_DIM, NUM_CLASSES, DTYPE, &tensor_alloc, &allocs) != NO_ERROR)
+    if (linear_init(&linear1, INPUT_DIM, NUM_CLASSES, DTYPE, &allocs) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
