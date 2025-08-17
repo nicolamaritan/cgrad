@@ -28,6 +28,17 @@ cgrad_error tensor_reshape(struct tensor *const t, const size_t *shape, const si
     {
         return TENSOR_DATA_NULL;
     }
+
+    // Reshaped data size must be the same as original data size
+    size_t reshaped_data_size = 1;
+    for (size_t i = 0; i < shape_size; i++)
+    {
+        reshaped_data_size *= shape[i];
+    }
+    if (reshaped_data_size != t->data_size)
+    {
+        return TENSOR_RESHAPE_INVALID_SHAPE;
+    }
     
     (*out) = tensor_allocator_alloc(allocs->tensor_alloc, shape, shape_size, t->dtype);
     if (!(*out))
@@ -63,6 +74,11 @@ static inline cgrad_error tensor_reshape_update_graph(struct tensor *const t, co
         return err;
     }
 
+    /**
+     * Save operands for backpropagation. The original shape is needed
+     * to perform the inverse operation during backprop, that is
+     * reshaping the gradient to the original shape.
+     */
     err = context_set_operand_size_t(&out->node->ctx, t->shape_size, OLD_SHAPE_SIZE);
     if (err != NO_ERROR)
     {
@@ -71,7 +87,7 @@ static inline cgrad_error tensor_reshape_update_graph(struct tensor *const t, co
 
     for (size_t i = 0; i < t->shape_size; i++)
     {
-        // Save contiguously after shape start pos
+        // Save contiguously after OLD_SHAPE_START_POS
         err = context_set_operand_size_t(&out->node->ctx, t->shape[i], OLD_SHAPE_START_POS + i);
         if (err != NO_ERROR)
         {

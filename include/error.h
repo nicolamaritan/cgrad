@@ -72,6 +72,9 @@ typedef enum
     // Permutation
     INDEXES_PERMUTATION_NULL,
 
+    // Reshape
+    TENSOR_RESHAPE_INVALID_SHAPE,
+
     // Index Batch
     INDEXES_BATCH_NULL,
 

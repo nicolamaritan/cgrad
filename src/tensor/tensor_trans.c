@@ -66,6 +66,11 @@ static inline cgrad_error tensor_trans_update_graph(struct tensor *const t, cons
         return err;
     }
 
+    /**
+     * Save axeses for backpropagation. They are needed 
+     * to perform the inverse operation during backprop, that is
+     * transposing the gradient to the original shape.
+     */
     err = context_set_operand_size_t(&(*out)->node->ctx, axis_1, AXIS_1);
     if (err != NO_ERROR)
     {
@@ -109,26 +114,6 @@ static cgrad_error tensor_trans_dispatch(const struct tensor *const t, const siz
         return OPERATION_INVALID_TENSOR_DTYPE;
     }
 }
-
-// static cgrad_error tensor_trans_f64(const struct tensor *const t, struct tensor *const out)
-// {
-//     size_t rows = t->shape[0];
-//     size_t cols = t->shape[1];
-
-//     double *restrict out_data = (double *)out->data;
-//     double *restrict t_data = (double *)t->data;
-
-//     // Transpose
-//     for (size_t i = 0; i < rows; i++)
-//     {
-//         for (size_t j = 0; j < cols; j++)
-//         {
-//             out_data[j * rows + i] = t_data[i * cols + j];
-//         }
-//     }
-
-//     return NO_ERROR;
-// }
 
 static cgrad_error tensor_trans_f32(const struct tensor *const t, const size_t axis_1, const size_t axis_2, struct tensor *const out)
 {
