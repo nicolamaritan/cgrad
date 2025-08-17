@@ -80,8 +80,8 @@ int main(int argc, char **argv)
     // Setup model params
     struct model_params params;
     model_params_init(&params);
-    add_model_param(&params, linear1.weights);
-    add_model_param(&params, linear1.biases);
+    add_model_param(&params, linear1.weight);
+    add_model_param(&params, linear1.bias);
 
     // Setup optimizer
     struct sgd_optimizer opt;

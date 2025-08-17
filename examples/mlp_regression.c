@@ -19,7 +19,7 @@
 // Example dataset build
 void build_example_dataset(struct tensor *x, struct tensor *y_target);
 // Example 2-layer-friendly function: y = tanh(w·x + b)
-float compute_example_y_target(float *x_row, float *weights, float bias, size_t dim);
+float compute_example_y_target(float *x_row, float *weight, float bias, size_t dim);
 
 int main()
 {
@@ -85,10 +85,10 @@ int main()
     // Setup model params
     struct model_params params;
     model_params_init(&params);
-    add_model_param(&params, linear1.weights);
-    add_model_param(&params, linear1.biases);
-    add_model_param(&params, linear2.weights);
-    add_model_param(&params, linear2.biases);
+    add_model_param(&params, linear1.weight);
+    add_model_param(&params, linear1.bias);
+    add_model_param(&params, linear2.weight);
+    add_model_param(&params, linear2.bias);
 
     // Setup optimizer
     struct sgd_optimizer opt;
@@ -154,12 +154,12 @@ int main()
     return EXIT_SUCCESS;
 }
 
-float compute_example_y_target(float *x_row, float *weights, float bias, size_t dim)
+float compute_example_y_target(float *x_row, float *weight, float bias, size_t dim)
 {
     float dot = 0.0;
     for (size_t j = 0; j < dim; j++)
     {
-        dot += x_row[j] * weights[j];
+        dot += x_row[j] * weight[j];
     }
     return tanh(dot + bias);
 }
@@ -169,10 +169,10 @@ void build_example_dataset(struct tensor *x, struct tensor *y_target)
     // Random weights and bias for generating y
     float lb = -20;
     float ub = 20;
-    float weights[x->shape[1]];
+    float weight[x->shape[1]];
     for (size_t j = 0; j < x->shape[1]; j++)
     {
-        weights[j] = sample_uniform(lb, ub);
+        weight[j] = sample_uniform(lb, ub);
     }
 
     float bias = sample_uniform(lb, ub);
@@ -188,7 +188,7 @@ void build_example_dataset(struct tensor *x, struct tensor *y_target)
             tensor2d_set(x, i, j, value);
         }
 
-        float y_value = compute_example_y_target(x_row, weights, bias, x->shape[1]);
+        float y_value = compute_example_y_target(x_row, weight, bias, x->shape[1]);
         tensor2d_set(y_target, i, 0, y_value);
     }
 }

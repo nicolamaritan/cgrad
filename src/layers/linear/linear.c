@@ -12,13 +12,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef enum linear_layer_operand
-{
-    INPUT,
-    WEIGHTS,
-    BIAS,
-} linear_layer_operand;
-
 static cgrad_error linear_xavier_init_f64(struct linear *const layer);
 static cgrad_error linear_xavier_init_f32(struct linear *const layer);
 
@@ -35,31 +28,30 @@ cgrad_error linear_init(struct linear *const layer, const size_t in_dim, const s
         return err;
     }
 
-    size_t weights_shape[] = {in_dim, out_dim};
-    size_t weights_shape_size = 2;
-    struct tensor *weights = tensor_allocator_alloc(allocs->tensor_alloc, weights_shape, weights_shape_size, dtype);
-    if (!weights)
+    size_t weight_shape[] = {in_dim, out_dim};
+    size_t weight_shape_size = 2;
+    struct tensor *weight = tensor_allocator_alloc(allocs->tensor_alloc, weight_shape, weight_shape_size, dtype);
+    if (!weight)
     {
         free(layer);
         return TENSOR_ALLOCATION_FAILED;
     }
 
-    // size_t biases_shape[] = {out_dim, 1};
-    size_t biases_shape[] = {1, out_dim};
-    size_t biases_shape_size = 2;
-    struct tensor *biases = tensor_allocator_alloc(allocs->tensor_alloc, biases_shape, biases_shape_size, dtype);
-    if (!biases)
+    size_t bias_shape[] = {1, out_dim};
+    size_t bias_shape_size = 2;
+    struct tensor *bias = tensor_allocator_alloc(allocs->tensor_alloc, bias_shape, bias_shape_size, dtype);
+    if (!bias)
     {
         free(layer);
-        tensor_allocator_free(allocs->tensor_alloc, weights);
+        tensor_allocator_free(allocs->tensor_alloc, weight);
         return TENSOR_ALLOCATION_FAILED;
     }
 
     layer->allocs = allocs;
     layer->in_dim = in_dim;
     layer->out_dim = out_dim;
-    layer->weights = weights;
-    layer->biases = biases;
+    layer->weight = weight;
+    layer->bias = bias;
 
     return NO_ERROR;
 }
@@ -81,14 +73,14 @@ cgrad_error linear_forward(struct linear *const layer, struct tensor *const x, s
 
     // XW computation 
     struct tensor *mult = NULL;
-    cgrad_error err = tensor2d_mult(x, layer->weights, &mult, track_grad, layer->allocs);
+    cgrad_error err = tensor2d_mult(x, layer->weight, &mult, track_grad, layer->allocs);
     if (err != NO_ERROR)
     {
         return err;
     }
 
     // XW + b computation
-    err = tensor2d_add_row_vector(mult, layer->biases, out, track_grad, layer->allocs);
+    err = tensor2d_add_row_vector(mult, layer->bias, out, track_grad, layer->allocs);
     if (err != NO_ERROR)
     {
         return err;
@@ -104,7 +96,7 @@ cgrad_error linear_xavier_init(struct linear *const layer)
         return LINEAR_NULL;
     }
 
-    switch (layer->weights->dtype)
+    switch (layer->weight->dtype)
     {
     case DTYPE_FLOAT64:
         return linear_xavier_init_f64(layer);
@@ -117,10 +109,10 @@ cgrad_error linear_xavier_init(struct linear *const layer)
 
 static cgrad_error linear_xavier_init_f64(struct linear *const layer)
 {
-    double *restrict data = layer->weights->data;
+    double *restrict data = layer->weight->data;
     size_t in_dim = layer->in_dim;
     size_t out_dim = layer->out_dim;
-    size_t data_size = layer->weights->data_size;
+    size_t data_size = layer->weight->data_size;
 
     const double XAVIER_INIT_NUMERATOR = 6.0;
     double xavier_init_bound = sqrt(XAVIER_INIT_NUMERATOR / (in_dim + out_dim));
@@ -135,10 +127,10 @@ static cgrad_error linear_xavier_init_f64(struct linear *const layer)
 
 static cgrad_error linear_xavier_init_f32(struct linear *const layer)
 {
-    float *restrict data = layer->weights->data;
+    float *restrict data = layer->weight->data;
     size_t in_dim = layer->in_dim;
     size_t out_dim = layer->out_dim;
-    size_t data_size = layer->weights->data_size;
+    size_t data_size = layer->weight->data_size;
 
     const float XAVIER_INIT_NUMERATOR = 6.0;
     float xavier_init_bound = sqrt(XAVIER_INIT_NUMERATOR / (in_dim + out_dim));
@@ -158,6 +150,6 @@ void linear_cleanup(struct linear *const layer)
         return;
     }
 
-    tensor_allocator_free(layer->allocs->tensor_alloc, layer->weights);
-    tensor_allocator_free(layer->allocs->tensor_alloc, layer->biases);
+    tensor_allocator_free(layer->allocs->tensor_alloc, layer->weight);
+    tensor_allocator_free(layer->allocs->tensor_alloc, layer->bias);
 }

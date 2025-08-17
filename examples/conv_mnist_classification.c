@@ -113,7 +113,7 @@ int main(int argc, char **argv)
     model_params_init(&params);
     add_model_param(&params, conv1.weight);
     add_model_param(&params, conv2.weight);
-    add_model_param(&params, linear1.weights);
+    add_model_param(&params, linear1.weight);
 
     // Setup optimizer
     struct sgd_optimizer opt;

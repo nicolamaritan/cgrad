@@ -11,8 +11,8 @@
 
 struct linear
 {
-    struct tensor *weights;
-    struct tensor *biases;
+    struct tensor *weight;
+    struct tensor *bias;
     size_t in_dim;
     size_t out_dim;
     struct allocators *allocs;
