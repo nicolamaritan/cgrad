@@ -1,0 +1,14 @@
+add_executable(mlp_regression mlp_regression.c)
+add_executable(linear_mnist_classification linear_mnist_classification.c)
+add_executable(mlp_mnist_classification mlp_mnist_classification.c)
+add_executable(conv_mnist_classification conv_mnist_classification.c)
+
+target_link_libraries(mlp_regression PRIVATE cgrad)
+target_link_libraries(linear_mnist_classification PRIVATE cgrad)
+target_link_libraries(mlp_mnist_classification PRIVATE cgrad)
+target_link_libraries(conv_mnist_classification PRIVATE cgrad)
+
+target_include_directories(mlp_regression PRIVATE ${CMAKE_SOURCE_DIR}/cgrad/include)
+target_include_directories(linear_mnist_classification PRIVATE ${CMAKE_SOURCE_DIR}/cgrad/include)
+target_include_directories(mlp_mnist_classification PRIVATE ${CMAKE_SOURCE_DIR}/cgrad/include)
+target_include_directories(conv_mnist_classification PRIVATE ${CMAKE_SOURCE_DIR}/cgrad/include)

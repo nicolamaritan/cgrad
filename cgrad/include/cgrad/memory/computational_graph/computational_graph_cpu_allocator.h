@@ -1,0 +1,10 @@
+#ifndef COMPUTATIONAL_GRAPH_CPU_ALLOCATOR_H
+#define COMPUTATIONAL_GRAPH_CPU_ALLOCATOR_H
+
+#include "cgrad/memory/computational_graph/computational_graph_allocator.h"
+#include "cgrad/memory/computational_graph/computational_graph_cpu_pool.h"
+
+cgrad_error computational_graph_cpu_allocator_init(struct computational_graph_allocator *const graph_allocator);
+void computational_graph_cpu_allocator_cleanup(struct computational_graph_allocator *const graph_alloc);
+
+#endif
