@@ -12,10 +12,3 @@ target_include_directories(cgrad_test PUBLIC
 target_link_libraries(cgrad_test PUBLIC
     cgrad
 )
-
-add_executable(main main.c)
-target_link_libraries(main PRIVATE
-    cgrad
-    cgrad_test
-)
-target_include_directories(main PRIVATE ${CMAKE_SOURCE_DIR}/cgrad_test/include)
