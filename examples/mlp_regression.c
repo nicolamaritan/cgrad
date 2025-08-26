@@ -140,6 +140,7 @@ int main()
         // Clear iteration allocations
         tensor_list_free_all(intermediates, &tensor_alloc);
         tensor_allocator_free(&tensor_alloc, h2);
+        tensor_allocator_free(&tensor_alloc, h3);
         tensor_allocator_free(&tensor_alloc, z);
     }
 

@@ -1,6 +1,7 @@
 #include "cgrad/tensor/tensor_add.h"
 #include "cgrad/tensor/tensor_copy.h"
 #include "cgrad/tensor/tensor_helpers.h"
+#include "cgrad/tensor/tensor_equality.h"
 #include "cgrad/autograd/computational_graph/computational_graph.h"
 
 typedef enum tensor_add_operand

@@ -1,5 +1,6 @@
 #include "cgrad/tensor/tensor_axpy.h"
 #include "cgrad/tensor/tensor_helpers.h"
+#include "cgrad/tensor/tensor_equality.h"
 #include <cblas.h>
 
 static inline cgrad_error tensor_axpy_dispatch(const struct tensor *const x, struct tensor *const y, const double alpha);

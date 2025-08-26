@@ -1,6 +1,7 @@
 #include "cgrad/losses/mse.h"
 #include "cgrad/autograd/computational_graph/computational_graph_link.h"
 #include "cgrad/tensor/tensor_helpers.h"
+#include "cgrad/tensor/tensor_equality.h"
 #include <stdlib.h>
 #include <stdio.h>
 

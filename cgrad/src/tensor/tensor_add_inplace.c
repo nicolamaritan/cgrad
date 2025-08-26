@@ -1,6 +1,7 @@
 #include "cgrad/tensor/tensor_add_inplace.h"
 #include "cgrad/tensor/tensor_axpy.h"
 #include "cgrad/tensor/tensor_helpers.h"
+#include "cgrad/tensor/tensor_equality.h"
 
 cgrad_error tensor_add_inplace(struct tensor *A, const struct tensor *const B)
 {

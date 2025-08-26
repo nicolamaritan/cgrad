@@ -1,0 +1,7 @@
+#ifndef CGRAD_TEST_CONFIG_H
+#define CGRAD_TEST_CONFIG_H
+
+#define TEST_NAME_MAX_SIZE 32
+#define TEST_RESULT_MSG_MAX_SIZE 32
+
+#endif

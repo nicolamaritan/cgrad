@@ -6,3 +6,4 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 
 add_subdirectory(cgrad)
 add_subdirectory(examples)
+add_subdirectory(cgrad_test)

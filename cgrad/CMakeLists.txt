@@ -53,6 +53,7 @@ add_library(cgrad STATIC
     src/tensor/tensor_set.c
     src/tensor/tensor_sum.c
     src/tensor/tensor_trans.c
+    src/tensor/tensor_equality.c
 )
 
 target_compile_options(cgrad PRIVATE

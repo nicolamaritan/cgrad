@@ -1,5 +1,6 @@
 #include "cgrad/tensor/tensor_scalar_mult_tensor_add.h"
 #include "cgrad/tensor/tensor_helpers.h"
+#include "cgrad/tensor/tensor_equality.h"
 #include <cblas.h>
 
 static inline cgrad_error tensor_scalar_mult_tensor_add_dispatch(struct tensor *const x, struct tensor *const y, const double alpha, struct tensor *const out);
