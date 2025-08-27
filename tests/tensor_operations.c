@@ -3,6 +3,7 @@
 #include "cgrad_test/test_result.h"
 #include "cgrad_test/test_case.h"
 #include "cgrad_test/datastructures/test_list.h"
+#include "cgrad_test/datastructures/test_list_callbacks.h"
 #include "cgrad_test/run_tests.h"
 #include "cgrad_test/test_result_error.h"
 #include "cgrad/memory/tensor/cpu/tensor_cpu_allocator.h"
@@ -22,23 +23,15 @@ int main(int argc, char **argv)
     run_tests(tests);
 
     size_t num_failed_tests = 0;
-    struct test_list_node *curr = tests->head->next;
-    while (curr != tests->tail)
-    {
-        if (curr->result.err == TEST_FAILED)
-        {
-            printf("\t - Test \"%s\" failed.\n", curr->test_name);
-            printf("\t   Message: %s.\n", curr->result.msg);
-            num_failed_tests++;
-        }
-
-        curr = curr->next;
-    }
+    test_list_foreach(tests, &report_failures, &num_failed_tests);
 
     size_t num_passed_tests = tests->size - num_failed_tests;
     float percentage_passed_tests = ((float)num_passed_tests / (float)tests->size) * 100.0;
+    float percentage_failed_tests = ((float)num_failed_tests / (float)tests->size) * 100.0;
 
+    printf("Number of tests: %ld\n", tests->size);
     printf("Number of passed tests: %ld (%.2f \%)\n", num_passed_tests, percentage_passed_tests);
+    printf("Number of failed tests: %ld (%.2f \%)\n", num_failed_tests, percentage_failed_tests);
 
     return EXIT_SUCCESS;
 }
