@@ -9,15 +9,22 @@
 #include "cgrad/memory/computational_graph/computational_graph_cpu_allocator.h"
 #include "cgrad/tensor/tensor_set.h"
 #include "cgrad/tensor/tensor2d_mult.h"
+#include "cgrad/tensor/tensor_add.h"
 #include "cgrad/tensor/tensor_equality.h"
 #include <stdio.h>
 
 void tensor2d_mult_test_cpu_instance_1(struct test_result *);
+void tensor_add_test_cpu_instance_1(struct test_result *);
+void tensor_add_test_cpu_instance_2(struct test_result *);
+void tensor_add_test_cpu_instance_3(struct test_result *);
 
 int main(int argc, char **argv)
 {
     struct test_list *tests = tests_list_alloc();
     test_list_append(tests, &tensor2d_mult_test_cpu_instance_1, "tensor2d_mult_test_cpu_instance_1");
+    test_list_append(tests, &tensor_add_test_cpu_instance_1, "tensor_add_test_cpu_instance_1");
+    test_list_append(tests, &tensor_add_test_cpu_instance_2, "tensor_add_test_cpu_instance_2");
+    test_list_append(tests, &tensor_add_test_cpu_instance_3, "tensor_add_test_cpu_instance_3");
 
     run_tests(tests);
 
@@ -61,4 +68,100 @@ void tensor2d_mult_test_cpu_instance_1(struct test_result *const result)
     tensor2d_mult(t1, t2, &out, false, &allocs);
 
     ASSERT_TRUE(tensor_no_grad_equal(out, EXPECTED_OUT), "One or more output values incorrect.");
+
+    tensor_cpu_allocator_cleanup(&tensor_alloc);
+    computational_graph_cpu_allocator_cleanup(&graph_alloc);
+}
+
+void tensor_add_test_cpu_instance_1(struct test_result *result)
+{
+    struct tensor_allocator tensor_alloc;
+    tensor_cpu_allocator_init(&tensor_alloc);
+
+    struct computational_graph_allocator graph_alloc;
+    computational_graph_cpu_allocator_init(&graph_alloc);
+
+    struct allocators allocs = {&tensor_alloc, &graph_alloc};
+
+    const cgrad_dtype DTYPE = DTYPE_FLOAT32;
+
+    const size_t shape[] = {2, 2};
+    const float t1_data[] = {1.0, 2.0, 3.0, 4.0};
+    struct tensor *t1 = tensor_allocator_from_array_alloc(&tensor_alloc, t1_data, shape, 2, DTYPE);
+
+    const float t2_data[] = {5.0, 6.0, 7.0, 8.0};
+    struct tensor *t2 = tensor_allocator_from_array_alloc(&tensor_alloc, t2_data, shape, 2, DTYPE);
+
+    const float expected_out_data[] = {6.0, 8.0, 10.0, 12.0};
+    struct tensor *EXPECTED_OUT = tensor_allocator_from_array_alloc(&tensor_alloc, expected_out_data, shape, 2, DTYPE);
+
+    struct tensor *out = NULL;
+    tensor_add(t1, t2, &out, false, &allocs);
+
+    ASSERT_TRUE(tensor_no_grad_equal(out, EXPECTED_OUT), "One or more output values incorrect.");
+
+    tensor_cpu_allocator_cleanup(&tensor_alloc);
+    computational_graph_cpu_allocator_cleanup(&graph_alloc);
+}
+
+void tensor_add_test_cpu_instance_2(struct test_result *result)
+{
+    struct tensor_allocator tensor_alloc;
+    tensor_cpu_allocator_init(&tensor_alloc);
+
+    struct computational_graph_allocator graph_alloc;
+    computational_graph_cpu_allocator_init(&graph_alloc);
+
+    struct allocators allocs = {&tensor_alloc, &graph_alloc};
+
+    const cgrad_dtype DTYPE = DTYPE_FLOAT32;
+
+    const size_t shape[] = {3, 2};
+    const float t1_data[] = {0.1, 0.2, 1.0, 1.1, -2.0, 0.5};
+    struct tensor *t1 = tensor_allocator_from_array_alloc(&tensor_alloc, t1_data, shape, 2, DTYPE);
+
+    const float t2_data[] = {0.0, 2.0, -1.0, 10.0, 7.0, 8.0};
+    struct tensor *t2 = tensor_allocator_from_array_alloc(&tensor_alloc, t2_data, shape, 2, DTYPE);
+
+    const float expected_out_data[] = {0.1, 2.2, 0.0, 11.1, 5.0, 8.5};
+    struct tensor *EXPECTED_OUT = tensor_allocator_from_array_alloc(&tensor_alloc, expected_out_data, shape, 2, DTYPE);
+
+    struct tensor *out = NULL;
+    tensor_add(t1, t2, &out, false, &allocs);
+
+    ASSERT_TRUE(tensor_no_grad_equal(out, EXPECTED_OUT), "One or more output values incorrect.");
+
+    tensor_cpu_allocator_cleanup(&tensor_alloc);
+    computational_graph_cpu_allocator_cleanup(&graph_alloc);
+}
+
+void tensor_add_test_cpu_instance_3(struct test_result *result)
+{
+    struct tensor_allocator tensor_alloc;
+    tensor_cpu_allocator_init(&tensor_alloc);
+
+    struct computational_graph_allocator graph_alloc;
+    computational_graph_cpu_allocator_init(&graph_alloc);
+
+    struct allocators allocs = {&tensor_alloc, &graph_alloc};
+
+    const cgrad_dtype DTYPE = DTYPE_FLOAT32;
+
+    const size_t shape[] = {3, 2};
+    const float t1_data[] = {0.1, 0.2, 1.0, 1.1, -2.0, 0.5};
+    struct tensor *t1 = tensor_allocator_from_array_alloc(&tensor_alloc, t1_data, shape, 2, DTYPE);
+
+    const float t2_data[] = {0.0, 2.0, -1.0, 10.0, 7.0, 8.0};
+    struct tensor *t2 = tensor_allocator_from_array_alloc(&tensor_alloc, t2_data, shape, 2, DTYPE);
+
+    const float expected_out_data[] = {1.1, 1.2, 1.0, 10.1, 7.0, 8.5};
+    struct tensor *EXPECTED_OUT = tensor_allocator_from_array_alloc(&tensor_alloc, expected_out_data, shape, 2, DTYPE);
+
+    struct tensor *out = NULL;
+    tensor_add(t1, t2, &out, false, &allocs);
+
+    ASSERT_TRUE(!tensor_no_grad_equal(out, EXPECTED_OUT), "One or more output values incorrect.");
+
+    tensor_cpu_allocator_cleanup(&tensor_alloc);
+    computational_graph_cpu_allocator_cleanup(&graph_alloc);
 }
