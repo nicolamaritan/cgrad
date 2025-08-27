@@ -1,4 +1,4 @@
-#include "cgrad_test/datastructures/test_list.h"
+#include "cgrad_test/datastructures/test_list/test_list.h"
 #include <string.h>
 
 static struct test_list_node *test_list_node_alloc(test_case test_case_func);

@@ -3,8 +3,13 @@
 
 #include "cgrad_test/config.h"
 #include "cgrad_test/test_result.h"
-#include "cgrad_test/test_result_error.h"
 #include <string.h>
+
+typedef enum 
+{
+    TEST_OK = 0,
+    TEST_FAILED,
+} cgrad_test_result_error;
 
 struct test_result
 {

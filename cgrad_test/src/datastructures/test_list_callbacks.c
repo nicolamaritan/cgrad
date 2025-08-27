@@ -1,4 +1,4 @@
-#include "cgrad_test/datastructures/test_list_callbacks.h"
+#include "cgrad_test/datastructures/test_list/test_list_callbacks.h"
 #include <stdio.h>
 
 void report_failures(const char *test_name, struct test_result *result, void *user)
