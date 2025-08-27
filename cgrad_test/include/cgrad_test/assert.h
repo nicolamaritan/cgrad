@@ -11,9 +11,11 @@ static inline void test_result_set_error(struct test_result *const result, cgrad
         if (!expr)                                           \
         {                                                    \
             test_result_set_error(result, TEST_FAILED, msg); \
-            return;                                          \
+            goto test_cleanup;                               \
         }                                                    \
     } while (0)
+
+#define ASSERT_FALSE(expr, msg) ASSERT_TRUE(!expr, msg)
 
 static inline void test_result_set_error(struct test_result *const result, cgrad_test_result_error err, const char *msg)
 {

@@ -48,7 +48,7 @@ static inline struct tensor *tensor_allocator_no_grad_zero_alloc(struct tensor_a
 
 static inline struct tensor *tensor_allocator_from_array_alloc(struct tensor_allocator *allocator, const void *data, const size_t *shape, const size_t shape_size, const cgrad_dtype dtype)
 {
-    allocator->from_array_alloc(allocator->pool, data, shape, shape_size, dtype);
+    return allocator->from_array_alloc(allocator->pool, data, shape, shape_size, dtype);
 }
 
 static inline void tensor_allocator_free(struct tensor_allocator *allocator, struct tensor *ptr)
