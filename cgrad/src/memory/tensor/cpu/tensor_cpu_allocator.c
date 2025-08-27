@@ -7,6 +7,8 @@ static struct tensor *tensor_cpu_no_grad_alloc(void *pool, const size_t *const s
 
 static struct tensor *tensor_cpu_no_grad_zero_alloc(void *pool, const size_t *const shape, const size_t shape_size, const cgrad_dtype dtype);
 
+static struct tensor *tensor_cpu_from_array_alloc(void *pool, const void *data, const size_t *const shape, const size_t shape_size, const cgrad_dtype dtype);
+
 static void tensor_cpu_free(void *pool, struct tensor *t);
 
 static void tensor_cpu_no_grad_free(void *pool, struct tensor *t);
@@ -37,6 +39,7 @@ cgrad_error tensor_cpu_allocator_init(struct tensor_allocator *const tensor_allo
     tensor_alloc->alloc = tensor_cpu_alloc,
     tensor_alloc->no_grad_alloc = tensor_cpu_no_grad_alloc,
     tensor_alloc->no_grad_zero_alloc = tensor_cpu_no_grad_zero_alloc,
+    tensor_alloc->from_array_alloc = tensor_cpu_from_array_alloc;
     tensor_alloc->free = tensor_cpu_free,
     tensor_alloc->no_grad_free = tensor_cpu_no_grad_free,
     tensor_alloc->clone = tensor_cpu_clone,
@@ -154,6 +157,19 @@ static struct tensor *tensor_cpu_no_grad_zero_alloc(void *pool, const size_t *co
     t->shape_size = shape_size;
     t->grad = NULL;
     t->dtype = dtype;
+
+    return t;
+}
+
+static struct tensor *tensor_cpu_from_array_alloc(void *pool, const void *data, const size_t *const shape, const size_t shape_size, const cgrad_dtype dtype)
+{
+    struct tensor *t = tensor_cpu_alloc(pool, shape, shape_size, dtype);
+    if (!t)
+    {
+        return NULL;
+    }
+
+    memcpy(t->data, data, t->data_size * dtype_sizeof(dtype));
 
     return t;
 }

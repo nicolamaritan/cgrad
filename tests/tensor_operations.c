@@ -47,24 +47,15 @@ void tensor2d_mult_test_cpu_instance_1(struct test_result *const result)
 
     const cgrad_dtype DTYPE = DTYPE_FLOAT32;
 
-    size_t shape[] = {2, 2};
-    struct tensor *t1 = tensor_allocator_alloc(&tensor_alloc, shape, 2, DTYPE);
-    tensor2d_set(t1, 0, 0, 1.0f);
-    tensor2d_set(t1, 0, 1, 2.0f);
-    tensor2d_set(t1, 1, 0, 3.0f);
-    tensor2d_set(t1, 1, 1, 4.0f);
+    const size_t shape[] = {2, 2};
+    const float t1_data[] = {1.0, 2.0, 3.0, 4.0};
+    struct tensor *t1 = tensor_allocator_from_array_alloc(&tensor_alloc, t1_data, shape, 2, DTYPE);
 
-    struct tensor *t2 = tensor_allocator_alloc(&tensor_alloc, shape, 2, DTYPE);
-    tensor2d_set(t2, 0, 0, 1.0f);
-    tensor2d_set(t2, 0, 1, 2.0f);
-    tensor2d_set(t2, 1, 0, 3.0f);
-    tensor2d_set(t2, 1, 1, 4.0f);
+    const float t2_data[] = {1.0, 2.0, 3.0, 4.0};
+    struct tensor *t2 = tensor_allocator_from_array_alloc(&tensor_alloc, t2_data, shape, 2, DTYPE);
 
-    struct tensor *EXPECTED_OUT = tensor_allocator_alloc(&tensor_alloc, shape, 2, DTYPE);
-    tensor2d_set(EXPECTED_OUT, 0, 0, 7.0f);
-    tensor2d_set(EXPECTED_OUT, 0, 1, 10.0f);
-    tensor2d_set(EXPECTED_OUT, 1, 0, 15.0f);
-    tensor2d_set(EXPECTED_OUT, 1, 1, 22.0f);
+    const float expected_out_data[] = {7.0, 10.0, 15.0, 22.0};
+    struct tensor *EXPECTED_OUT = tensor_allocator_from_array_alloc(&tensor_alloc, expected_out_data, shape, 2, DTYPE);
 
     struct tensor *out = NULL;
     tensor2d_mult(t1, t2, &out, false, &allocs);
