@@ -43,14 +43,9 @@ cgrad_error tensor_cpu_pool_init(struct tensor_cpu_pool *pool)
     return NO_ERROR;
 }
 
-void *tensor_cpu_pool_tensor_alloc(struct tensor_cpu_pool *pool, const size_t size)
+void *tensor_cpu_pool_tensor_alloc(struct tensor_cpu_pool *pool)
 {
     if (!pool || !pool->tensor_chunk_head)
-    {
-        return NULL;
-    }
-
-    if (size > MEMORY_TENSOR_POOL_DATA_CHUNK_SIZE)
     {
         return NULL;
     }

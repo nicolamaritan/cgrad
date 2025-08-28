@@ -95,7 +95,7 @@ static struct tensor *tensor_cpu_no_grad_alloc(void *pool, const size_t *const s
     }
 
     struct tensor_cpu_pool *cpu_pool = (struct tensor_cpu_pool *)pool;
-    struct tensor *t = tensor_cpu_pool_tensor_alloc(cpu_pool, data_size);
+    struct tensor *t = tensor_cpu_pool_tensor_alloc(cpu_pool);
     if (!t)
     {
         return NULL;
@@ -133,7 +133,7 @@ static struct tensor *tensor_cpu_no_grad_zero_alloc(void *pool, const size_t *co
     }
 
     struct tensor_cpu_pool *cpu_pool = (struct tensor_cpu_pool *)pool;
-    struct tensor *t = tensor_cpu_pool_tensor_alloc(cpu_pool, data_size);
+    struct tensor *t = tensor_cpu_pool_tensor_alloc(cpu_pool);
     if (!t)
     {
         return NULL;

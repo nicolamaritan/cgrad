@@ -8,7 +8,7 @@ static inline void test_result_set_error(struct test_result *const result, cgrad
 #define ASSERT_TRUE(expr, msg)                               \
     do                                                       \
     {                                                        \
-        if (!expr)                                           \
+        if (!(expr))                                         \
         {                                                    \
             test_result_set_error(result, TEST_FAILED, msg); \
             goto test_cleanup;                               \
