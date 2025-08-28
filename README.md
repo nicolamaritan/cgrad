@@ -6,19 +6,25 @@ Deep Learning library for the C programming language.
 
 ## Build 
 
-A Makefile is provided in the project root. To build the project, run:
+The project uses CMake as its build system. Two build types are provided:
 
+- **Release build**:
 ```bash
-make
+mkdir -p build
+cd build
+cmake -DCMAKE_BUILD_TYPES=Release ..
+cmake --build .
 ```
 
-This command compiles the source files in `src/` and builds all examples in the `examples/` directory.
-
-For debug builds, run:
-
+- **Debug build**:
 ```bash
-make debug
+mkdir -p build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+cmake --build .
 ```
+
+This command compiles the source files in the `build/` directory.
 
 ## Features
 - Tensor library
@@ -38,19 +44,19 @@ Some examples are provided inside the `examples` directory to demonstrate the us
 ### Regression example
 The `mlp_regression.c` example fits a 2-layers MLP with ReLU activation on the `tanh` of a random linear combination of the inputs.
 
-1. Build the project using `make`.
-2. Execute the example executable:
+1. Build the project using CMake.
+2. Execute the example executable from the project's root directory:
 
 ```bash
-./examples/mlp_regression.out
+./build/examples/mlp_regression.out
 ```
 
 ### MNIST classification example
 The `mlp_mnist_classification.c` example fits a 2-layers MLP with ReLU activation on a flattened version of the MNIST dataset.
 
-1. Build the project using `make`.
-2. Execute the example executable:
+1. Build the project using CMake.
+2. Execute the example executable from the project's root directory:
 
 ```bash
-./examples/mlp_mnist_classification.out <mnist_train_dataset_path>
+./build/examples/mlp_mnist_classification.out <mnist_train_dataset_path>
 ```
