@@ -14,17 +14,17 @@ struct backpropagation_targets
     size_t size;
 };
 
-static cgrad_error build_gradients(struct computational_graph_node *loss_node, struct allocators *allocs, struct backpropagation_targets *targets);
+static cgrad_error build_gradients(struct computational_graph_node *loss_node, struct cgrad_env *env, struct backpropagation_targets *targets);
 static cgrad_error add_target(struct backpropagation_targets* const targets, struct computational_graph_node* const node);
 static inline cgrad_error set_gradient_wrt_itself(struct tensor* const t);
 
-cgrad_error backward(struct tensor* t, struct allocators *allocs)
+cgrad_error backward(struct tensor* t, struct cgrad_env *env)
 {
     if (!t)
     {
         return TENSOR_NULL;
     }
-    if (!allocs)
+    if (!env)
     {
         return ALLOCATORS_NULL;
     }
@@ -38,7 +38,7 @@ cgrad_error backward(struct tensor* t, struct allocators *allocs)
         return err;
     }
 
-    if ((err = build_gradients(t->node, allocs, &targets)) != NO_ERROR)
+    if ((err = build_gradients(t->node, env, &targets)) != NO_ERROR)
     {
         return err;
     }
@@ -47,13 +47,13 @@ cgrad_error backward(struct tensor* t, struct allocators *allocs)
     {
         struct computational_graph_node* node = targets.targets[i];
         node->t->node = NULL;
-        computational_graph_allocator_free(allocs->graph_alloc, node);
+        computational_graph_allocator_free(&env->graph_alloc, node);
     }
 
     return NO_ERROR;
 }
 
-static cgrad_error build_gradients(struct computational_graph_node *loss_node, struct allocators *allocs, struct backpropagation_targets *targets)
+static cgrad_error build_gradients(struct computational_graph_node *loss_node, struct cgrad_env *env, struct backpropagation_targets *targets)
 {
     cgrad_error err = NO_ERROR;
 
@@ -80,7 +80,7 @@ static cgrad_error build_gradients(struct computational_graph_node *loss_node, s
         for (size_t i = 0; i < node->n_children; i++)
         {
             struct computational_graph_node *child_node = node->children[i];
-            struct tensor *gradient = tensor_allocator_no_grad_alloc(allocs->tensor_alloc, child_node->t->shape, child_node->t->shape_size, loss_node->t->dtype);
+            struct tensor *gradient = tensor_allocator_no_grad_alloc(&env->tensor_alloc, child_node->t->shape, child_node->t->shape_size, loss_node->t->dtype);
             if (!gradient)
             {
                 return TENSOR_ALLOCATION_FAILED;
@@ -106,7 +106,7 @@ static cgrad_error build_gradients(struct computational_graph_node *loss_node, s
 
             child_node->pushed_gradients_count++;
 
-            tensor_allocator_free(allocs->tensor_alloc, gradient);
+            tensor_allocator_free(&env->tensor_alloc, gradient);
 
             if (child_node->pushed_gradients_count == child_node->n_parents)
             {

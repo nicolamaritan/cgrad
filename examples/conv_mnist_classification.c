@@ -3,7 +3,7 @@
 #include "cgrad/layers/relu.h"
 #include "cgrad/losses/cross_entropy.h"
 #include "cgrad/autograd/backpropagation/backpropagation.h"
-#include "cgrad/memory/allocators.h"
+#include "cgrad/cgrad_env.h"
 #include "cgrad/model/model_params.h"
 #include "cgrad/tensor/tensor.h"
 #include "cgrad/tensor/tensor2d_mult.h"
@@ -13,8 +13,7 @@
 #include "cgrad/optimizers/sgd.h"
 #include "cgrad/dataset/csv_dataset.h"
 #include "cgrad/dataset/indexes_permutation.h"
-#include "cgrad/memory/tensor/cpu/tensor_cpu_allocator.h"
-#include "cgrad/memory/computational_graph/computational_graph_cpu_allocator.h"
+#include "cgrad/cgrad_env.h"
 #include "cgrad/utils/random.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,27 +31,14 @@ int main(int argc, char **argv)
     }
 
     const int SEED = 42;
-    init_random_seed(SEED);
-
+    const size_t INTERMEDIATES_CAPACITY = 20;
     const cgrad_dtype DTYPE = DTYPE_FLOAT32;
 
-    struct computational_graph_cpu_pool graph_pool;
-    if (computational_graph_cpu_pool_init(&graph_pool) != NO_ERROR)
+    struct cgrad_env env;
+    if (cgrad_env_init(&env, SEED, INTERMEDIATES_CAPACITY) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
-
-    // Allocator initialization
-    struct tensor_allocator tensor_alloc;
-    tensor_cpu_allocator_init(&tensor_alloc);
-
-    struct computational_graph_allocator graph_alloc;
-    computational_graph_cpu_allocator_init(&graph_alloc);
-
-    struct allocators allocs = {&tensor_alloc, &graph_alloc};
-
-    const size_t INTERMEDIATES_CAPACITY = 20;
-    struct tensor_list *intermediates = tensor_list_alloc(INTERMEDIATES_CAPACITY);
 
     const size_t BATCH_SIZE = 64;
     const size_t NUM_CLASSES = 10;
@@ -75,7 +61,7 @@ int main(int argc, char **argv)
     const size_t CONV1_IN_CHANNELS = 1;
     const size_t CONV1_OUT_CHANNELS = 4;
     const size_t CONV1_KERNEL_SIZE = 3;
-    if (conv2d_init(&conv1, CONV1_IN_CHANNELS, CONV1_OUT_CHANNELS, CONV1_KERNEL_SIZE, DTYPE, &allocs) != NO_ERROR)
+    if (conv2d_init(&conv1, CONV1_IN_CHANNELS, CONV1_OUT_CHANNELS, CONV1_KERNEL_SIZE, DTYPE, &env) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
@@ -87,7 +73,7 @@ int main(int argc, char **argv)
     struct conv2d conv2;
     const size_t CONV2_OUT_CHANNELS = 4;
     const size_t CONV2_KERNEL_SIZE = 3;
-    if (conv2d_init(&conv2, CONV1_OUT_CHANNELS, CONV2_OUT_CHANNELS, CONV2_KERNEL_SIZE, DTYPE, &allocs) != NO_ERROR)
+    if (conv2d_init(&conv2, CONV1_OUT_CHANNELS, CONV2_OUT_CHANNELS, CONV2_KERNEL_SIZE, DTYPE, &env) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
@@ -98,7 +84,7 @@ int main(int argc, char **argv)
 
     struct linear linear1;
     const size_t LINEAR1_IN = 2304;
-    if (linear_init(&linear1, LINEAR1_IN, NUM_CLASSES, DTYPE, &allocs) != NO_ERROR)
+    if (linear_init(&linear1, LINEAR1_IN, NUM_CLASSES, DTYPE, &env) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
@@ -117,7 +103,7 @@ int main(int argc, char **argv)
 
     // Setup optimizer
     struct sgd_optimizer opt;
-    if (sgd_optimizer_init(&opt, &params, &tensor_alloc) != NO_ERROR)
+    if (sgd_optimizer_init(&opt, &params, &env) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
@@ -161,7 +147,7 @@ int main(int argc, char **argv)
             struct tensor *x = NULL;
             struct tensor *y = NULL;
             // Sample batch
-            if (csv_dataset_sample_batch(train_set, &x, &y, ixs_batch, DTYPE, &tensor_alloc) != NO_ERROR)
+            if (csv_dataset_sample_batch(train_set, &x, &y, ixs_batch, DTYPE, &env) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
@@ -170,44 +156,44 @@ int main(int argc, char **argv)
             struct tensor *x_reshaped = NULL;
             size_t img_shape[] = {BATCH_SIZE, 1, 28, 28};
             size_t img_shape_size = 4;
-            if (tensor_reshape(x, img_shape, img_shape_size, &x_reshaped, true, &allocs) != NO_ERROR)
+            if (tensor_reshape(x, img_shape, img_shape_size, &x_reshaped, true, &env) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
 
             struct tensor *h1 = NULL;
-            if (conv2d_forward(&conv1, x_reshaped, &h1, intermediates, true) != NO_ERROR)
+            if (conv2d_forward(&conv1, x_reshaped, &h1, true) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
 
             struct tensor *h2 = NULL;
-            if (relu_forward(h1, &h2, true, &allocs) != NO_ERROR)
+            if (relu_forward(h1, &h2, true, &env) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
 
             struct tensor *h3 = NULL;
-            if (conv2d_forward(&conv2, h2, &h3, intermediates, true) != NO_ERROR)
+            if (conv2d_forward(&conv2, h2, &h3, true) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
 
             struct tensor *h3_flattened = NULL;
             size_t h3_flattened_shape[] = {iter_batch_size, 2304};
-            if (tensor_reshape(h3, h3_flattened_shape, 2, &h3_flattened, true, &allocs) != NO_ERROR)
+            if (tensor_reshape(h3, h3_flattened_shape, 2, &h3_flattened, true, &env) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
 
             struct tensor *h4 = NULL;
-            if (linear_forward(&linear1, h3_flattened, &h4, intermediates, true) != NO_ERROR)
+            if (linear_forward(&linear1, h3_flattened, &h4, true) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
 
             struct tensor *z = NULL;
-            if (cross_entropy_loss(h4, y, &z, true, &allocs) != NO_ERROR)
+            if (cross_entropy_loss(h4, y, &z, true, &env) != NO_ERROR)
             {
                 return EXIT_FAILURE;
             }
@@ -221,21 +207,21 @@ int main(int argc, char **argv)
 
             // ------------- Backward -------------
             zero_grad(&params);
-            backward(z, &allocs);
+            backward(z, &env);
 
             sgd_optimizer_step(&opt, lr, momentum, false);
 
             // Clear iteration allocations
-            tensor_list_free_all(intermediates, &tensor_alloc);
-            tensor_allocator_free(&tensor_alloc, x);
-            tensor_allocator_free(&tensor_alloc, x_reshaped);
-            tensor_allocator_free(&tensor_alloc, y);
-            tensor_allocator_free(&tensor_alloc, h1);
-            tensor_allocator_free(&tensor_alloc, h2);
-            tensor_allocator_free(&tensor_alloc, h3);
-            tensor_allocator_free(&tensor_alloc, h3_flattened);
-            tensor_allocator_free(&tensor_alloc, h4);
-            tensor_allocator_free(&tensor_alloc, z);
+            cgrad_env_free_intermediates(&env);
+            tensor_free(&env, x);
+            tensor_free(&env, x_reshaped);
+            tensor_free(&env, y);
+            tensor_free(&env, h1);
+            tensor_free(&env, h2);
+            tensor_free(&env, h3);
+            tensor_free(&env, h3_flattened);
+            tensor_free(&env, h4);
+            tensor_free(&env, z);
 
             index_permutation_update(permutation, iter_batch_size);
             iteration++;
@@ -247,7 +233,6 @@ int main(int argc, char **argv)
     conv2d_cleanup(&conv1);
     conv2d_cleanup(&conv2);
     indexes_batch_free(ixs_batch);
-    tensor_cpu_allocator_cleanup(&tensor_alloc);
-    computational_graph_cpu_allocator_cleanup(&graph_alloc);
+    cgrad_env_cleanup(&env);
     return EXIT_SUCCESS;
 }

@@ -19,7 +19,7 @@ static cgrad_error add_child(struct computational_graph_node *const node, struct
  */
 static cgrad_error add_parent(struct computational_graph_node *const node, struct computational_graph_node *const parent);
 
-cgrad_error add_computational_graph_link(struct tensor *operand, size_t operand_id, struct tensor *result, backpropagation_function backprop_function, struct allocators *allocs)
+cgrad_error add_computational_graph_link(struct tensor *operand, size_t operand_id, struct tensor *result, backpropagation_function backprop_function, struct cgrad_env *env)
 {
     if (!operand || !result)
     {
@@ -29,7 +29,7 @@ cgrad_error add_computational_graph_link(struct tensor *operand, size_t operand_
     {
         return TENSOR_GRAD_NULL;
     }
-    if (!allocs)
+    if (!env)
     {
         return ALLOCATORS_NULL;
     }
@@ -42,12 +42,12 @@ cgrad_error add_computational_graph_link(struct tensor *operand, size_t operand_
 
     if (!operand->node)
     {
-        operand->node = computational_graph_allocator_alloc(allocs->graph_alloc, operand);
+        operand->node = computational_graph_allocator_alloc(&env->graph_alloc, operand);
         if (!operand->node)
         {
             return AUTOGRAD_COMPUTATIONAL_GRAPH_NODE_ALLOCATION_ERROR;
         }
-        if ((err = context_init(&operand->node->ctx, allocs->tensor_alloc)) != NO_ERROR)
+        if ((err = context_init(&operand->node->ctx, &env->tensor_alloc)) != NO_ERROR)
         {
             return err;
         }
@@ -55,13 +55,13 @@ cgrad_error add_computational_graph_link(struct tensor *operand, size_t operand_
 
     if (!result->node)
     {
-        result->node = computational_graph_allocator_alloc(allocs->graph_alloc, result);
+        result->node = computational_graph_allocator_alloc(&env->graph_alloc, result);
         if (!result->node)
         {
-            computational_graph_allocator_free(allocs->graph_alloc, operand->node);
+            computational_graph_allocator_free(&env->graph_alloc, operand->node);
             return AUTOGRAD_COMPUTATIONAL_GRAPH_NODE_ALLOCATION_ERROR;
         }
-        if ((err = context_init(&result->node->ctx, allocs->tensor_alloc)) != NO_ERROR)
+        if ((err = context_init(&result->node->ctx, &env->tensor_alloc)) != NO_ERROR)
         {
             return err;
         }
@@ -73,15 +73,15 @@ cgrad_error add_computational_graph_link(struct tensor *operand, size_t operand_
     // Setup connection
     if ((err = add_parent(op_node, res_node)) != NO_ERROR)
     {
-        computational_graph_allocator_free(allocs->graph_alloc, op_node);
-        computational_graph_allocator_free(allocs->graph_alloc, res_node);
+        computational_graph_allocator_free(&env->graph_alloc, op_node);
+        computational_graph_allocator_free(&env->graph_alloc, res_node);
         return err;
     }
 
     if ((err = add_child(res_node, op_node, operand_id)) != NO_ERROR)
     {
-        computational_graph_allocator_free(allocs->graph_alloc, op_node);
-        computational_graph_allocator_free(allocs->graph_alloc, res_node);
+        computational_graph_allocator_free(&env->graph_alloc, op_node);
+        computational_graph_allocator_free(&env->graph_alloc, res_node);
         return err;
     }
 

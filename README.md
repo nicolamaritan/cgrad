@@ -12,7 +12,7 @@ The project uses CMake as its build system. Two build types are provided:
 ```bash
 mkdir -p build
 cd build
-cmake -DCMAKE_BUILD_TYPES=Release ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 cmake --build .
 ```
 

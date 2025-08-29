@@ -44,128 +44,112 @@ int main(int argc, char **argv)
 
 void tensor2d_mult_test_cpu_instance_1(struct test_result *const result)
 {
-    struct tensor_allocator tensor_alloc;
-    tensor_cpu_allocator_init(&tensor_alloc);
+    const int SEED = 42;
+    const size_t INTERMEDIATES_CAPACITY = 20;
+    const cgrad_dtype DTYPE = DTYPE_FLOAT32;
 
-    struct computational_graph_allocator graph_alloc;
-    computational_graph_cpu_allocator_init(&graph_alloc);
-
-    struct allocators allocs = {&tensor_alloc, &graph_alloc};
-
-    const cgrad_dtype dtype = DTYPE_FLOAT32;
+    struct cgrad_env env;
+    ASSERT_TRUE(cgrad_env_init(&env, SEED, INTERMEDIATES_CAPACITY) == NO_ERROR, "CGrad Environment Initialization should not fail.");
 
     const size_t shape[] = {2, 2};
     const float t1_data[] = {1.0, 2.0, 3.0, 4.0};
-    struct tensor *t1 = tensor_allocator_from_array_alloc(&tensor_alloc, t1_data, shape, 2, dtype);
+    struct tensor *t1 = tensor_from_array_alloc(&env, t1_data, shape, 2, DTYPE);
 
     const float t2_data[] = {1.0, 2.0, 3.0, 4.0};
-    struct tensor *t2 = tensor_allocator_from_array_alloc(&tensor_alloc, t2_data, shape, 2, dtype);
+    struct tensor *t2 = tensor_from_array_alloc(&env, t2_data, shape, 2, DTYPE);
 
     const float expected_out_data[] = {7.0, 10.0, 15.0, 22.0};
-    struct tensor *expected_out = tensor_allocator_from_array_alloc(&tensor_alloc, expected_out_data, shape, 2, dtype);
+    struct tensor *expected_out = tensor_from_array_alloc(&env, expected_out_data, shape, 2, DTYPE);
 
     struct tensor *out = NULL;
-    tensor2d_mult(t1, t2, &out, false, &allocs);
+    tensor2d_mult(t1, t2, &out, false, &env);
 
     ASSERT_TRUE(tensor_no_grad_equal(out, expected_out), "One or more output values incorrect.");
 
 test_cleanup:
-    tensor_cpu_allocator_cleanup(&tensor_alloc);
-    computational_graph_cpu_allocator_cleanup(&graph_alloc);
+    cgrad_env_cleanup(&env);
 }
 
 void tensor_add_test_cpu_instance_1(struct test_result *result)
 {
-    struct tensor_allocator tensor_alloc;
-    tensor_cpu_allocator_init(&tensor_alloc);
+    const int SEED = 42;
+    const size_t INTERMEDIATES_CAPACITY = 20;
+    const cgrad_dtype DTYPE = DTYPE_FLOAT32;
 
-    struct computational_graph_allocator graph_alloc;
-    computational_graph_cpu_allocator_init(&graph_alloc);
-
-    struct allocators allocs = {&tensor_alloc, &graph_alloc};
-
-    const cgrad_dtype dtype = DTYPE_FLOAT32;
+    struct cgrad_env env;
+    ASSERT_TRUE(cgrad_env_init(&env, SEED, INTERMEDIATES_CAPACITY) == NO_ERROR, "CGrad Environment Initialization should not fail.");
 
     const size_t shape[] = {2, 2};
     const float t1_data[] = {1.0, 2.0, 3.0, 4.0};
-    struct tensor *t1 = tensor_allocator_from_array_alloc(&tensor_alloc, t1_data, shape, 2, dtype);
+    struct tensor *t1 = tensor_from_array_alloc(&env, t1_data, shape, 2, DTYPE);
 
     const float t2_data[] = {5.0, 6.0, 7.0, 8.0};
-    struct tensor *t2 = tensor_allocator_from_array_alloc(&tensor_alloc, t2_data, shape, 2, dtype);
+    struct tensor *t2 = tensor_from_array_alloc(&env, t2_data, shape, 2, DTYPE);
 
     const float expected_out_data[] = {6.0, 8.0, 10.0, 12.0};
-    struct tensor *expected_out = tensor_allocator_from_array_alloc(&tensor_alloc, expected_out_data, shape, 2, dtype);
+    struct tensor *expected_out = tensor_from_array_alloc(&env, expected_out_data, shape, 2, DTYPE);
 
     struct tensor *out = NULL;
-    tensor_add(t1, t2, &out, false, &allocs);
+    tensor_add(t1, t2, &out, false, &env);
 
     ASSERT_TRUE(tensor_no_grad_equal(out, expected_out), "One or more output values incorrect.");
 
 test_cleanup:
-    tensor_cpu_allocator_cleanup(&tensor_alloc);
-    computational_graph_cpu_allocator_cleanup(&graph_alloc);
+    cgrad_env_cleanup(&env);
 }
 
 void tensor_add_test_cpu_instance_2(struct test_result *result)
 {
-    struct tensor_allocator tensor_alloc;
-    tensor_cpu_allocator_init(&tensor_alloc);
+    const int SEED = 42;
+    const size_t INTERMEDIATES_CAPACITY = 20;
+    const cgrad_dtype DTYPE = DTYPE_FLOAT32;
 
-    struct computational_graph_allocator graph_alloc;
-    computational_graph_cpu_allocator_init(&graph_alloc);
-
-    struct allocators allocs = {&tensor_alloc, &graph_alloc};
-
-    const cgrad_dtype dtype = DTYPE_FLOAT32;
+    struct cgrad_env env;
+    ASSERT_TRUE(cgrad_env_init(&env, SEED, INTERMEDIATES_CAPACITY) == NO_ERROR, "CGrad Environment Initialization should not fail.");
 
     const size_t shape[] = {3, 2};
     const float t1_data[] = {0.1, 0.2, 1.0, 1.1, -2.0, 0.5};
-    struct tensor *t1 = tensor_allocator_from_array_alloc(&tensor_alloc, t1_data, shape, 2, dtype);
+    struct tensor *t1 = tensor_from_array_alloc(&env, t1_data, shape, 2, DTYPE);
 
     const float t2_data[] = {0.0, 2.0, -1.0, 10.0, 7.0, 8.0};
-    struct tensor *t2 = tensor_allocator_from_array_alloc(&tensor_alloc, t2_data, shape, 2, dtype);
+    struct tensor *t2 = tensor_from_array_alloc(&env, t2_data, shape, 2, DTYPE);
 
     const float expected_out_data[] = {0.1, 2.2, 0.0, 11.1, 5.0, 8.5};
-    struct tensor *expected_out = tensor_allocator_from_array_alloc(&tensor_alloc, expected_out_data, shape, 2, dtype);
+    struct tensor *expected_out = tensor_from_array_alloc(&env, expected_out_data, shape, 2, DTYPE);
 
     struct tensor *out = NULL;
-    tensor_add(t1, t2, &out, false, &allocs);
+    tensor_add(t1, t2, &out, false, &env);
 
     ASSERT_TRUE(tensor_no_grad_equal(out, expected_out), "One or more output values incorrect.");
 
 test_cleanup:
-    tensor_cpu_allocator_cleanup(&tensor_alloc);
-    computational_graph_cpu_allocator_cleanup(&graph_alloc);
+    cgrad_env_cleanup(&env);
 }
 
 void tensor_add_test_cpu_instance_3(struct test_result *result)
 {
-    struct tensor_allocator tensor_alloc;
-    tensor_cpu_allocator_init(&tensor_alloc);
+    const int SEED = 42;
+    const size_t INTERMEDIATES_CAPACITY = 20;
+    const cgrad_dtype DTYPE = DTYPE_FLOAT32;
 
-    struct computational_graph_allocator graph_alloc;
-    computational_graph_cpu_allocator_init(&graph_alloc);
-
-    struct allocators allocs = {&tensor_alloc, &graph_alloc};
-
-    const cgrad_dtype dtype = DTYPE_FLOAT32;
+    struct cgrad_env env;
+    ASSERT_TRUE(cgrad_env_init(&env, SEED, INTERMEDIATES_CAPACITY) == NO_ERROR, "CGrad Environment Initialization should not fail.");
 
     const size_t shape[] = {3, 2};
     const float t1_data[] = {0.1, 0.2, 1.0, 1.1, -2.0, 0.5};
-    struct tensor *t1 = tensor_allocator_from_array_alloc(&tensor_alloc, t1_data, shape, 2, dtype);
+    struct tensor *t1 = tensor_from_array_alloc(&env, t1_data, shape, 2, DTYPE);
 
     const float t2_data[] = {0.0, 2.0, -1.0, 10.0, 7.0, 8.0};
-    struct tensor *t2 = tensor_allocator_from_array_alloc(&tensor_alloc, t2_data, shape, 2, dtype);
+    struct tensor *t2 = tensor_from_array_alloc(&env, t2_data, shape, 2, DTYPE);
 
     const float expected_out_data[] = {1.1, 1.2, 1.0, 10.1, 7.0, 8.5};
-    struct tensor *expected_out = tensor_allocator_from_array_alloc(&tensor_alloc, expected_out_data, shape, 2, dtype);
+    struct tensor *expected_out = tensor_from_array_alloc(&env, expected_out_data, shape, 2, DTYPE);
 
     struct tensor *out = NULL;
-    tensor_add(t1, t2, &out, false, &allocs);
+    tensor_add(t1, t2, &out, false, &env);
 
     ASSERT_TRUE(!tensor_no_grad_equal(out, expected_out), "One or more output values incorrect.");
 
 test_cleanup:
-    tensor_cpu_allocator_cleanup(&tensor_alloc);
-    computational_graph_cpu_allocator_cleanup(&graph_alloc);
+    cgrad_env_cleanup(&env);
 }

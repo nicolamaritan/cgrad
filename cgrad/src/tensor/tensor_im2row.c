@@ -13,30 +13,30 @@ typedef enum tensor_im2row_owned
     ORIGIN_IDXS,
 } tensor_im2row_owned;
 
-static inline cgrad_error tensor_im2row_update_graph(struct tensor *const t, struct tensor *const out, struct tensor *const origin_idxs, struct allocators *allocs);
-static inline cgrad_error tensor_im2row_dispatch(struct tensor *t, const struct tensor *kernel, struct tensor **const out, struct tensor **const origin_idxs, struct allocators *const allocs);
-static cgrad_error tensor_im2row_f32(struct tensor *t, const struct tensor *kernel, struct tensor **const out, struct tensor **const origin_idxs, struct allocators *const allocs);
+static inline cgrad_error tensor_im2row_update_graph(struct tensor *const t, struct tensor *const out, struct tensor *const origin_idxs, struct cgrad_env *env);
+static inline cgrad_error tensor_im2row_dispatch(struct tensor *t, const struct tensor *kernel, struct tensor **const out, struct tensor **const origin_idxs, struct cgrad_env *const env);
+static cgrad_error tensor_im2row_f32(struct tensor *t, const struct tensor *kernel, struct tensor **const out, struct tensor **const origin_idxs, struct cgrad_env *const env);
 static cgrad_error tensor_im2row_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static cgrad_error tensor_im2row_backpropagate_f32(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
-cgrad_error tensor_im2row(struct tensor *t, const struct tensor *kernel, struct tensor **out, const bool track_grad, struct allocators *const allocs)
+cgrad_error tensor_im2row(struct tensor *t, const struct tensor *kernel, struct tensor **out, const bool track_grad, struct cgrad_env *const env)
 {
     // checks
 
     struct tensor *origin_idxs = NULL;
-    tensor_im2row_dispatch(t, kernel, out, &origin_idxs, allocs);
+    tensor_im2row_dispatch(t, kernel, out, &origin_idxs, env);
 
     if (track_grad)
     {
-        return tensor_im2row_update_graph(t, *out, origin_idxs, allocs);
+        return tensor_im2row_update_graph(t, *out, origin_idxs, env);
     }
 
     return NO_ERROR;
 }
 
-static inline cgrad_error tensor_im2row_update_graph(struct tensor *const t, struct tensor *const out, struct tensor *const origin_idxs, struct allocators *allocs)
+static inline cgrad_error tensor_im2row_update_graph(struct tensor *const t, struct tensor *const out, struct tensor *const origin_idxs, struct cgrad_env *env)
 {
-    cgrad_error err = add_computational_graph_link(t, TENSOR, out, &tensor_im2row_backpropagate, allocs);
+    cgrad_error err = add_computational_graph_link(t, TENSOR, out, &tensor_im2row_backpropagate, env);
     if (err != NO_ERROR)
     {
         return err;
@@ -45,18 +45,18 @@ static inline cgrad_error tensor_im2row_update_graph(struct tensor *const t, str
     return context_set_owned(&out->node->ctx, origin_idxs, ORIGIN_IDXS);
 }
 
-static inline cgrad_error tensor_im2row_dispatch(struct tensor *t, const struct tensor *kernel, struct tensor **const out, struct tensor **const origin_idxs, struct allocators *const allocs)
+static inline cgrad_error tensor_im2row_dispatch(struct tensor *t, const struct tensor *kernel, struct tensor **const out, struct tensor **const origin_idxs, struct cgrad_env *const env)
 {
     switch (t->dtype)
     {
     case DTYPE_FLOAT32:
-        return tensor_im2row_f32(t, kernel, out, origin_idxs, allocs);
+        return tensor_im2row_f32(t, kernel, out, origin_idxs, env);
     default:
         return OPERATION_INVALID_TENSOR_DTYPE;
     }
 }
 
-static cgrad_error tensor_im2row_f32(struct tensor *t, const struct tensor *kernel, struct tensor **const out, struct tensor **const origin_idxs, struct allocators *const allocs)
+static cgrad_error tensor_im2row_f32(struct tensor *t, const struct tensor *kernel, struct tensor **const out, struct tensor **const origin_idxs, struct cgrad_env *const env)
 {
     float *t_data = (float *)t->data;
 
@@ -69,8 +69,8 @@ static cgrad_error tensor_im2row_f32(struct tensor *t, const struct tensor *kern
     size_t S = kernel->shape[3];
 
     const size_t out_shape[] = {H_out * W_out * t->shape[0], C * R * S};
-    (*out) = tensor_allocator_alloc(allocs->tensor_alloc, out_shape, 2, t->dtype);
-    (*origin_idxs) = tensor_allocator_alloc(allocs->tensor_alloc, out_shape, 2, t->dtype);
+    (*out) = tensor_allocator_alloc(&env->tensor_alloc, out_shape, 2, t->dtype);
+    (*origin_idxs) = tensor_allocator_alloc(&env->tensor_alloc, out_shape, 2, t->dtype);
     float *out_data = (float *)(*out)->data;
     float *origin_idxs_data = (float *)(*origin_idxs)->data;
 

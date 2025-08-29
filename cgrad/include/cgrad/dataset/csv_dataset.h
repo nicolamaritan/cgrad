@@ -3,7 +3,7 @@
 
 #include "cgrad/dataset/indexes_permutation.h"
 #include "cgrad/tensor/tensor.h"
-#include "cgrad/memory/tensor/tensor_allocator.h"
+#include "cgrad/cgrad_env.h"
 #include "cgrad/error.h"
 #include <stddef.h>
 
@@ -33,7 +33,7 @@ struct csv_dataset *csv_dataset_alloc(const char *csv_path);
  *
  * TODO
  */
-cgrad_error csv_dataset_sample_batch(const struct csv_dataset *const dataset, struct tensor **const inputs, struct tensor **const targets, const struct indexes_batch *const ixs_batch, const cgrad_dtype dtype, struct tensor_allocator *const tensor_alloc);
+cgrad_error csv_dataset_sample_batch(const struct csv_dataset *const dataset, struct tensor **const inputs, struct tensor **const targets, const struct indexes_batch *const ixs_batch, const cgrad_dtype dtype, struct cgrad_env *const env);
 
 /**
  * @brief Applies standard scaling (zero mean, unit variance) to the dataset features.

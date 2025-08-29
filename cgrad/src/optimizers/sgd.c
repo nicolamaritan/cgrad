@@ -5,7 +5,7 @@
 
 static cgrad_error add_prev_b_t(struct sgd_optimizer *const opt, struct tensor *const prev_grad);
 
-cgrad_error sgd_optimizer_init(struct sgd_optimizer *opt, struct model_params *const params, struct tensor_allocator *allocator)
+cgrad_error sgd_optimizer_init(struct sgd_optimizer *opt, struct model_params *const params, struct cgrad_env *env)
 {
     if (!opt)
     {
@@ -15,18 +15,18 @@ cgrad_error sgd_optimizer_init(struct sgd_optimizer *opt, struct model_params *c
     {
         return MODEL_PARAMS_NULL;
     }
-    if (!allocator)
+    if (!env)
     {
-        return TENSOR_ALLOCATOR_NULL;
+        return CGRAD_ENV_NULL;
     }
 
     opt->params = params;
-    opt->allocator = allocator;
+    opt->tensor_alloc = &env->tensor_alloc;
     opt->size = 0;
     for (size_t i = 0; i < params->size; i++)
     {
         struct tensor* param = params->params[i];
-        struct tensor* param_prev_grad = tensor_allocator_no_grad_zero_alloc(allocator, param->shape, param->shape_size, param->dtype);
+        struct tensor* param_prev_grad = tensor_allocator_no_grad_zero_alloc(opt->tensor_alloc, param->shape, param->shape_size, param->dtype);
 
         cgrad_error err = add_prev_b_t(opt, param_prev_grad);
         if (err != NO_ERROR)
@@ -48,17 +48,17 @@ cgrad_error sgd_optimizer_step(struct sgd_optimizer* opt, double lr, double mome
     for (size_t i = 0; i < opt->params->size; i++)
     {
         struct tensor* param = opt->params->params[i];
-        struct tensor_allocator *allocator = opt->allocator;
+        struct tensor_allocator *tensor_alloc = opt->tensor_alloc;
         
         struct tensor* prev_b_t = opt->prev_b_t[i];
-        struct tensor* b_t = tensor_allocator_no_grad_alloc(allocator, prev_b_t->shape, prev_b_t->shape_size, param->dtype);
+        struct tensor* b_t = tensor_allocator_no_grad_alloc(tensor_alloc, prev_b_t->shape, prev_b_t->shape_size, param->dtype);
 
         if (momentum != 0)
         {
             if (nesterov)
             {
                 // b_t <- momentum * b_t-1 + g_t
-                struct tensor* g_t = tensor_allocator_clone(allocator, param->grad);
+                struct tensor* g_t = tensor_allocator_clone(tensor_alloc, param->grad);
                 tensor_scalar_mult_tensor_add(prev_b_t, g_t, momentum, b_t);
 
                 // g_t <- g_t + momentum * b_t
@@ -68,7 +68,7 @@ cgrad_error sgd_optimizer_step(struct sgd_optimizer* opt, double lr, double mome
                 // param <- param - lr * g_t
                 tensor_axpy(g_t, param, -lr);
 
-                tensor_allocator_free(allocator, g_t);
+                tensor_allocator_free(tensor_alloc, g_t);
             }
             else
             {
@@ -84,7 +84,7 @@ cgrad_error sgd_optimizer_step(struct sgd_optimizer* opt, double lr, double mome
         }
 
         // Free and setup next iteration b_ts
-        tensor_allocator_free(allocator, opt->prev_b_t[i]);
+        tensor_allocator_free(tensor_alloc, opt->prev_b_t[i]);
         opt->prev_b_t[i] = b_t;
     }
 
@@ -100,7 +100,7 @@ void sgd_optimizer_cleanup(struct sgd_optimizer *opt)
 
     for (size_t i = 0; i < opt->size; i++)
     {
-        tensor_allocator_free(opt->allocator, opt->prev_b_t[i]);
+        tensor_allocator_free(opt->tensor_alloc, opt->prev_b_t[i]);
     }
 }
 

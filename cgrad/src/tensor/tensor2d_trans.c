@@ -7,13 +7,13 @@ typedef enum tensor2d_trans_operand
     TENSOR2D_TRANS_ONLY_OPERAND,
 } tensor2d_trans_operand;
 
-static inline cgrad_error tensor2d_trans_update_graph(struct tensor *const t, struct tensor **const out, struct allocators *const allocs);
+static inline cgrad_error tensor2d_trans_update_graph(struct tensor *const t, struct tensor **const out, struct cgrad_env *const env);
 static cgrad_error tensor2d_trans_dispatch(const struct tensor *const t, struct tensor *const out);
 static cgrad_error tensor2d_trans_f64(const struct tensor *const t, struct tensor *const out);
 static cgrad_error tensor2d_trans_f32(const struct tensor *const t, struct tensor *const out);
 static cgrad_error tensor2d_trans_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
-cgrad_error tensor2d_trans(struct tensor *const t, struct tensor **const out, const bool track_grad, struct allocators *const allocs)
+cgrad_error tensor2d_trans(struct tensor *const t, struct tensor **const out, const bool track_grad, struct cgrad_env *const env)
 {
     if (!t)
     {
@@ -30,7 +30,7 @@ cgrad_error tensor2d_trans(struct tensor *const t, struct tensor **const out, co
     
     const size_t shape[] = {t->shape[1], t->shape[0]};
     const size_t shape_size = 2;
-    (*out) = tensor_allocator_alloc(allocs->tensor_alloc, shape, shape_size, t->dtype);
+    (*out) = tensor_allocator_alloc(&env->tensor_alloc, shape, shape_size, t->dtype);
     if (!(*out))
     {
         return TENSOR_ALLOCATION_FAILED;
@@ -44,15 +44,15 @@ cgrad_error tensor2d_trans(struct tensor *const t, struct tensor **const out, co
 
     if (track_grad)
     {
-        return tensor2d_trans_update_graph(t, out, allocs);
+        return tensor2d_trans_update_graph(t, out, env);
     }
 
     return NO_ERROR;
 }
 
-static inline cgrad_error tensor2d_trans_update_graph(struct tensor *const t, struct tensor **const out, struct allocators *allocs)
+static inline cgrad_error tensor2d_trans_update_graph(struct tensor *const t, struct tensor **const out, struct cgrad_env *env)
 {
-    return add_computational_graph_link(t, TENSOR2D_TRANS_ONLY_OPERAND, *out, &tensor2d_trans_backpropagate, allocs);
+    return add_computational_graph_link(t, TENSOR2D_TRANS_ONLY_OPERAND, *out, &tensor2d_trans_backpropagate, env);
 }
 
 cgrad_error tensor2d_trans_into(const struct tensor *const t, struct tensor *const out)

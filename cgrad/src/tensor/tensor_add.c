@@ -10,15 +10,15 @@ typedef enum tensor_add_operand
     RHS_TENSOR,
 } tensor_add_operand;
 
-static inline cgrad_error tensor_add_update_graph(struct tensor *const x, struct tensor *const y, struct tensor **const out, struct allocators *const allocs);
+static inline cgrad_error tensor_add_update_graph(struct tensor *const x, struct tensor *const y, struct tensor **const out, struct cgrad_env *const env);
 static inline cgrad_error tensor_add_dispatch(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
 static cgrad_error tensor_add_f64(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
 static cgrad_error tensor_add_f32(const struct tensor *const x, const struct tensor *const y, struct tensor *const out);
 static cgrad_error tensor_add_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
-cgrad_error tensor_add(struct tensor *const x, struct tensor *const y, struct tensor **const out, const bool track_grad, struct allocators *const allocs)
+cgrad_error tensor_add(struct tensor *const x, struct tensor *const y, struct tensor **const out, const bool track_grad, struct cgrad_env *const env)
 {
-    if (!allocs)
+    if (!env)
     {
         return ALLOCATORS_NULL;
     }
@@ -43,7 +43,7 @@ cgrad_error tensor_add(struct tensor *const x, struct tensor *const y, struct te
         return TENSOR_DTYPE_MISMATCH;
     }
 
-    (*out) = tensor_allocator_alloc(allocs->tensor_alloc, x->shape, x->shape_size, x->dtype);
+    (*out) = tensor_allocator_alloc(&env->tensor_alloc, x->shape, x->shape_size, x->dtype);
 
     cgrad_error err = tensor_add_dispatch(x, y, *out);
     if (err != NO_ERROR)
@@ -53,21 +53,21 @@ cgrad_error tensor_add(struct tensor *const x, struct tensor *const y, struct te
 
     if (track_grad)
     {
-        return tensor_add_update_graph(x, y, out, allocs);
+        return tensor_add_update_graph(x, y, out, env);
     }
 
     return NO_ERROR;
 }
 
-static inline cgrad_error tensor_add_update_graph(struct tensor *const x, struct tensor *const y, struct tensor **const out, struct allocators *const allocs)
+static inline cgrad_error tensor_add_update_graph(struct tensor *const x, struct tensor *const y, struct tensor **const out, struct cgrad_env *const env)
 {
-    cgrad_error err = add_computational_graph_link(x, LHS_TENSOR, *out, &tensor_add_backpropagate, allocs);
+    cgrad_error err = add_computational_graph_link(x, LHS_TENSOR, *out, &tensor_add_backpropagate, env);
     if (err != NO_ERROR)
     {
         return err;
     }
 
-    err = add_computational_graph_link(y, RHS_TENSOR, *out, &tensor_add_backpropagate, allocs);
+    err = add_computational_graph_link(y, RHS_TENSOR, *out, &tensor_add_backpropagate, env);
 
     return err;
 }

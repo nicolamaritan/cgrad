@@ -15,7 +15,7 @@ struct tensor_list
 
 static inline struct tensor_list *tensor_list_alloc(const size_t capacity);
 static inline cgrad_error tensor_list_add(struct tensor_list *const list, struct tensor *const t);
-static inline cgrad_error tensor_list_free_all(struct tensor_list *const list, struct tensor_allocator *const tensor_alloc);
+static inline void tensor_list_free(struct tensor_list *const list);
 
 static inline struct tensor_list *tensor_list_alloc(const size_t capacity)
 {
@@ -57,15 +57,16 @@ static inline cgrad_error tensor_list_add(struct tensor_list *const list, struct
     return NO_ERROR;
 }
 
-static inline cgrad_error tensor_list_free_all(struct tensor_list *const list, struct tensor_allocator *const tensor_alloc)
+static inline void tensor_list_free(struct tensor_list *const list)
 {
-    for (size_t i = 0; i < list->size; i++)
+    if (!list)
     {
-        tensor_allocator_free(tensor_alloc, list->data[i]);
+        return;
     }
 
-    list->size = 0;
-    return NO_ERROR;
+    free(list->data);
+    list->data = NULL;
+    free(list);
 }
 
 #endif

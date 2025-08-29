@@ -16,7 +16,7 @@ typedef enum tensor2d_add_row_vector_operand
     ROW_VECTOR,
 } tensor2d_add_row_vector_operand;
 
-static inline cgrad_error tensor2d_add_row_vector_update_graph(struct tensor *const t, struct tensor *const v, struct tensor **const out, struct allocators *const allocs);
+static inline cgrad_error tensor2d_add_row_vector_update_graph(struct tensor *const t, struct tensor *const v, struct tensor **const out, struct cgrad_env *const env);
 static inline cgrad_error tensor2d_add_row_vector_dispatch(const struct tensor *const t, const struct tensor *const v, struct tensor *out);
 static cgrad_error tensor2d_add_row_vector_backpropagate_tensor2d(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 static cgrad_error tensor2d_add_row_vector_backpropagate_row_vector(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
@@ -31,7 +31,7 @@ static cgrad_error tensor2d_add_row_vector_scalar_f64(const struct tensor *const
 static cgrad_error tensor2d_add_row_vector_scalar_f32(const struct tensor *const t, const struct tensor *const v, struct tensor *out);
 #endif
 
-cgrad_error tensor2d_add_row_vector(struct tensor *const t, struct tensor *const v, struct tensor **const out, const bool track_grad, struct allocators *const allocs)
+cgrad_error tensor2d_add_row_vector(struct tensor *const t, struct tensor *const v, struct tensor **const out, const bool track_grad, struct cgrad_env *const env)
 {
     if (!t || !v)
     {
@@ -58,7 +58,7 @@ cgrad_error tensor2d_add_row_vector(struct tensor *const t, struct tensor *const
         return TENSOR_DTYPE_MISMATCH;
     }
 
-    (*out) = tensor_allocator_alloc(allocs->tensor_alloc, t->shape, t->shape_size, t->dtype);
+    (*out) = tensor_allocator_alloc(&env->tensor_alloc, t->shape, t->shape_size, t->dtype);
 
     if (!(*out))
     {
@@ -73,21 +73,21 @@ cgrad_error tensor2d_add_row_vector(struct tensor *const t, struct tensor *const
 
     if (track_grad)
     {
-        return tensor2d_add_row_vector_update_graph(t, v, out, allocs);
+        return tensor2d_add_row_vector_update_graph(t, v, out, env);
     }
 
     return NO_ERROR;
 }
 
-static inline cgrad_error tensor2d_add_row_vector_update_graph(struct tensor *const t, struct tensor *const v, struct tensor **const out, struct allocators *const allocs)
+static inline cgrad_error tensor2d_add_row_vector_update_graph(struct tensor *const t, struct tensor *const v, struct tensor **const out, struct cgrad_env *const env)
 {
-    cgrad_error err = add_computational_graph_link(t, TENSOR2D, *out, &tensor2d_add_row_vector_backpropagate_tensor2d, allocs);
+    cgrad_error err = add_computational_graph_link(t, TENSOR2D, *out, &tensor2d_add_row_vector_backpropagate_tensor2d, env);
     if (err != NO_ERROR)
     {
         return err;
     }
 
-    err = add_computational_graph_link(v, ROW_VECTOR, *out, &tensor2d_add_row_vector_backpropagate_row_vector, allocs);
+    err = add_computational_graph_link(v, ROW_VECTOR, *out, &tensor2d_add_row_vector_backpropagate_row_vector, env);
 
     return err;
 }

@@ -2,7 +2,7 @@
 #include "cgrad/layers/relu.h"
 #include "cgrad/losses/mse.h"
 #include "cgrad/autograd/backpropagation/backpropagation.h"
-#include "cgrad/memory/allocators.h"
+#include "cgrad/cgrad_env.h"
 #include "cgrad/model/model_params.h"
 #include "cgrad/tensor/tensor.h"
 #include "cgrad/tensor/tensor_get.h"
@@ -23,39 +23,32 @@ float compute_example_y_target(float *x_row, float *weight, float bias, size_t d
 
 int main()
 {
-    const int SEED = 42;
-    init_random_seed(SEED);
-
-    const cgrad_dtype DTYPE = DTYPE_FLOAT32;
-
     const size_t BATCH_SIZE = 128;
     const size_t INPUT_DIM = 64;
     const size_t HIDDEN_DIM = 128;
     const size_t OUT_DIM = 1;
 
-    // Allocator initialization
-    struct tensor_allocator tensor_alloc;
-    tensor_cpu_allocator_init(&tensor_alloc);
-
-    struct computational_graph_allocator graph_alloc;
-    computational_graph_cpu_allocator_init(&graph_alloc);
-
-    struct allocators allocs = {&tensor_alloc, &graph_alloc};
-
+    const int SEED = 42;
     const size_t INTERMEDIATES_CAPACITY = 20;
-    struct tensor_list *intermediates = tensor_list_alloc(INTERMEDIATES_CAPACITY);
+    const cgrad_dtype DTYPE = DTYPE_FLOAT32;
+
+    struct cgrad_env env;
+    if (cgrad_env_init(&env, SEED, INTERMEDIATES_CAPACITY) != NO_ERROR)
+    {
+        return EXIT_FAILURE;
+    }
 
     size_t x_shape[] = {BATCH_SIZE, INPUT_DIM};
     size_t x_shape_size = 2;
-    struct tensor *x = tensor_allocator_alloc(&tensor_alloc, x_shape, x_shape_size, DTYPE);
+    struct tensor *x = tensor_alloc(&env, x_shape, x_shape_size, DTYPE);
 
     size_t y_shape[] = {BATCH_SIZE, 1};
     size_t y_shape_size = 2;
-    struct tensor *y_target = tensor_allocator_alloc(&tensor_alloc, y_shape, y_shape_size, DTYPE);
+    struct tensor *y_target = tensor_alloc(&env, y_shape, y_shape_size, DTYPE);
     if (!x || !y_target)
     {
-        tensor_allocator_free(&tensor_alloc, x);
-        tensor_allocator_free(&tensor_alloc, y_target);
+        tensor_free(&env, x);
+        tensor_free(&env, y_target);
         return EXIT_FAILURE;
     }
 
@@ -63,7 +56,7 @@ int main()
 
     // Allocate model
     struct linear linear1;
-    if (linear_init(&linear1, INPUT_DIM, HIDDEN_DIM, DTYPE, &allocs) != NO_ERROR)
+    if (linear_init(&linear1, INPUT_DIM, HIDDEN_DIM, DTYPE, &env) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
@@ -73,7 +66,7 @@ int main()
     }
 
     struct linear linear2;
-    if (linear_init(&linear2, HIDDEN_DIM, OUT_DIM, DTYPE, &allocs) != NO_ERROR)
+    if (linear_init(&linear2, HIDDEN_DIM, OUT_DIM, DTYPE, &env) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
@@ -92,7 +85,7 @@ int main()
 
     // Setup optimizer
     struct sgd_optimizer opt;
-    if (sgd_optimizer_init(&opt, &params, &tensor_alloc) != NO_ERROR)
+    if (sgd_optimizer_init(&opt, &params, &env) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
@@ -105,25 +98,25 @@ int main()
     {
         // ------------- Forward -------------
         struct tensor *h1 = NULL;
-        if (linear_forward(&linear1, x, &h1, intermediates, true) != NO_ERROR)
+        if (linear_forward(&linear1, x, &h1, true) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
 
         struct tensor *h2 = NULL; 
-        if (relu_forward(h1, &h2, true, &allocs) != NO_ERROR)
+        if (relu_forward(h1, &h2, true, &env) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
 
         struct tensor *h3 = NULL;
-        if (linear_forward(&linear2, h2, &h3, intermediates, true) != NO_ERROR)
+        if (linear_forward(&linear2, h2, &h3, true) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
 
         struct tensor *z = NULL;
-        if (mse_loss(h3, y_target, &z, true, &allocs) != NO_ERROR)
+        if (mse_loss(h3, y_target, &z, true, &env) != NO_ERROR)
         {
             return EXIT_FAILURE;
         }
@@ -134,24 +127,24 @@ int main()
 
         // ------------- Backward -------------
         zero_grad(&params);
-        backward(z, &allocs);
+        backward(z, &env);
         sgd_optimizer_step(&opt, lr, momentum, false);
 
         // Clear iteration allocations
-        tensor_list_free_all(intermediates, &tensor_alloc);
-        tensor_allocator_free(&tensor_alloc, h2);
-        tensor_allocator_free(&tensor_alloc, h3);
-        tensor_allocator_free(&tensor_alloc, z);
+        cgrad_env_free_intermediates(&env);
+        tensor_free(&env, h1);
+        tensor_free(&env, h2);
+        tensor_free(&env, h3);
+        tensor_free(&env, z);
     }
 
     // Cleanup
     sgd_optimizer_cleanup(&opt);
-    tensor_allocator_free(&tensor_alloc, x);
-    tensor_allocator_free(&tensor_alloc, y_target);
+    tensor_free(&env, x);
+    tensor_free(&env, y_target);
     linear_cleanup(&linear1);
     linear_cleanup(&linear2);
-    tensor_cpu_allocator_cleanup(&tensor_alloc);
-    computational_graph_cpu_allocator_cleanup(&graph_alloc);
+    cgrad_env_cleanup(&env);
     return EXIT_SUCCESS;
 }
 

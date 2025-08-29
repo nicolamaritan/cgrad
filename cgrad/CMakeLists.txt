@@ -2,6 +2,7 @@ set(CMAKE_C_FLAGS_RELEASE "-Wall -Iinclude -mavx2 -DENABLE_SIMD_AVX2 -DNDEBUG -O
 set(CMAKE_C_FLAGS_DEBUG "-Wall -Iinclude -mavx2 -DENABLE_SIMD_AVX2 -g")
 
 add_library(cgrad STATIC
+    src/cgrad_env.c
 
     # Autograd sources
     src/autograd/backpropagation/backpropagation.c

@@ -15,13 +15,13 @@ typedef enum tensor_trans_operand_size_t
     AXIS_2
 } tensor_trans_operand_size_t;
     
-static inline cgrad_error tensor_trans_update_graph(struct tensor *const t, const size_t axis_1, const size_t axis_2, struct tensor **const out, struct allocators *allocs);
+static inline cgrad_error tensor_trans_update_graph(struct tensor *const t, const size_t axis_1, const size_t axis_2, struct tensor **const out, struct cgrad_env *env);
 static cgrad_error tensor_trans_dispatch(const struct tensor *const t, const size_t axis_1, const size_t axis_2, struct tensor *const out);
 // static cgrad_error tensor_trans_f64(const struct tensor *const t, struct tensor *const out);
 static cgrad_error tensor_trans_f32(const struct tensor *const t, const size_t axis_1, const size_t axis_2, struct tensor *const out);
 static cgrad_error tensor_trans_backpropagate(const struct backpropagation_context *const ctx, const struct tensor *const grad_wrt_out, struct tensor *grad_wrt_operand);
 
-cgrad_error tensor_trans(struct tensor *const t, const size_t axis_1, const size_t axis_2, struct tensor **const out, const bool track_grad, struct allocators *const allocs)
+cgrad_error tensor_trans(struct tensor *const t, const size_t axis_1, const size_t axis_2, struct tensor **const out, const bool track_grad, struct cgrad_env *const env)
 {
     if (!t)
     {
@@ -38,7 +38,7 @@ cgrad_error tensor_trans(struct tensor *const t, const size_t axis_1, const size
     trans_shape[axis_1] = trans_shape[axis_2];
     trans_shape[axis_2] = temp;
 
-    (*out) = tensor_allocator_alloc(allocs->tensor_alloc, trans_shape, t->shape_size, t->dtype);
+    (*out) = tensor_allocator_alloc(&env->tensor_alloc, trans_shape, t->shape_size, t->dtype);
     if (!(*out))
     {
         return TENSOR_ALLOCATION_FAILED;
@@ -52,15 +52,15 @@ cgrad_error tensor_trans(struct tensor *const t, const size_t axis_1, const size
 
     if (track_grad)
     {
-        return tensor_trans_update_graph(t, axis_1, axis_2, out, allocs);
+        return tensor_trans_update_graph(t, axis_1, axis_2, out, env);
     }
 
     return NO_ERROR;
 }
 
-static inline cgrad_error tensor_trans_update_graph(struct tensor *const t, const size_t axis_1, const size_t axis_2, struct tensor **const out, struct allocators *allocs)
+static inline cgrad_error tensor_trans_update_graph(struct tensor *const t, const size_t axis_1, const size_t axis_2, struct tensor **const out, struct cgrad_env *env)
 {
-    cgrad_error err = add_computational_graph_link(t, TENSOR, *out, &tensor_trans_backpropagate, allocs);
+    cgrad_error err = add_computational_graph_link(t, TENSOR, *out, &tensor_trans_backpropagate, env);
     if (err != NO_ERROR)
     {
         return err;

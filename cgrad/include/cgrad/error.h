@@ -9,6 +9,9 @@ typedef enum
 {
     NO_ERROR = 0,                /**< Operation was successful. */
 
+    // CGrad Env errors
+    CGRAD_ENV_NULL,
+
     // Tensor errors
     TENSOR_NULL,                 /**< Tensor pointer is null. */
     TENSOR_GRAD_NULL,
