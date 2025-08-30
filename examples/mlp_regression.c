@@ -5,11 +5,10 @@
 #include "cgrad/cgrad_env.h"
 #include "cgrad/model/model_params.h"
 #include "cgrad/tensor/tensor.h"
+#include "cgrad/tensor/tensor_alloc.h"
 #include "cgrad/tensor/tensor_get.h"
 #include "cgrad/tensor/tensor_set.h"
 #include "cgrad/optimizers/sgd.h"
-#include "cgrad/memory/tensor/cpu/tensor_cpu_allocator.h"
-#include "cgrad/memory/computational_graph/computational_graph_cpu_allocator.h"
 #include "cgrad/utils/random.h"
 #include <stdio.h>
 #include <stdlib.h>

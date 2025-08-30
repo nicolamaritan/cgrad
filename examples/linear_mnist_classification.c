@@ -6,6 +6,7 @@
 #include "cgrad/model/model_params.h"
 #include "cgrad/tensor/tensor.h"
 #include "cgrad/tensor/tensor_get.h"
+#include "cgrad/tensor/tensor_alloc.h"
 #include "cgrad/optimizers/sgd.h"
 #include "cgrad/dataset/csv_dataset.h"
 #include "cgrad/dataset/indexes_permutation.h"

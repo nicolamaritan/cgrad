@@ -10,6 +10,7 @@
 #include "cgrad/tensor/tensor_reshape.h"
 #include "cgrad/tensor/tensor_print_shape.h"
 #include "cgrad/tensor/tensor_get.h"
+#include "cgrad/tensor/tensor_alloc.h"
 #include "cgrad/optimizers/sgd.h"
 #include "cgrad/dataset/csv_dataset.h"
 #include "cgrad/dataset/indexes_permutation.h"

@@ -11,6 +11,7 @@
 #include "cgrad/tensor/tensor2d_mult.h"
 #include "cgrad/tensor/tensor_add.h"
 #include "cgrad/tensor/tensor_equality.h"
+#include "cgrad/tensor/tensor_alloc.h"
 #include <stdio.h>
 
 void tensor2d_mult_test_cpu_instance_1(struct test_result *);

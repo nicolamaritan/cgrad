@@ -1,5 +1,6 @@
 #include "cgrad/cgrad_env.h"
 #include "cgrad/utils/random.h"
+#include "cgrad/tensor/tensor_alloc.h"
 #include "cgrad/memory/tensor/cpu/tensor_cpu_allocator.h"
 #include "cgrad/memory/computational_graph/computational_graph_cpu_allocator.h"
 
@@ -41,4 +42,21 @@ void cgrad_env_cleanup(struct cgrad_env *env)
     computational_graph_cpu_allocator_cleanup(&env->graph_alloc);
     tensor_cpu_allocator_cleanup(&env->tensor_alloc);
     tensor_list_free(env->tensor_alloc_intermediates);
+}
+
+cgrad_error cgrad_env_free_intermediates(struct cgrad_env *env)
+{
+    if (!env)
+    {
+        return CGRAD_ENV_NULL;
+    }
+
+    for (size_t i = 0; i < env->tensor_alloc_intermediates->size; i++)
+    {
+        tensor_free(env, env->tensor_alloc_intermediates->data[i]);
+    }
+
+    env->tensor_alloc_intermediates->size = 0;
+
+    return NO_ERROR;
 }
