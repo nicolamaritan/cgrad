@@ -2,7 +2,7 @@
 Deep Learning library for the C programming language.
 
 ## Dependencies
-- libblas-dev
+- libopenblas-dev
 
 ## Build 
 
