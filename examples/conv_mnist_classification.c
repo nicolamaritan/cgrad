@@ -93,23 +93,22 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-
     // Setup model params
     struct model_params params;
     model_params_init(&params);
-    add_model_param(&params, conv1.weight);
-    add_model_param(&params, conv2.weight);
-    add_model_param(&params, linear1.weight);
+    model_params_add(&params, conv1.weight);
+    model_params_add(&params, conv2.weight);
+    model_params_add(&params, linear1.weight);
 
     // Setup optimizer
+    double lr = 3e-4;
+    double momentum = 0.9;
     struct sgd_optimizer opt;
-    if (sgd_optimizer_init(&opt, &params, &env) != NO_ERROR)
+
+    if (sgd_optimizer_init(&opt, &params, lr, momentum, false, &env) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
-
-    double lr = 3e-4;
-    double momentum = 0.9;
 
     // Setup indexes batch container. In this case, the container's capacity is the batch size.
     struct indexes_batch *ixs_batch = indexes_batch_alloc(BATCH_SIZE);
@@ -206,10 +205,10 @@ int main(int argc, char **argv)
             }
 
             // ------------- Backward -------------
-            zero_grad(&params);
+            sgd_optimizer_zero_grad(&opt);
             backward(z, &env);
 
-            sgd_optimizer_step(&opt, lr, momentum, false);
+            sgd_optimizer_step(&opt);
 
             // Clear iteration allocations
             cgrad_env_free_intermediates(&env);

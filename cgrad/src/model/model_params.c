@@ -6,7 +6,7 @@ void model_params_init(struct model_params *const params)
     memset(params->params, 0, params->size * sizeof(struct tensor *));
 }
 
-cgrad_error add_model_param(struct model_params *const params, struct tensor *const t)
+cgrad_error model_params_add(struct model_params *const params, struct tensor *const t)
 {
     size_t const size = params->size;
     if (size >= MODEL_MAX_PARAMS)

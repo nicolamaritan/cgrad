@@ -12,10 +12,10 @@ struct model_params
 };
 
 void model_params_init(struct model_params *const params);
-cgrad_error add_model_param(struct model_params *const params, struct tensor *const t);
-static inline void zero_grad(struct model_params *const params);
+cgrad_error model_params_add(struct model_params *const params, struct tensor *const t);
+static inline void model_params_zero_grad(struct model_params *const params);
 
-static inline void zero_grad(struct model_params *const params)
+static inline void model_params_zero_grad(struct model_params *const params)
 {
     for (size_t i = 0; i < params->size; i++)
     {

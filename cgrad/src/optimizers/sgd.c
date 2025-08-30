@@ -5,7 +5,7 @@
 
 static cgrad_error add_prev_b_t(struct sgd_optimizer *const opt, struct tensor *const prev_grad);
 
-cgrad_error sgd_optimizer_init(struct sgd_optimizer *opt, struct model_params *const params, struct cgrad_env *env)
+cgrad_error sgd_optimizer_init(struct sgd_optimizer *opt, struct model_params *const params, const double lr, const double momentum, const bool nesterov, struct cgrad_env *env)
 {
     if (!opt)
     {
@@ -20,6 +20,9 @@ cgrad_error sgd_optimizer_init(struct sgd_optimizer *opt, struct model_params *c
         return CGRAD_ENV_NULL;
     }
 
+    opt->lr = lr;
+    opt->momemtum = momentum;
+    opt->nesterov = nesterov;
     opt->params = params;
     opt->tensor_alloc = &env->tensor_alloc;
     opt->size = 0;
@@ -38,12 +41,16 @@ cgrad_error sgd_optimizer_init(struct sgd_optimizer *opt, struct model_params *c
     return NO_ERROR;
 }
 
-cgrad_error sgd_optimizer_step(struct sgd_optimizer* opt, double lr, double momentum, bool nesterov)
+cgrad_error sgd_optimizer_step(struct sgd_optimizer *opt)
 {
     if (!opt)
     {
         return OPTIMIZER_NULL;
     }
+
+    double lr = opt->lr;
+    double momentum = opt->momemtum;
+    bool nesterov = opt->nesterov;
 
     for (size_t i = 0; i < opt->params->size; i++)
     {

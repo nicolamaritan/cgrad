@@ -78,20 +78,20 @@ int main()
     // Setup model params
     struct model_params params;
     model_params_init(&params);
-    add_model_param(&params, linear1.weight);
-    add_model_param(&params, linear1.bias);
-    add_model_param(&params, linear2.weight);
-    add_model_param(&params, linear2.bias);
+    model_params_add(&params, linear1.weight);
+    model_params_add(&params, linear1.bias);
+    model_params_add(&params, linear2.weight);
+    model_params_add(&params, linear2.bias);
 
     // Setup optimizer
+    double lr = 3e-4;
+    double momentum = 0.9;
     struct sgd_optimizer opt;
-    if (sgd_optimizer_init(&opt, &params, &env) != NO_ERROR)
+
+    if (sgd_optimizer_init(&opt, &params, lr, momentum, false, &env) != NO_ERROR)
     {
         return EXIT_FAILURE;
     }
-
-    double lr = 3e-4;
-    double momentum = 0.9;
 
     size_t epochs = 100;
     for (size_t i = 0; i < epochs; i++)
@@ -126,9 +126,9 @@ int main()
         printf("epoch %ld, loss: %f\n", i, loss);
 
         // ------------- Backward -------------
-        zero_grad(&params);
+        sgd_optimizer_zero_grad(&opt);
         backward(z, &env);
-        sgd_optimizer_step(&opt, lr, momentum, false);
+        sgd_optimizer_step(&opt);
 
         // Clear iteration allocations
         cgrad_env_free_intermediates(&env);
