@@ -2,8 +2,40 @@
 #include "cgrad/memory/computational_graph/computational_graph_cpu_pool.h"
 #include <string.h>
 
+/**
+ * @brief Allocates and initializes a computational graph node on the CPU.
+ *
+ * This function obtains a new `computational_graph_node` from the given CPU
+ * graph pool, associates it with the provided tensor, and initializes its
+ * bookkeeping fields (parents, children, gradients, etc.) to safe defaults.
+ *
+ * @param pool Pointer to a `computational_graph_cpu_pool` from which the node
+ *        will be allocated. Must not be NULL.
+ * @param t Pointer to the tensor that will be associated with the new node.
+ *        Must not be NULL.
+ *
+ * @return Pointer to the newly allocated and initialized
+ *         `computational_graph_node`, or NULL if allocation fails or if
+ *         `t` is NULL.
+ *
+ * @note The function also sets `t->node` to point back to the allocated node.
+ */
 static struct computational_graph_node *computational_graph_cpu_alloc(void *pool, struct tensor *t);
 
+/**
+ * @brief Frees a computational graph node in a CPU-based graph pool.
+ *
+ * This function releases resources associated with a
+ * `computational_graph_node`. It clears the back-reference from the
+ * associated tensor (if any), cleans up the node's execution context, and
+ * returns the node to the CPU pool for reuse.
+ *
+ * @param pool Pointer to a `computational_graph_cpu_pool` that owns the node.
+ * @param node Pointer to the `computational_graph_node` to be freed.
+ *
+ * @note The function sets `node->t->node` to NULL if the tensor is still
+ *       referencing the node.
+ */
 static void computational_graph_cpu_free(void *pool, struct computational_graph_node *node);
 
 cgrad_error computational_graph_cpu_allocator_init(struct computational_graph_allocator *const graph_allocator)

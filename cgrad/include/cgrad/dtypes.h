@@ -12,6 +12,13 @@ typedef enum
     DTYPE_INT16,
 } cgrad_dtype;
 
+/**
+ * @brief Return the dimension in byte of a given data type
+ * 
+ * @param dtype input data type
+ * 
+ * @return Dimension of the input data type
+ */
 static inline size_t dtype_sizeof(cgrad_dtype dtype);
 
 static inline size_t dtype_sizeof(cgrad_dtype dtype)

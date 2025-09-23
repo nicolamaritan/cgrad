@@ -1,20 +1,145 @@
 #include "cgrad/memory/tensor/cpu/tensor_cpu_allocator.h"
 #include <string.h>
 
+/**
+ * @brief Allocates a CPU tensor and its gradient if applicable.
+ *
+ * This function allocates a tensor from the given CPU pool. For real-valued
+ * tensors (DTYPE_FLOAT32 or DTYPE_FLOAT64), it also allocates a gradient tensor.
+ * If any allocation fails, previously allocated memory is freed and NULL is returned.
+ *
+ * @param[in] pool Pointer to the CPU tensor pool.
+ * @param[in] shape Array containing the size of each dimension of the tensor.
+ * @param[in] shape_size Number of dimensions of the tensor.
+ * @param[in] dtype Data type of the tensor (see @ref cgrad_dtype).
+ *
+ * @return Pointer to the allocated tensor, or NULL if allocation failed.
+ *
+ * @note The returned tensor should be freed with tensor_cpu_free().
+ * @note Gradient tensors are only allocated for real-valued types.
+ */
 static struct tensor *tensor_cpu_alloc(void *pool, const size_t *const shape, const size_t shape_size, const cgrad_dtype dtype);
 
+/**
+ * @brief Allocates a CPU tensor without gradient.
+ *
+ * This function allocates memory for the tensor's data from the CPU pool,
+ * computes its stride, and initializes all tensor fields. No gradient tensor
+ * is allocated.
+ *
+ * @param[in] pool Pointer to the CPU tensor pool.
+ * @param[in] shape Array containing the size of each dimension of the tensor.
+ * @param[in] shape_size Number of dimensions of the tensor.
+ * @param[in] dtype Data type of the tensor (see @ref cgrad_dtype).
+ *
+ * @return Pointer to the allocated tensor, or NULL if allocation fails.
+ *
+ * @note This function does not allocate a gradient tensor.
+ */
 static struct tensor *tensor_cpu_no_grad_alloc(void *pool, const size_t *const shape, const size_t shape_size, const cgrad_dtype dtype);
 
+/**
+ * @brief Allocates a CPU tensor without gradient and initializes its data to zero.
+ *
+ * This function allocates memory for the tensor's data from the CPU pool, sets
+ * all elements to zero, computes its stride, and initializes all tensor fields.
+ * No gradient tensor is allocated.
+ *
+ * @param[in] pool Pointer to the CPU tensor pool.
+ * @param[in] shape Array containing the size of each dimension of the tensor.
+ * @param[in] shape_size Number of dimensions of the tensor.
+ * @param[in] dtype Data type of the tensor (see @ref cgrad_dtype).
+ *
+ * @return Pointer to the allocated tensor, or NULL if allocation fails.
+ *
+ * @note This function does not allocate a gradient tensor.
+ */
 static struct tensor *tensor_cpu_no_grad_zero_alloc(void *pool, const size_t *const shape, const size_t shape_size, const cgrad_dtype dtype);
 
+/**
+ * @brief Allocates a CPU tensor and copies data from an existing array.
+ *
+ * This function allocates a tensor from the CPU pool and copies the contents
+ * from the provided array into the tensor's data buffer.
+ *
+ * @param[in] pool Pointer to the CPU tensor pool.
+ * @param[in] data Pointer to the source data array.
+ * @param[in] shape Array containing the size of each dimension of the tensor.
+ * @param[in] shape_size Number of dimensions of the tensor.
+ * @param[in] dtype Data type of the tensor (see @ref cgrad_dtype).
+ *
+ * @return Pointer to the allocated tensor, or NULL if allocation fails.
+ *
+ * @note The size of the data array must match the total number of elements
+ *       defined by shape and shape_size.
+ */
 static struct tensor *tensor_cpu_from_array_alloc(void *pool, const void *data, const size_t *const shape, const size_t shape_size, const cgrad_dtype dtype);
 
+/**
+ * @brief Frees a CPU tensor and its associated data.
+ *
+ * This function releases the memory of the tensor's data and gradient (if any),
+ * and returns the tensor structure back to the CPU pool. The node pointer is
+ * not freed by this function and should be managed separately if used.
+ *
+ * @param[in] pool Pointer to the CPU tensor pool.
+ * @param[in,out] t Pointer to the tensor to free.
+ *
+ * @note If t is NULL, the function does nothing.
+ * @note The tensor's node pointer is not freed; it is the caller's responsibility
+ *       to handle it if necessary.
+ * @note Use this function to properly free tensors allocated with
+ *       tensor_cpu_alloc() or tensor_cpu_no_grad_alloc().
+ */
 static void tensor_cpu_free(void *pool, struct tensor *t);
 
+/**
+ * @brief Frees a CPU tensor without gradient.
+ *
+ * This function releases the memory of the tensor's data and returns the
+ * tensor structure back to the CPU pool. No gradient tensor is involved.
+ *
+ * @param[in] pool Pointer to the CPU tensor pool.
+ * @param[in,out] t Pointer to the tensor to free.
+ *
+ * @note If t is NULL, the function does nothing.
+ * @note Use this function to properly free tensors allocated with
+ *       tensor_cpu_no_grad_alloc().
+ *
+ */
 static void tensor_cpu_no_grad_free(void *pool, struct tensor *t);
 
+/**
+ * @brief Clones a CPU tensor.
+ *
+ * This function allocates a new tensor from the CPU pool with the same shape
+ * and data type as the source tensor, and copies its data into the new tensor.
+ *
+ * @param[in] pool Pointer to the CPU tensor pool.
+ * @param[in] src Pointer to the source tensor to clone.
+ *
+ * @return Pointer to the newly allocated tensor, or NULL if allocation fails
+ *         or if the source tensor is NULL.
+ *
+ * @note This function currently copies only the first two dimensions using
+ *       sizeof(double); adjust if using other data types or higher dimensions.
+ */
 static struct tensor *tensor_cpu_clone(void *pool, const struct tensor *const src);
 
+/**
+ * @brief Computes the stride array for a tensor given its shape.
+ *
+ * The stride array indicates the number of elements to skip in memory
+ * to move along each dimension. This is used for indexing multi-dimensional
+ * tensors stored in a flat array.
+ *
+ * @param[in]  shape      Array containing the size of each dimension of the tensor.
+ * @param[out] stride     Array where the computed stride for each dimension will be stored.
+ * @param[in]  shape_size Number of dimensions of the tensor.
+ *
+ * @note The stride array must be pre-allocated with at least shape_size elements.
+ * @note This function assumes row-major ordering
+ */
 static void compute_stride(size_t *const shape, size_t *const stride, size_t const shape_size);
 
 cgrad_error tensor_cpu_allocator_init(struct tensor_allocator *const tensor_alloc)

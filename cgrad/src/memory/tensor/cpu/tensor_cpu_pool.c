@@ -7,6 +7,12 @@
 #include <string.h>
 #include <assert.h>
 
+
+/**
+ * @brief Initialize the free list to manage memory
+ * 
+ * @param pool Pointer to a struct tensor_cpu_pool used for memory management 
+ */
 static void tensor_cpu_pool_init_chunks(struct tensor_cpu_pool *pool);
 
 cgrad_error tensor_cpu_pool_init(struct tensor_cpu_pool *pool)

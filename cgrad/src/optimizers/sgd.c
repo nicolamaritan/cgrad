@@ -3,6 +3,23 @@
 #include "cgrad/tensor/tensor_scalar_mult_tensor_add.h"
 #include "cgrad/tensor/tensor_axpy.h"
 
+/**
+ * @brief Adds a tensor to the SGD optimizer's previous gradient array.
+ *
+ * This function appends a tensor to the `prev_b_t` array of the SGD optimizer,
+ * which stores the previous gradient values for momentum updates.
+ *
+ * @param state Pointer to the `sgd_optimizer` instance. Must not be NULL.
+ * @param prev_grad Pointer to the tensor representing the previous gradient
+ *        for a model parameter. Must not be NULL.
+ *
+ * @return
+ * - `NO_ERROR` if the tensor was successfully added.
+ * - `MODEL_MAX_PARAMS_EXCEEDED` if the optimizer has reached its maximum
+ *   number of parameters.
+ *
+ * @note This function does not copy the tensor; it stores the pointer directly.
+ */
 static cgrad_error add_prev_b_t(struct sgd_optimizer *const opt, struct tensor *const prev_grad);
 
 cgrad_error sgd_optimizer_init(struct sgd_optimizer *opt, struct model_params *const params, const double lr, const double momentum, const bool nesterov, struct cgrad_env *env)

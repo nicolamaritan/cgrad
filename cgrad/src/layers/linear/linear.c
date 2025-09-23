@@ -12,7 +12,40 @@
 #include <stdlib.h>
 #include <string.h>
 
+/**
+ * @brief Applies Xavier initialization to a linear layer's weights (double precision).
+ *
+ * This function initializes the weight tensor of a linear layer with
+ * `double` precision (DTYPE_FLOAT64) using the Xavier (Glorot) method.
+ * Each weight is sampled uniformly from the interval:
+ * [-sqrt(6 / (in_dim + out_dim)), sqrt(6 / (in_dim + out_dim))].
+ *
+ * @param layer Pointer to the `linear` layer whose weights will be initialized.
+ *        Must not be NULL and must have a weight tensor of type DTYPE_FLOAT64.
+ *
+ * @return
+ * - `NO_ERROR` if the weights were successfully initialized.
+ *
+ * @note This function only initializes the weights; biases are not modified.
+ */
 static cgrad_error linear_xavier_init_f64(struct linear *const layer);
+
+/**
+ * @brief Applies Xavier initialization to a linear layer's weights (single precision).
+ *
+ * This function initializes the weight tensor of a linear layer with
+ * `float` precision (DTYPE_FLOAT32) using the Xavier (Glorot) method.
+ * Each weight is sampled uniformly from the interval:
+ * [-sqrt(6 / (in_dim + out_dim)), sqrt(6 / (in_dim + out_dim))].
+ *
+ * @param layer Pointer to the `linear` layer whose weights will be initialized.
+ *        Must not be NULL and must have a weight tensor of type DTYPE_FLOAT32.
+ *
+ * @return
+ * - `NO_ERROR` if the weights were successfully initialized.
+ *
+ * @note This function only initializes the weights; biases are not modified.
+ */
 static cgrad_error linear_xavier_init_f32(struct linear *const layer);
 
 cgrad_error linear_init(struct linear *const layer, const size_t in_dim, const size_t out_dim, const cgrad_dtype dtype, struct cgrad_env *const env)

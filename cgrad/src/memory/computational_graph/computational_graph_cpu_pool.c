@@ -6,6 +6,17 @@
 #include <string.h>
 #include <assert.h>
 
+/**
+ * @brief Initializes the internal chunk list of a computational graph CPU pool.
+ *
+ * This function links all chunks in the memory pool into a singly linked list,
+ * so that they can be efficiently managed for allocations.
+ *
+ * @param[in,out] pool Pointer to the computational graph CPU pool whose chunks
+ *                     need to be initialized.
+ * 
+ * @note The last chunk's next pointer is set to NULL to mark the end of the list.
+ */
 static void computational_graph_cpu_pool_init_chunks(struct computational_graph_cpu_pool *pool);
 
 cgrad_error computational_graph_cpu_pool_init(struct computational_graph_cpu_pool *pool)
