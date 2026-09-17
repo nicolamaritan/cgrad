@@ -52,6 +52,7 @@ add_library(cgrad STATIC
     src/tensor/tensor_reshape.c
     src/tensor/tensor_scalar_mult_tensor_add.c
     src/tensor/tensor_set.c
+    src/tensor/tensor_softmax_last_axis.c
     src/tensor/tensor_sum.c
     src/tensor/tensor_trans.c
     src/tensor/tensor_equality.c
