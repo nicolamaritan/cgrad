@@ -44,6 +44,7 @@ add_library(cgrad STATIC
     src/tensor/tensor_add.c
     src/tensor/tensor_add_inplace.c
     src/tensor/tensor_axpy.c
+    src/tensor/tensor_const_scalar_mult.c
     src/tensor/tensor_copy.c
     src/tensor/tensor_get.c
     src/tensor/tensor_helpers.c

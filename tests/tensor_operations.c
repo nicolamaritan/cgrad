@@ -13,6 +13,7 @@
 #include "cgrad/tensor/tensor_equality.h"
 #include "cgrad/tensor/tensor_alloc.h"
 #include "cgrad/tensor/tensor_softmax_last_axis.h"
+#include "cgrad/tensor/tensor_const_scalar_mult.h"
 #include <stdio.h>
 #include <math.h>
 
@@ -132,6 +133,56 @@ void tensor_softmax_last_axis_test_cpu_instance_5(struct test_result *result);
  */
 void tensor_softmax_last_axis_test_cpu_instance_6(struct test_result *result);
 
+/**
+ * @brief Tests tensor_const_scalar_mult with a basic positive scalar
+ *        (2x2, float32).
+ *
+ * @param result Pointer to a test_result struct where to save the results
+ *
+ * @return None
+ */
+void tensor_const_scalar_mult_test_cpu_instance_1(struct test_result *result);
+
+/**
+ * @brief Tests tensor_const_scalar_mult with a negative scalar (float64).
+ *
+ * @param result Pointer to a test_result struct where to save the results
+ *
+ * @return None
+ */
+void tensor_const_scalar_mult_test_cpu_instance_2(struct test_result *result);
+
+/**
+ * @brief Tests tensor_const_scalar_mult with a zero scalar, expecting an
+ *        all-zero output regardless of the input values.
+ *
+ * @param result Pointer to a test_result struct where to save the results
+ *
+ * @return None
+ */
+void tensor_const_scalar_mult_test_cpu_instance_3(struct test_result *result);
+
+/**
+ * @brief Tests tensor_const_scalar_mult on an unsupported dtype,
+ *        expecting an error.
+ *
+ * @param result Pointer to a test_result struct where to save the results
+ *
+ * @return None
+ */
+void tensor_const_scalar_mult_test_cpu_instance_4(struct test_result *result);
+
+/**
+ * @brief Tests tensor_const_scalar_mult on a rank-3 tensor, verifying
+ *        the scalar is applied elementwise across every leading
+ *        dimension, not just the last one.
+ *
+ * @param result Pointer to a test_result struct where to save the results
+ *
+ * @return None
+ */
+void tensor_const_scalar_mult_test_cpu_instance_5(struct test_result *result);
+
 int main(int argc, char **argv)
 {
     struct test_list *tests = tests_list_alloc();
@@ -147,6 +198,11 @@ int main(int argc, char **argv)
     test_list_append(tests, &tensor_softmax_last_axis_test_cpu_instance_4, "tensor_softmax_last_axis_test_cpu_instance_4");
     test_list_append(tests, &tensor_softmax_last_axis_test_cpu_instance_5, "tensor_softmax_last_axis_test_cpu_instance_5");
     test_list_append(tests, &tensor_softmax_last_axis_test_cpu_instance_6, "tensor_softmax_last_axis_test_cpu_instance_6");
+    test_list_append(tests, &tensor_const_scalar_mult_test_cpu_instance_1, "tensor_const_scalar_mult_test_cpu_instance_1");
+    test_list_append(tests, &tensor_const_scalar_mult_test_cpu_instance_2, "tensor_const_scalar_mult_test_cpu_instance_2");
+    test_list_append(tests, &tensor_const_scalar_mult_test_cpu_instance_3, "tensor_const_scalar_mult_test_cpu_instance_3");
+    test_list_append(tests, &tensor_const_scalar_mult_test_cpu_instance_4, "tensor_const_scalar_mult_test_cpu_instance_4");
+    test_list_append(tests, &tensor_const_scalar_mult_test_cpu_instance_5, "tensor_const_scalar_mult_test_cpu_instance_5");
 
     run_tests(tests);
 
@@ -535,6 +591,139 @@ void tensor_softmax_last_axis_test_cpu_instance_6(struct test_result *result)
         }
         ASSERT_TRUE(fabs(row_sum - 1.0) < EPSILON, "Each softmax row must sum to 1, even on rank-4 input.");
     }
+
+test_cleanup:
+    cgrad_env_cleanup(&env);
+}
+
+void tensor_const_scalar_mult_test_cpu_instance_1(struct test_result *result)
+{
+    const int SEED = 42;
+    const size_t INTERMEDIATES_CAPACITY = 20;
+    const cgrad_dtype DTYPE = DTYPE_FLOAT32;
+
+    struct cgrad_env env;
+    ASSERT_TRUE(cgrad_env_init(&env, SEED, INTERMEDIATES_CAPACITY) == NO_ERROR, "CGrad Environment Initialization should not fail.");
+
+    const size_t shape[] = {2, 2};
+    const float t_data[] = {1.0, 2.0, 3.0, 4.0};
+    struct tensor *t = tensor_from_array_alloc(&env, t_data, shape, 2, DTYPE);
+
+    const double scalar = 2.0;
+    const float expected_out_data[] = {2.0, 4.0, 6.0, 8.0};
+    struct tensor *expected_out = tensor_from_array_alloc(&env, expected_out_data, shape, 2, DTYPE);
+
+    struct tensor *out = NULL;
+    cgrad_error err = tensor_const_scalar_mult(t, scalar, &out, false, &env);
+
+    ASSERT_TRUE(err == NO_ERROR, "tensor_const_scalar_mult should not fail.");
+    ASSERT_TRUE(tensor_no_grad_equal(out, expected_out), "One or more output values incorrect.");
+
+test_cleanup:
+    cgrad_env_cleanup(&env);
+}
+
+void tensor_const_scalar_mult_test_cpu_instance_2(struct test_result *result)
+{
+    const int SEED = 42;
+    const size_t INTERMEDIATES_CAPACITY = 20;
+    const cgrad_dtype DTYPE = DTYPE_FLOAT64;
+
+    struct cgrad_env env;
+    ASSERT_TRUE(cgrad_env_init(&env, SEED, INTERMEDIATES_CAPACITY) == NO_ERROR, "CGrad Environment Initialization should not fail.");
+
+    const size_t shape[] = {3, 2};
+    const double t_data[] = {1.0, -2.0, 3.5, 0.0, -1.0, 4.2};
+    struct tensor *t = tensor_from_array_alloc(&env, t_data, shape, 2, DTYPE);
+
+    const double scalar = -1.5;
+    const double expected_out_data[] = {-1.5, 3.0, -5.25, 0.0, 1.5, -6.3};
+    struct tensor *expected_out = tensor_from_array_alloc(&env, expected_out_data, shape, 2, DTYPE);
+
+    struct tensor *out = NULL;
+    cgrad_error err = tensor_const_scalar_mult(t, scalar, &out, false, &env);
+
+    ASSERT_TRUE(err == NO_ERROR, "tensor_const_scalar_mult should not fail.");
+    ASSERT_TRUE(tensor_no_grad_equal(out, expected_out), "One or more output values incorrect with a negative scalar.");
+
+test_cleanup:
+    cgrad_env_cleanup(&env);
+}
+
+void tensor_const_scalar_mult_test_cpu_instance_3(struct test_result *result)
+{
+    const int SEED = 42;
+    const size_t INTERMEDIATES_CAPACITY = 20;
+    const cgrad_dtype DTYPE = DTYPE_FLOAT32;
+
+    struct cgrad_env env;
+    ASSERT_TRUE(cgrad_env_init(&env, SEED, INTERMEDIATES_CAPACITY) == NO_ERROR, "CGrad Environment Initialization should not fail.");
+
+    const size_t shape[] = {2, 3};
+    const float t_data[] = {1.0, 2.0, 3.0, -4.0, 5.5, -6.0};
+    struct tensor *t = tensor_from_array_alloc(&env, t_data, shape, 2, DTYPE);
+
+    const double scalar = 0.0;
+    const float expected_out_data[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    struct tensor *expected_out = tensor_from_array_alloc(&env, expected_out_data, shape, 2, DTYPE);
+
+    struct tensor *out = NULL;
+    cgrad_error err = tensor_const_scalar_mult(t, scalar, &out, false, &env);
+
+    ASSERT_TRUE(err == NO_ERROR, "tensor_const_scalar_mult should not fail.");
+    ASSERT_TRUE(tensor_no_grad_equal(out, expected_out), "Multiplying by zero should zero out every element.");
+
+test_cleanup:
+    cgrad_env_cleanup(&env);
+}
+
+void tensor_const_scalar_mult_test_cpu_instance_4(struct test_result *result)
+{
+    const int SEED = 42;
+    const size_t INTERMEDIATES_CAPACITY = 20;
+    const cgrad_dtype DTYPE = DTYPE_INT32;
+
+    struct cgrad_env env;
+    ASSERT_TRUE(cgrad_env_init(&env, SEED, INTERMEDIATES_CAPACITY) == NO_ERROR, "CGrad Environment Initialization should not fail.");
+
+    const size_t shape[] = {2, 2};
+    const int32_t t_data[] = {1, 2, 3, 4};
+    struct tensor *t = tensor_from_array_alloc(&env, t_data, shape, 2, DTYPE);
+
+    const double scalar = 2.0;
+    struct tensor *out = NULL;
+    cgrad_error err = tensor_const_scalar_mult(t, scalar, &out, false, &env);
+
+    ASSERT_TRUE(err == OPERATION_INVALID_TENSOR_DTYPE, "tensor_const_scalar_mult on integer dtype should return OPERATION_INVALID_TENSOR_DTYPE.");
+
+test_cleanup:
+    cgrad_env_cleanup(&env);
+}
+
+void tensor_const_scalar_mult_test_cpu_instance_5(struct test_result *result)
+{
+    const int SEED = 42;
+    const size_t INTERMEDIATES_CAPACITY = 20;
+    const cgrad_dtype DTYPE = DTYPE_FLOAT64;
+
+    struct cgrad_env env;
+    ASSERT_TRUE(cgrad_env_init(&env, SEED, INTERMEDIATES_CAPACITY) == NO_ERROR, "CGrad Environment Initialization should not fail.");
+
+    // Shape (2, 2, 2): the scalar must be applied to every element,
+    // regardless of which leading dimension it belongs to
+    const size_t shape[] = {2, 2, 2};
+    const double t_data[] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0};
+    struct tensor *t = tensor_from_array_alloc(&env, t_data, shape, 3, DTYPE);
+
+    const double scalar = 3.0;
+    const double expected_out_data[] = {3.0, 6.0, 9.0, 12.0, 15.0, 18.0, 21.0, 24.0};
+    struct tensor *expected_out = tensor_from_array_alloc(&env, expected_out_data, shape, 3, DTYPE);
+
+    struct tensor *out = NULL;
+    cgrad_error err = tensor_const_scalar_mult(t, scalar, &out, false, &env);
+
+    ASSERT_TRUE(err == NO_ERROR, "tensor_const_scalar_mult should not fail on a rank-3 tensor.");
+    ASSERT_TRUE(tensor_no_grad_equal(out, expected_out), "One or more output values incorrect on rank-3 input.");
 
 test_cleanup:
     cgrad_env_cleanup(&env);
