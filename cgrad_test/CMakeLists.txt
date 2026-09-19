@@ -1,6 +1,7 @@
 add_library(cgrad_test STATIC
     src/datastructures/test_list.c
     src/datastructures/test_list_callbacks.c
+    src/utils/sum_loss.c
     src/run_tests.c
 )
 
