@@ -13,6 +13,7 @@
 #include "cgrad/tensor/tensor_softmax_last_axis.h"
 #include "cgrad/tensor/tensor_reshape.h"
 #include "cgrad/tensor/tensor2d_mult.h"
+#include "cgrad/layers/gelu.h"
 #include "cgrad/memory/tensor/cpu/tensor_cpu_allocator.h"
 #include "cgrad/memory/computational_graph/computational_graph_cpu_allocator.h"
 #include "cgrad/autograd/backpropagation/backpropagation.h"
@@ -40,7 +41,7 @@ void tensor_const_scalar_mult_backward_test_cpu_instance_1(struct test_result *r
 void tensor_const_scalar_mult_backward_test_cpu_instance_2(struct test_result *result);
 
 /**
- * @brief Tests the backward pass of tensor_reshape through the real
+ * @brief Tests the backward pass of tensor_reshape through the 
  *        autodiff engine. Since reshape does not alter values, composing
  *        it with sum_loss means the gradient w.r.t. the original tensor
  *        must be all 1s, reshaped back to the ORIGINAL shape.
@@ -48,7 +49,7 @@ void tensor_const_scalar_mult_backward_test_cpu_instance_2(struct test_result *r
 void tensor_reshape_backward_test_cpu_instance_1(struct test_result *result);
 
 /**
- * @brief Tests the backward pass of softmax through the real autodiff
+ * @brief Tests the backward pass of softmax through the autodiff
  *        engine, composed with sum_loss. Since every softmax row always
  *        sums to the constant 1, its gradient with respect to the
  *        original logits must be exactly 0, regardless of the input
@@ -67,6 +68,18 @@ void tensor_softmax_last_axis_backward_test_cpu_instance_1(struct test_result *r
  */
 void tensor_softmax_last_axis_backward_test_cpu_instance_2(struct test_result *result);
 
+/**
+ * @brief Tests the backward pass of GELU on float32 values through the autodiff
+ *        engine, composed with sum_loss.
+ */
+void gelu_backward_test_cpu_instance_1(struct test_result *result);
+
+/**
+ * @brief Tests the backward pass of GELU on float64 values through the autodiff
+ *        engine, composed with sum_loss.
+ */
+void gelu_backward_test_cpu_instance_2(struct test_result *result);
+
 int main(int argc, char **argv)
 {
     struct test_list *tests = tests_list_alloc();
@@ -75,6 +88,8 @@ int main(int argc, char **argv)
     test_list_append(tests, &tensor_reshape_backward_test_cpu_instance_1, "tensor_reshape_backward_test_cpu_instance_1");
     test_list_append(tests, &tensor_softmax_last_axis_backward_test_cpu_instance_1, "tensor_softmax_last_axis_backward_test_cpu_instance_1");
     test_list_append(tests, &tensor_softmax_last_axis_backward_test_cpu_instance_2, "tensor_softmax_last_axis_backward_test_cpu_instance_2");
+    test_list_append(tests, &gelu_backward_test_cpu_instance_1, "gelu_backward_test_cpu_instance_1");
+    test_list_append(tests, &gelu_backward_test_cpu_instance_2, "gelu_backward_test_cpu_instance_2");
 
     run_tests(tests);
 
@@ -275,6 +290,133 @@ void tensor_softmax_last_axis_backward_test_cpu_instance_2(struct test_result *r
     struct tensor *expected_grad = tensor_from_array_alloc(&env, expected_grad_data, shape, 2, DTYPE);
 
     ASSERT_TRUE(tensor_no_grad_equal(t->grad, expected_grad), "Gradient of softmax w.r.t. t is incorrect on non-degenerate input.");
+
+test_cleanup:
+    cgrad_env_cleanup(&env);
+}
+
+void gelu_backward_test_cpu_instance_1(struct test_result *result)
+{
+    const int SEED = 42;
+    const size_t INTERMEDIATES_CAPACITY = 20;
+    const cgrad_dtype DTYPE = DTYPE_FLOAT32;
+
+    struct cgrad_env env;
+    ASSERT_TRUE(
+        cgrad_env_init(&env, SEED, INTERMEDIATES_CAPACITY) == NO_ERROR,
+        "CGrad Environment Initialization should not fail.");
+
+    const size_t shape[] = {2, 2};
+
+    const float t_data[] = {
+        -1.0f, 0.0f,
+        1.0f, 2.0f
+    };
+
+    struct tensor *t =
+        tensor_from_array_alloc(&env, t_data, shape, 2, DTYPE);
+
+    struct tensor *out = NULL;
+
+    cgrad_error err =
+        gelu_forward(t, &out, true, &env);
+
+    ASSERT_TRUE(
+        err == NO_ERROR,
+        "GELU forward should not fail.");
+
+    struct tensor *z = NULL;
+
+    err = sum_loss(out, &z, true, &env);
+
+    ASSERT_TRUE(
+        err == NO_ERROR,
+        "sum_loss forward should not fail.");
+
+    backward(z, &env);
+
+    const float expected_grad_data[] = {
+        -0.0833154,
+        0.5f,
+        1.0833154,
+        1.0852318,
+    };
+
+    struct tensor *expected_grad =
+        tensor_from_array_alloc(
+            &env,
+            expected_grad_data,
+            shape,
+            2,
+            DTYPE);
+
+    ASSERT_TRUE(
+        tensor_no_grad_equal(t->grad, expected_grad),
+        "GELU gradient is incorrect.");
+
+test_cleanup:
+    cgrad_env_cleanup(&env);
+}
+
+void gelu_backward_test_cpu_instance_2(struct test_result *result)
+{
+    const int SEED = 42;
+    const size_t INTERMEDIATES_CAPACITY = 20;
+    const cgrad_dtype DTYPE = DTYPE_FLOAT64;
+
+    struct cgrad_env env;
+    ASSERT_TRUE(
+        cgrad_env_init(&env, SEED, INTERMEDIATES_CAPACITY) == NO_ERROR,
+        "CGrad Environment Initialization should not fail.");
+
+    const size_t shape[] = {2, 2};
+
+    const double t_data[] = {
+        -2.0, -1.0,
+        0.5, 2.0
+    };
+
+    struct tensor *t =
+        tensor_from_array_alloc(&env, t_data, shape, 2, DTYPE);
+
+    struct tensor *out = NULL;
+
+    cgrad_error err =
+        gelu_forward(t, &out, true, &env);
+
+    ASSERT_TRUE(
+        err == NO_ERROR,
+        "GELU forward should not fail.");
+
+
+    struct tensor *z = NULL;
+
+    err = sum_loss(out, &z, true, &env);
+
+    ASSERT_TRUE(
+        err == NO_ERROR,
+        "sum_loss forward should not fail.");
+
+    backward(z, &env);
+
+    const double expected_grad_data[] = {
+        -0.0852318,
+        -0.0833154,
+        0.8674951,
+        1.0852318
+    };
+
+    struct tensor *expected_grad =
+        tensor_from_array_alloc(
+            &env,
+            expected_grad_data,
+            shape,
+            2,
+            DTYPE);
+
+    ASSERT_TRUE(
+        tensor_no_grad_equal(t->grad, expected_grad),
+        "Float64 GELU gradient is incorrect.");
 
 test_cleanup:
     cgrad_env_cleanup(&env);

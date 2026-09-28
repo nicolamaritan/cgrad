@@ -18,6 +18,7 @@ add_library(cgrad STATIC
     src/layers/conv2d/conv2d.c
     src/layers/linear/linear.c
     src/layers/relu.c
+    src/layers/gelu.c
 
     # Losses sources
     src/losses/cross_entropy.c

@@ -14,6 +14,7 @@
 #include "cgrad/tensor/tensor_alloc.h"
 #include "cgrad/tensor/tensor_softmax_last_axis.h"
 #include "cgrad/tensor/tensor_const_scalar_mult.h"
+#include "cgrad/layers/gelu.h"
 #include <stdio.h>
 #include <math.h>
 
@@ -183,6 +184,26 @@ void tensor_const_scalar_mult_test_cpu_instance_4(struct test_result *result);
  */
 void tensor_const_scalar_mult_test_cpu_instance_5(struct test_result *result);
 
+/**
+ * @brief Tests GELU forward propagation on float32 values spanning
+ *        negative, zero, and positive inputs.
+ *
+ * @param result Pointer to a test_result struct where to save the results
+ *
+ * @return None
+ */
+void gelu_test_cpu_instance_1(struct test_result *result);
+
+/**
+ * @brief Tests GELU forward propagation on float64 values, including
+ *        larger positive and negative values.
+ *
+ * @param result Pointer to a test_result struct where to save the results
+ *
+ * @return None
+ */
+void gelu_test_cpu_instance_2(struct test_result *result);
+
 int main(int argc, char **argv)
 {
     struct test_list *tests = tests_list_alloc();
@@ -203,6 +224,8 @@ int main(int argc, char **argv)
     test_list_append(tests, &tensor_const_scalar_mult_test_cpu_instance_3, "tensor_const_scalar_mult_test_cpu_instance_3");
     test_list_append(tests, &tensor_const_scalar_mult_test_cpu_instance_4, "tensor_const_scalar_mult_test_cpu_instance_4");
     test_list_append(tests, &tensor_const_scalar_mult_test_cpu_instance_5, "tensor_const_scalar_mult_test_cpu_instance_5");
+    test_list_append(tests, &gelu_test_cpu_instance_1, "gelu_test_cpu_instance_1");
+    test_list_append(tests, &gelu_test_cpu_instance_2, "gelu_test_cpu_instance_2");
 
     run_tests(tests);
 
@@ -724,6 +747,116 @@ void tensor_const_scalar_mult_test_cpu_instance_5(struct test_result *result)
 
     ASSERT_TRUE(err == NO_ERROR, "tensor_const_scalar_mult should not fail on a rank-3 tensor.");
     ASSERT_TRUE(tensor_no_grad_equal(out, expected_out), "One or more output values incorrect on rank-3 input.");
+
+test_cleanup:
+    cgrad_env_cleanup(&env);
+}
+
+void gelu_test_cpu_instance_1(struct test_result *result)
+{
+    const int SEED = 42;
+    const size_t INTERMEDIATES_CAPACITY = 20;
+    const cgrad_dtype DTYPE = DTYPE_FLOAT32;
+
+    struct cgrad_env env;
+    ASSERT_TRUE(
+        cgrad_env_init(&env, SEED, INTERMEDIATES_CAPACITY) == NO_ERROR,
+        "CGrad Environment Initialization should not fail.");
+
+    const size_t shape[] = {2, 2};
+
+    const float t_data[] = {
+        -1.0f, 0.0f,
+        1.0f, 2.0f
+    };
+
+    struct tensor *t =
+        tensor_from_array_alloc(&env, t_data, shape, 2, DTYPE);
+
+    const float expected_out_data[] = {
+        -0.158655f, 0.0f,
+        0.841345f, 1.954500f
+    };
+
+    struct tensor *expected_out =
+        tensor_from_array_alloc(
+            &env,
+            expected_out_data,
+            shape,
+            2,
+            DTYPE);
+
+    struct tensor *out = NULL;
+
+    cgrad_error err =
+        gelu_forward(t, &out, false, &env);
+
+    ASSERT_TRUE(
+        err == NO_ERROR,
+        "GELU forward should not fail.");
+
+    ASSERT_TRUE(
+        tensor_no_grad_equal(out, expected_out),
+        "One or more GELU output values are incorrect.");
+
+test_cleanup:
+    cgrad_env_cleanup(&env);
+}
+
+void gelu_test_cpu_instance_2(struct test_result *result)
+{
+    const int SEED = 42;
+    const size_t INTERMEDIATES_CAPACITY = 20;
+    const cgrad_dtype DTYPE = DTYPE_FLOAT64;
+
+    struct cgrad_env env;
+    ASSERT_TRUE(
+        cgrad_env_init(&env, SEED, INTERMEDIATES_CAPACITY) == NO_ERROR,
+        "CGrad Environment Initialization should not fail.");
+
+    const size_t shape[] = {2, 3};
+
+    const double t_data[] = {
+        -2.0, -0.5, 0.0,
+        0.5, 1.0, 2.0
+    };
+
+    struct tensor *t =
+        tensor_from_array_alloc(&env, t_data, shape, 2, DTYPE);
+
+    /*
+     * Values generated using the same tanh GELU approximation as
+     * the implementation.
+     */
+    const double expected_out_data[] = {
+        -0.045500263,
+        -0.154268769,
+        0.0,
+        0.345731230,
+        0.841344746,
+        1.954499736
+    };
+
+    struct tensor *expected_out =
+        tensor_from_array_alloc(
+            &env,
+            expected_out_data,
+            shape,
+            2,
+            DTYPE);
+
+    struct tensor *out = NULL;
+
+    cgrad_error err =
+        gelu_forward(t, &out, false, &env);
+
+    ASSERT_TRUE(
+        err == NO_ERROR,
+        "GELU forward should not fail for float64.");
+
+    ASSERT_TRUE(
+        tensor_no_grad_equal(out, expected_out),
+        "One or more float64 GELU output values are incorrect.");
 
 test_cleanup:
     cgrad_env_cleanup(&env);
